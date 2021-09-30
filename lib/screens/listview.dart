@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutibre/utils/scroll.dart';
 
 class ListPage extends StatelessWidget {
   const ListPage({Key? key}) : super(key: key);
@@ -21,11 +22,13 @@ class ListViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     int size = MediaQuery.of(context).size.width.round();
 
-    return (Center(
+    return (MaterialApp(
+        debugShowCheckedModeBanner: false,
+        scrollBehavior: MyCustomScrollBehavior(),
         // Create a grid with columns fit to screen. If you change the scrollDirection to
         // horizontal, this produces rows.
 
-        child: getListView()));
+        home: getListView()));
   }
 
   List<String> getListElement() {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutibre/utils/scroll.dart';
 
 class GridPage extends StatelessWidget {
   @override
@@ -17,8 +18,10 @@ class GridListView extends StatelessWidget {
   Widget build(BuildContext context) {
     int size = MediaQuery.of(context).size.width.round();
 
-    return Center(
-      child: GridView.count(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      scrollBehavior: MyCustomScrollBehavior(),
+      home: GridView.count(
         // Create a grid with columns fit to screen. If you change the scrollDirection to
         // horizontal, this produces rows.
 
