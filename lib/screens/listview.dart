@@ -10,39 +10,28 @@ class ListPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("List"),
       ),
-      body: const ListViewPage(),
+      body: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          scrollBehavior: MyCustomScrollBehavior(),
+          // Create a grid with columns fit to screen. If you change the scrollDirection to
+          // horizontal, this produces rows.
+
+          home: getListView()),
     );
   }
 }
 
-class ListViewPage extends StatelessWidget {
-  const ListViewPage({Key? key}) : super(key: key);
+List<String> getListElement() {
+  var items = List<String>.generate(100, (counter) => 'Item $counter');
+  return items;
+}
 
-  @override
-  Widget build(BuildContext context) {
-    int size = MediaQuery.of(context).size.width.round();
-
-    return (MaterialApp(
-        debugShowCheckedModeBanner: false,
-        scrollBehavior: MyCustomScrollBehavior(),
-        // Create a grid with columns fit to screen. If you change the scrollDirection to
-        // horizontal, this produces rows.
-
-        home: getListView()));
-  }
-
-  List<String> getListElement() {
-    var items = List<String>.generate(100, (counter) => 'Item $counter');
-    return items;
-  }
-
-  Widget getListView() {
-    var listItems = getListElement();
-    var listView = ListView.builder(itemBuilder: (context, index) {
-      return ListTile(
-        title: Text(listItems[index]),
-      );
-    });
-    return listView;
-  }
+Widget getListView() {
+  var listItems = getListElement();
+  var listView = ListView.builder(itemBuilder: (context, index) {
+    return ListTile(
+      title: Text(listItems[index]),
+    );
+  });
+  return listView;
 }
