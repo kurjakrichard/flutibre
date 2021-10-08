@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutibre/utils/scroll.dart';
+import 'package:flutibre/models/girl.dart';
+import 'package:flutibre/utils/dataservice.dart';
+import 'package:flutibre/screens/details_page.dart';
 
 class ListPage extends StatelessWidget {
-  const ListPage({Key? key}) : super(key: key);
+  ListPage({Key? key}) : super(key: key);
+  final DataService data = DataService();
+
+  List<ImageDetails> get _images => data.getListGirls();
 
   @override
   Widget build(BuildContext context) {
@@ -16,22 +22,26 @@ class ListPage extends StatelessWidget {
           // Create a grid with columns fit to screen. If you change the scrollDirection to
           // horizontal, this produces rows.
 
-          home: getListView()),
+          home: SingleChildScrollView(
+            child: DataTable(
+              columns: [
+                DataColumn(label: Text("Price")),
+                DataColumn(label: Text("Title")),
+                DataColumn(label: Text("Photographer")),
+                DataColumn(label: FlutterLogo()),
+              ],
+              rows: _images.map((data) {
+                return DataRow(
+                  cells: [
+                    DataCell(Text(data.price)),
+                    DataCell(Text(data.title)),
+                    DataCell(Text(data.photographer)),
+                    DataCell(FlutterLogo())
+                  ],
+                );
+              }).toList(),
+            ),
+          )),
     );
   }
-}
-
-List<String> getListElement() {
-  var items = List<String>.generate(100, (counter) => 'Item $counter');
-  return items;
-}
-
-Widget getListView() {
-  var listItems = getListElement();
-  var listView = ListView.builder(itemBuilder: (context, index) {
-    return ListTile(
-      title: Text(listItems[index]),
-    );
-  });
-  return listView;
 }
