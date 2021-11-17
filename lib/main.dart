@@ -20,15 +20,15 @@ class Flutibre extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Flutibre'),
           ),
-          body: const Center(
-            child: Text('Welcome to The Flutibre!'),
+          body: Center(
+            child: GridPage(),
           ),
           drawer: Drawer(
             child: ListView(
               children: <Widget>[
                 DrawerHeader(
                   child: const Text("Navigation"),
-                  decoration: BoxDecoration(color: Colors.grey[700]),
+                   decoration: BoxDecoration(color: Colors.grey[700]),
                 ),
                 ListTile(
                   title: const Text("List"),

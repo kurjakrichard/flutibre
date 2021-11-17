@@ -5,8 +5,9 @@ import 'package:flutibre/screens/details_page.dart';
 import 'package:flutibre/utils/dataservice.dart';
 
 class GridPage extends StatelessWidget {
-  final DataService data = DataService();
+  GridPage({Key? key}) : super(key: key);
 
+  final DataService data = DataService();
   List<ImageDetails> get _images => data.getListGirls();
 
   @override

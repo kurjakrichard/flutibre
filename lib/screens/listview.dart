@@ -23,25 +23,42 @@ class ListPage extends StatelessWidget {
           // horizontal, this produces rows.
 
           home: SingleChildScrollView(
-            child: DataTable(
-              columns: [
-                DataColumn(label: Text("Price")),
-                DataColumn(label: Text("Title")),
-                DataColumn(label: Text("Photographer")),
-                DataColumn(label: FlutterLogo()),
-              ],
-              rows: _images.map((data) {
-                return DataRow(
-                  cells: [
-                    DataCell(Text(data.price)),
-                    DataCell(Text(data.title)),
-                    DataCell(Text(data.photographer)),
-                    DataCell(FlutterLogo())
+              scrollDirection: Axis.vertical,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+
+                  columns: const [
+                    DataColumn(label: Text("Price")),
+                    DataColumn(label: Text("Title")),
+                    DataColumn(label: Text("Photographer")),
+                    DataColumn(label: FlutterLogo()),
                   ],
-                );
-              }).toList(),
-            ),
-          )),
+                  rows: _images.map((data) {
+                    return DataRow(
+                      selected: sel,
+                      onSelectChanged: (value) { Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailsPage(
+                      imagePath: _images[index].imagePath,
+                      title: _images[index].title,
+                      photographer: _images[index].photographer,
+                      price: _images[index].price,
+                      details: _images[index].details,
+                      index: index,
+                    ),
+                      },
+                      cells: [
+                        DataCell(Text(data.price)),
+                        DataCell(Text(data.title)),
+                        DataCell(Text(data.photographer)),
+                        DataCell(FlutterLogo())
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ))),
     );
   }
 }

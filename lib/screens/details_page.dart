@@ -36,7 +36,7 @@ class DetailsPage extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
+            SizedBox(
               height: 260,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +107,7 @@ class DetailsPage extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical: 15),
                           color: Colors.lightBlueAccent,
                           child: Text(
-                            'Buy',
+                            'Open',
                             style: TextStyle(
                               color: Colors.white,
                             ),
