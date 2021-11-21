@@ -21,14 +21,17 @@ class Flutibre extends StatelessWidget {
             title: const Text('Flutibre'),
           ),
           body: Center(
-            child: GridPage(),
-          ),
+              child: Text(
+            "Welcome to Flutibre",
+            style: TextStyle(color: Colors.black, fontSize: 24),
+          ) //GridPage(),
+              ),
           drawer: Drawer(
             child: ListView(
               children: <Widget>[
                 DrawerHeader(
                   child: const Text("Navigation"),
-                   decoration: BoxDecoration(color: Colors.grey[700]),
+                  decoration: BoxDecoration(color: Colors.grey[700]),
                 ),
                 ListTile(
                   title: const Text("List"),

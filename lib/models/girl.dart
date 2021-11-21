@@ -4,6 +4,7 @@ class ImageDetails {
   final String photographer;
   final String title;
   final String details;
+
   ImageDetails(
       {required this.imagePath,
       required this.price,
