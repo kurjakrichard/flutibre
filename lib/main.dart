@@ -17,10 +17,8 @@ class Flutibre extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Flutibre'),
-          ),
-          body: Center(
+          appBar: AppBar(title: const Text('Flutibre')),
+          body: const Center(
               child: Text(
             "Welcome to Flutibre",
             style: TextStyle(color: Colors.black, fontSize: 24),
