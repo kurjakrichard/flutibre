@@ -3,25 +3,25 @@ import 'package:flutibre/utils/database_helper.dart';
 class Book {
   int? _id;
   String? _title;
-  String? _author_sort;
+  String? _path;
 
   Book(
     this._title,
-    this._author_sort,
+    this._path,
   );
 
   Book.withId(
     this._id,
     this._title,
-    this._author_sort,
+    this._path,
   );
 
   get id => this._id;
   set id(value) => this._id = value;
   get title => this._title;
   set title(value) => this._title = value;
-  get author_sort => this._author_sort;
-  set author_sort(value) => this._author_sort = value;
+  get path => this._path;
+  set path(value) => this._path = value;
 
   // Convert a Book object into a Map object
   Map<String, dynamic> toMap() {
@@ -30,7 +30,7 @@ class Book {
       map['id'] = _id;
     }
     map['title'] = _title;
-    map['autor_sort'] = _author_sort;
+    map['path'] = _path;
 
     return map;
   }
@@ -39,6 +39,6 @@ class Book {
   Book.fromMapObject(Map<String, dynamic> map) {
     this._id = map['id'];
     this._title = map['title'];
-    this._author_sort = map['author_sort'];
+    this._path = map['path'];
   }
 }
