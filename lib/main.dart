@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 
 void main() => runApp(const MaterialApp(
       home: Flutibre(),
-      debugShowCheckedModeBanner: false,
     ));
 
 class Flutibre extends StatelessWidget {
