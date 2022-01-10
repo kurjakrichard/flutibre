@@ -1,56 +1,35 @@
-import 'package:flutibre/screens/gridview.dart';
-import 'package:flutibre/screens/listview.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
+import 'dart:io';
 
-void main() => runApp(const MaterialApp(
+import 'package:flutibre/screens/main_window.dart';
+import 'package:flutibre/utils/scroll.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'utils/config.dart';
+
+void main() => runApp(MaterialApp(
       home: Flutibre(),
+      debugShowCheckedModeBanner: false,
     ));
 
 class Flutibre extends StatelessWidget {
-  const Flutibre({Key? key}) : super(key: key);
+  Flutibre({Key? key}) : super(key: key);
+  String path = readJsonData().toString();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          appBar: AppBar(title: const Text('Flutibre')),
-          body: const Center(
-              child: Text(
-            "Welcome to Flutibre",
-            style: TextStyle(color: Colors.black, fontSize: 24),
-          ) //GridPage(),
-              ),
-          drawer: Drawer(
-            child: ListView(
-              children: <Widget>[
-                DrawerHeader(
-                  child: const Text("Navigation"),
-                  decoration: BoxDecoration(color: Colors.grey[700]),
-                ),
-                ListTile(
-                  title: const Text("List"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ListPage()),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text("Tiles"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => GridPage()),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ));
+        scrollBehavior: MyCustomScrollBehavior(),
+        home: const MainWindow());
   }
+}
+
+Future<String> readJsonData() async {
+  final configFile = File('assets/config/flutter_config.json');
+  final jsonString = await configFile.readAsString();
+  final dynamic jsonMap = jsonDecode(jsonString);
+  print(jsonMap['path']);
+  return jsonMap['path'];
 }

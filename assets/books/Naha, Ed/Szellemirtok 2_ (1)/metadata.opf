@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier opf:scheme="calibre" id="calibre_id">1</dc:identifier>
+        <dc:identifier opf:scheme="uuid" id="uuid_id">62177b5a-116e-4347-8bee-7abffbe549fd</dc:identifier>
+        <dc:title>Szellemírtók 2.</dc:title>
+        <dc:creator opf:file-as="Naha, Ed" opf:role="aut">Naha, Ed</dc:creator>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (5.34.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:date>2012-02-08T19:19:11+00:00</dc:date>
+        <dc:description>&lt;P&gt;A parapszichológia veszélyes dolog…&lt;/P&gt; &lt;P&gt;Négy év múlva újabb veszély fenyegeti New Yorkot. Egy használaton kívüli föld alatti alagútban fortyogó nyálkafolyam mocorog: a szellemvilág ismét készül valamire. Ennek jeleként szilveszter reggelén befut a Titanic, és megelevenedik a híres zsarnokot, Kárpáti Vigót ábrázoló festmény. A szellemirtók ismét akcióba lépnek, s még a Szabadság-szobrot is mozgósítják…&lt;/P&gt;</dc:description>
+        <dc:publisher>e-konyvtar.com</dc:publisher>
+        <dc:language>hun</dc:language>
+        <meta name="calibre:author_link_map" content="{&quot;Naha, Ed&quot;: &quot;&quot;}"/>
+        <meta name="calibre:timestamp" content="2022-01-10T20:47:23.926953+00:00"/>
+        <meta name="calibre:title_sort" content="Szellemírtók 2."/>
+    </metadata>
+    <guide>
+        <reference type="cover" title="Borító" href="cover.jpg"/>
+    </guide>
+</package>

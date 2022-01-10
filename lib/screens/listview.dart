@@ -1,6 +1,6 @@
+import 'package:flutibre/models/book.dart';
 import 'package:flutter/material.dart';
 import 'package:flutibre/utils/scroll.dart';
-import 'package:flutibre/models/girl.dart';
 import 'package:flutibre/utils/dataservice.dart';
 import 'package:flutibre/screens/details_page.dart';
 
@@ -12,17 +12,17 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   final DataService data = DataService();
-  late List<ImageDetails> _images;
-  final columns = ['Price', 'Title', 'Photographer'];
+  late List<Book> _books;
+  final columns = ['Author', 'Title'];
   int? sortColumnIndex;
   bool isAscending = false;
-  late List<ImageDetails> selectedImages;
+  late List<Book> selectedBooks;
 
   @override
   void initState() {
     super.initState();
-    selectedImages = [];
-    this._images = data.getListGirls();
+    selectedBooks = [];
+    this._books = data.getListBooks();
   }
 
   @override
@@ -43,26 +43,23 @@ class _ListPageState extends State<ListPage> {
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
                   columns: getColumns(columns),
-                  rows: _images.map((data) {
+                  rows: _books.map((data) {
                     return DataRow(
-                      selected: selectedImages.contains(data),
+                      selected: selectedBooks.contains(data),
                       onSelectChanged: (value) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => DetailsPage(
-                                      imagePath: data.imagePath,
+                                      author: data.authorSort,
                                       title: data.title,
-                                      photographer: data.photographer,
-                                      price: data.price,
-                                      details: data.details,
+                                      imagePath: data.path,
                                       index: 0,
                                     )));
                       },
                       cells: [
-                        DataCell(Text(data.price)),
+                        DataCell(Text(data.authorSort)),
                         DataCell(Text(data.title)),
-                        DataCell(Text(data.photographer))
                       ],
                     );
                   }).toList(),
@@ -71,12 +68,12 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
-  onSelectedRow(bool selected, ImageDetails image) async {
+  onSelectedRow(bool selected, Book book) async {
     setState(() {
       if (selected) {
-        selectedImages.add(image);
+        selectedBooks.add(book);
       } else {
-        selectedImages.remove(image);
+        selectedBooks.remove(book);
       }
     });
   }
@@ -88,26 +85,25 @@ class _ListPageState extends State<ListPage> {
           ))
       .toList();
 
-  List<DataRow> getRows(List<ImageDetails> _images) =>
-      _images.map((ImageDetails _image) {
-        final cells = [_image.price, _image.title, _image.photographer];
+  List<DataRow> getRows(List<Book> _books) => _books.map((Book _book) {
+        final cells = [
+          _book.authorSort,
+          _book.title,
+        ];
 
         return DataRow(cells: getCells(cells));
       }).toList();
 
   List<DataCell> getCells(List<dynamic> cells) =>
-      cells.map((_images) => DataCell(Text('$data'))).toList();
+      cells.map((_books) => DataCell(Text('$data'))).toList();
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      _images.sort((image1, image2) =>
-          compareString(ascending, '${image1.price}', '${image2.price}'));
+      _books.sort((image1, image2) => compareString(
+          ascending, '${image1.authorSort}', '${image2.authorSort}'));
     } else if (columnIndex == 1) {
-      _images.sort((image1, image2) =>
+      _books.sort((image1, image2) =>
           compareString(ascending, image1.title, image2.title));
-    } else if (columnIndex == 2) {
-      _images.sort((image1, image2) =>
-          compareString(ascending, image1.photographer, image2.photographer));
     }
 
     setState(() {

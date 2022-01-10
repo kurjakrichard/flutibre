@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutibre/utils/scroll.dart';
-import 'package:flutibre/models/girl.dart';
+import 'package:flutibre/models/book.dart';
 import 'package:flutibre/screens/details_page.dart';
 import 'package:flutibre/utils/dataservice.dart';
 
@@ -8,7 +8,7 @@ class GridPage extends StatelessWidget {
   GridPage({Key? key}) : super(key: key);
 
   final DataService data = DataService();
-  List<ImageDetails> get _images => data.getListGirls();
+  List<Book> get _books => data.getListBooks();
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +33,9 @@ class GridPage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => DetailsPage(
-                      imagePath: _images[index].imagePath,
-                      title: _images[index].title,
-                      photographer: _images[index].photographer,
-                      price: _images[index].price,
-                      details: _images[index].details,
+                      author: _books[index].authorSort,
+                      title: _books[index].title,
+                      imagePath: _books[index].path,
                       index: index,
                     ),
                   ),
@@ -49,7 +47,7 @@ class GridPage extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     image: DecorationImage(
-                      image: AssetImage(_images[index].imagePath),
+                      image: AssetImage(_books[index].path),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -57,7 +55,7 @@ class GridPage extends StatelessWidget {
               ),
             );
           },
-          itemCount: _images.length,
+          itemCount: _books.length,
         ),
       ),
     );

@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier opf:scheme="calibre" id="calibre_id">2</dc:identifier>
+        <dc:identifier opf:scheme="uuid" id="uuid_id">b0cef90b-f0e4-4fc3-959d-519b02f05abd</dc:identifier>
+        <dc:title>Nagy szamárfül</dc:title>
+        <dc:creator opf:file-as="József, Romhányi" opf:role="aut">Romhányi József</dc:creator>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (5.34.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:date>2010-06-09T13:22:11.791000+00:00</dc:date>
+        <dc:language>hu</dc:language>
+        <meta name="calibre:author_link_map" content="{&quot;Romhányi József&quot;: &quot;&quot;}"/>
+        <meta name="calibre:timestamp" content="2022-01-10T20:47:24.069029+00:00"/>
+        <meta name="calibre:title_sort" content="Nagy szamárfül"/>
+    </metadata>
+    <guide>
+        <reference type="cover" title="Borító" href="cover.jpg"/>
+    </guide>
+</package>

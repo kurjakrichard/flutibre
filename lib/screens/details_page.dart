@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 
 class DetailsPage extends StatelessWidget {
-  final String imagePath;
+  final String author;
   final String title;
-  final String photographer;
-  final String price;
-  final String details;
+  final String imagePath;
   final int index;
+
   DetailsPage(
       {required this.imagePath,
+      required this.author,
       required this.title,
-      required this.photographer,
-      required this.price,
-      required this.details,
       required this.index});
   @override
   Widget build(BuildContext context) {
@@ -56,13 +53,13 @@ class DetailsPage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'By $photographer',
+                          'By $author',
                           style: TextStyle(
                             fontSize: 10,
                           ),
                         ),
                         Text(
-                          price,
+                          title,
                           style: TextStyle(
                             color: Colors.lightBlueAccent,
                             fontSize: 18,
@@ -71,12 +68,6 @@ class DetailsPage extends StatelessWidget {
                         ),
                         SizedBox(
                           height: 10,
-                        ),
-                        Text(
-                          details,
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
                         ),
                       ],
                     ),
