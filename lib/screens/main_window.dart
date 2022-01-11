@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 class MainWindow extends StatelessWidget {
   const MainWindow({Key? key}) : super(key: key);
+  final color = Colors.white;
+  final hovercolor = Colors.white70;
 
   @override
   Widget build(BuildContext context) {
@@ -18,31 +20,36 @@ class MainWindow extends StatelessWidget {
       ),
       backgroundColor: Colors.cyan[100],
       drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            DrawerHeader(
-              child: const Text("Navigation"),
-              decoration: BoxDecoration(color: Colors.grey[700]),
-            ),
-            ListTile(
-              title: const Text("List"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ListPage()),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text("Tiles"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => GridPage()),
-                );
-              },
-            ),
-          ],
+        child: Material(
+          color: Color.fromRGBO(98, 163, 191, 1),
+          child: ListView(
+            children: <Widget>[
+              DrawerHeader(
+                child: const Text("Navigation"),
+                decoration: BoxDecoration(color: Colors.grey[700]),
+              ),
+              ListTile(
+                title: const Text("List"),
+                hoverColor: hovercolor,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ListPage()),
+                  );
+                },
+              ),
+              ListTile(
+                title: const Text("Tiles"),
+                hoverColor: hovercolor,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GridPage()),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

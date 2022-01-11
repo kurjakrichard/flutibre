@@ -11,7 +11,7 @@ void main() => runApp(MaterialApp(
 
 class Flutibre extends StatelessWidget {
   Flutibre({Key? key}) : super(key: key);
-  final String path = readJsonData().toString();
+  //final String path = readJsonData().toString();
 
   @override
   Widget build(BuildContext context) {
