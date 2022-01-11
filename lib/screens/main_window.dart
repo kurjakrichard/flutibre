@@ -25,11 +25,17 @@ class MainWindow extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               DrawerHeader(
-                child: const Text("Navigation"),
-                decoration: BoxDecoration(color: Colors.grey[700]),
+                child: const Text(
+                  "Navigation",
+                  style: TextStyle(fontSize: 25, color: Colors.white),
+                ),
+                decoration: BoxDecoration(color: Colors.cyan[700]),
               ),
               ListTile(
-                title: const Text("List"),
+                title: const Text(
+                  "List",
+                  style: TextStyle(color: Colors.white),
+                ),
                 hoverColor: hovercolor,
                 onTap: () {
                   Navigator.push(
@@ -39,7 +45,10 @@ class MainWindow extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: const Text("Tiles"),
+                title: const Text(
+                  "Tiles",
+                  style: TextStyle(color: Colors.white),
+                ),
                 hoverColor: hovercolor,
                 onTap: () {
                   Navigator.push(
