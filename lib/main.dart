@@ -1,12 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutibre/screens/main_window.dart';
 import 'package:flutibre/utils/scroll.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import 'utils/config.dart';
 
 void main() => runApp(MaterialApp(
       home: Flutibre(),
@@ -15,7 +11,7 @@ void main() => runApp(MaterialApp(
 
 class Flutibre extends StatelessWidget {
   Flutibre({Key? key}) : super(key: key);
-  String path = readJsonData().toString();
+  final String path = readJsonData().toString();
 
   @override
   Widget build(BuildContext context) {

@@ -1,12 +1,8 @@
-import 'dart:html';
-
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutibre/models/book.dart';
 
 class DatabaseHelper {
   // ignore: unused_field

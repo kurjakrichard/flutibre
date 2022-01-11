@@ -6,7 +6,7 @@ class DetailsPage extends StatelessWidget {
   final String imagePath;
   final int index;
 
-  DetailsPage(
+  const DetailsPage(
       {required this.imagePath,
       required this.author,
       required this.title,

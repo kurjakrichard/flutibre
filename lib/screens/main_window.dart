@@ -9,12 +9,14 @@ class MainWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutibre'),
+        title: const Text('Flutibre',
+            style: TextStyle(color: Colors.white, fontSize: 20)),
         backgroundColor: const Color.fromRGBO(98, 163, 191, 1),
       ),
       body: Column(
-        children: [BookList(), BookList(), BookList()],
+        children: const [BookList(), BookList(), BookList()],
       ),
+      backgroundColor: Colors.cyan[100],
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
