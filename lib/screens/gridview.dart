@@ -14,8 +14,12 @@ class GridPage extends StatelessWidget {
   Widget build(BuildContext context) {
     int size = MediaQuery.of(context).size.width.round();
     return Scaffold(
+      backgroundColor: Colors.cyan[50],
       appBar: AppBar(
-        title: const Text("Tiles"),
+        title: Text(
+          "Tiles",
+          style: Theme.of(context).textTheme.headline1,
+        ),
       ),
       body: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -27,28 +31,30 @@ class GridPage extends StatelessWidget {
             mainAxisSpacing: 10,
           ),
           itemBuilder: (context, index) {
-            return RawMaterialButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DetailsPage(
-                      author: _books[index].authorSort,
-                      title: _books[index].title,
-                      imagePath: _books[index].path,
-                      index: index,
+            return Center(
+              child: RawMaterialButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailsPage(
+                        author: _books[index].author,
+                        title: _books[index].title,
+                        imagePath: _books[index].path,
+                        index: index,
+                      ),
                     ),
-                  ),
-                );
-              },
-              child: Hero(
-                tag: 'logo$index',
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    image: DecorationImage(
-                      image: AssetImage(_books[index].path),
-                      fit: BoxFit.cover,
+                  );
+                },
+                child: Hero(
+                  tag: 'logo$index',
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      image: DecorationImage(
+                        image: AssetImage(_books[index].path),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),

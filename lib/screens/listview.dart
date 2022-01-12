@@ -28,8 +28,12 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.cyan[50],
       appBar: AppBar(
-        title: const Text("List"),
+        title: Text(
+          "List",
+          style: Theme.of(context).textTheme.headline1,
+        ),
       ),
       body: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -51,14 +55,14 @@ class _ListPageState extends State<ListPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => DetailsPage(
-                                      author: data.authorSort,
+                                      author: data.author,
                                       title: data.title,
                                       imagePath: data.path,
                                       index: 0,
                                     )));
                       },
                       cells: [
-                        DataCell(Text(data.authorSort)),
+                        DataCell(Text(data.author)),
                         DataCell(Text(data.title)),
                       ],
                     );
@@ -87,7 +91,7 @@ class _ListPageState extends State<ListPage> {
 
   List<DataRow> getRows(List<Book> _books) => _books.map((Book _book) {
         final cells = [
-          _book.authorSort,
+          _book.author,
           _book.title,
         ];
 
@@ -99,11 +103,11 @@ class _ListPageState extends State<ListPage> {
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      _books.sort((image1, image2) => compareString(
-          ascending, '${image1.authorSort}', '${image2.authorSort}'));
+      _books.sort((book1, book2) =>
+          compareString(ascending, '${book1.author}', '${book2.author}'));
     } else if (columnIndex == 1) {
-      _books.sort((image1, image2) =>
-          compareString(ascending, image1.title, image2.title));
+      _books.sort(
+          (book1, book2) => compareString(ascending, book1.title, book2.title));
     }
 
     setState(() {

@@ -11,33 +11,36 @@ class MainWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutibre',
-            style: TextStyle(color: Colors.white, fontSize: 20)),
-        backgroundColor: const Color.fromRGBO(98, 163, 191, 1),
+        title: Text(
+          'Flutibre',
+          style: Theme.of(context).textTheme.headline1,
+        ),
       ),
       body: Column(
         children: const [BookList(), BookList(), BookList()],
       ),
-      backgroundColor: Colors.cyan[100],
+      backgroundColor: Colors.cyan[50],
       drawer: Drawer(
         child: Material(
-          color: Color.fromRGBO(98, 163, 191, 1),
+          color: const Color.fromRGBO(98, 163, 191, 0.5),
           child: ListView(
             children: <Widget>[
+              // ignore: prefer_const_constructors
               DrawerHeader(
-                child: const Text(
+                child: Text(
                   "Navigation",
-                  style: TextStyle(fontSize: 25, color: Colors.white),
+                  style: Theme.of(context).textTheme.headline1,
                 ),
-                decoration: BoxDecoration(color: Colors.cyan[700]),
+                decoration: const BoxDecoration(color: Colors.cyan),
               ),
               ListTile(
-                title: const Text(
+                title: Text(
                   "List",
-                  style: TextStyle(color: Colors.white),
+                  style: Theme.of(context).textTheme.subtitle1,
                 ),
                 hoverColor: hovercolor,
                 onTap: () {
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ListPage()),
@@ -45,12 +48,13 @@ class MainWindow extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: const Text(
+                title: Text(
                   "Tiles",
-                  style: TextStyle(color: Colors.white),
+                  style: Theme.of(context).textTheme.subtitle1,
                 ),
                 hoverColor: hovercolor,
                 onTap: () {
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => GridPage()),
@@ -76,9 +80,15 @@ class BookList extends StatelessWidget {
           leading: Image.network(
             'https://randomuser.me/api/portraits/men/71.jpg',
           ),
-          title: const Text('Ricsi'),
-          subtitle: Text('Programozó'),
-          tileColor: Color.fromRGBO(98, 163, 191, 0.5),
+          title: Text(
+            'Ricsi',
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+          subtitle: Text(
+            'Programozó',
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+          tileColor: const Color.fromRGBO(98, 163, 191, 0.5),
         ));
   }
 }
