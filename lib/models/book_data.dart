@@ -1,39 +1,38 @@
-class Book {
+class BookData {
   final int id;
-  final String title;
   final String author;
+  final String title;
   final String series;
   final String language;
   final String publisher;
-  final String path;
+  final String content;
+  final String cover;
 
-  Book(
-      {required this.id,
-      required this.title,
-      required this.author,
-      required this.series,
-      required this.language,
-      required this.publisher,
-      required this.path});
+  BookData(this.id, this.author, this.title, this.series, this.language,
+      this.publisher, this.content, this.cover);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Book &&
+      other is BookData &&
           runtimeType == other.runtimeType &&
           id == other.id &&
-          title == other.title &&
           author == other.author &&
+          title == other.title &&
           series == other.series &&
           language == other.language &&
-          path == other.path;
+          publisher == other.publisher &&
+          content == other.content &&
+          cover == other.cover;
 
   @override
   int get hashCode =>
       id.hashCode ^
-      title.hashCode ^
       author.hashCode ^
+      title.hashCode ^
       series.hashCode ^
       language.hashCode ^
-      path.hashCode;
+      publisher.hashCode ^
+      content.hashCode ^
+      cover.hashCode;
 }

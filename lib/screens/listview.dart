@@ -1,28 +1,30 @@
-import 'package:flutibre/models/book.dart';
+import 'package:flutibre/models/book_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutibre/utils/scroll.dart';
-import 'package:flutibre/utils/dataservice.dart';
 import 'package:flutibre/screens/details_page.dart';
 
 class ListPage extends StatefulWidget {
-  ListPage({Key? key}) : super(key: key);
+  ListPage({Key? key, required this.books}) : super(key: key);
 
-  _ListPageState createState() => _ListPageState();
+  final List<BookData> books;
+
+  @override
+  _ListPageState createState() => _ListPageState(books: books);
 }
 
 class _ListPageState extends State<ListPage> {
-  final DataService data = DataService();
-  late List<Book> _books;
-  final columns = ['Author', 'Title'];
+  _ListPageState({required this.books});
+  List<BookData> books;
+
+  final columns = ['Author', 'Title', 'Language'];
   int? sortColumnIndex;
   bool isAscending = false;
-  late List<Book> selectedBooks;
+  late List<BookData> selectedBook;
 
   @override
   void initState() {
     super.initState();
-    selectedBooks = [];
-    this._books = data.getListBooks();
+    selectedBook = [];
   }
 
   @override
@@ -47,23 +49,21 @@ class _ListPageState extends State<ListPage> {
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
                   columns: getColumns(columns),
-                  rows: _books.map((data) {
+                  rows: books.map((data) {
                     return DataRow(
-                      selected: selectedBooks.contains(data),
+                      selected: selectedBook.contains(data),
                       onSelectChanged: (value) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => DetailsPage(
-                                      author: data.author,
-                                      title: data.title,
-                                      imagePath: data.path,
-                                      index: 0,
-                                    )));
+                              builder: (context) => const BookDetailsPage(),
+                              settings: RouteSettings(arguments: data),
+                            ));
                       },
                       cells: [
                         DataCell(Text(data.author)),
                         DataCell(Text(data.title)),
+                        DataCell(Text(data.language)),
                       ],
                     );
                   }).toList(),
@@ -72,12 +72,12 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
-  onSelectedRow(bool selected, Book book) async {
+  onSelectedRow(bool selected, BookData book) async {
     setState(() {
       if (selected) {
-        selectedBooks.add(book);
+        selectedBook.add(book);
       } else {
-        selectedBooks.remove(book);
+        selectedBook.remove(book);
       }
     });
   }
@@ -89,24 +89,24 @@ class _ListPageState extends State<ListPage> {
           ))
       .toList();
 
-  List<DataRow> getRows(List<Book> _books) => _books.map((Book _book) {
+  List<DataRow> getRows(List<BookData> books) => books.map((BookData book) {
         final cells = [
-          _book.author,
-          _book.title,
+          book.author,
+          book.title,
         ];
 
         return DataRow(cells: getCells(cells));
       }).toList();
 
   List<DataCell> getCells(List<dynamic> cells) =>
-      cells.map((_books) => DataCell(Text('$data'))).toList();
+      cells.map((books) => DataCell(Text('$books'))).toList();
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      _books.sort((book1, book2) =>
+      books.sort((book1, book2) =>
           compareString(ascending, '${book1.author}', '${book2.author}'));
     } else if (columnIndex == 1) {
-      _books.sort(
+      books.sort(
           (book1, book2) => compareString(ascending, book1.title, book2.title));
     }
 

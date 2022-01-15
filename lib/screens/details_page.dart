@@ -1,108 +1,107 @@
+import 'package:flutibre/models/book_data.dart';
 import 'package:flutter/material.dart';
 
-class DetailsPage extends StatelessWidget {
-  final String author;
-  final String title;
-  final String imagePath;
-  final int index;
-
-  const DetailsPage(
-      {Key? key,
-      required this.imagePath,
-      required this.author,
-      required this.title,
-      required this.index})
-      : super(key: key);
+class BookDetailsPage extends StatelessWidget {
+  const BookDetailsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var routeSettings = ModalRoute.of(context)!.settings;
+    var book = routeSettings.arguments as BookData;
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Hero(
-              tag: 'logo$index',
+      appBar: AppBar(
+          title: Text(
+        book.title,
+        style: Theme.of(context).textTheme.headline1,
+      )),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30)),
+                  borderRadius: const BorderRadius.all(Radius.circular(30)),
                   image: DecorationImage(
-                    image: AssetImage(imagePath),
-                    fit: BoxFit.cover,
+                    image: AssetImage(book.cover),
+                    fit: BoxFit.fitHeight,
                   ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 260,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            SizedBox(
+              height: 260,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Title:  ${book.title}',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                        Text(
+                          'Author:  ${book.author}',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                        Text(
+                          'Language:  ${book.language}',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                        Text(
+                          'Content:  ${book.content}',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
                     children: <Widget>[
-                      Text(
-                        title,
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                      Text(
-                        'By $author',
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                      Text(
-                        title,
-                        style: Theme.of(context).textTheme.bodyText1,
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            backgroundColor: Colors.cyan,
+                          ),
+                          child: Text(
+                            'Back',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                        ),
                       ),
                       const SizedBox(
-                        height: 10,
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            backgroundColor: Colors.cyan,
+                          ),
+                          child: Text(
+                            'Open',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                        ),
                       ),
                     ],
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          backgroundColor: Colors.cyan,
-                        ),
-                        child: Text(
-                          'Back',
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          backgroundColor: Colors.cyan,
-                        ),
-                        child: Text(
-                          'Open',
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

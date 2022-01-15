@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutibre/utils/scroll.dart';
-import 'package:flutibre/models/book.dart';
+import 'package:flutibre/models/book_data.dart';
 import 'package:flutibre/screens/details_page.dart';
-import 'package:flutibre/utils/dataservice.dart';
 
 class GridPage extends StatelessWidget {
-  GridPage({Key? key}) : super(key: key);
+  const GridPage({Key? key, required this.books}) : super(key: key);
 
-  final DataService data = DataService();
-  List<Book> get _books => data.getListBooks();
+  final List<BookData> books;
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +33,11 @@ class GridPage extends StatelessWidget {
               child: RawMaterialButton(
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailsPage(
-                        author: _books[index].author,
-                        title: _books[index].title,
-                        imagePath: _books[index].path,
-                        index: index,
-                      ),
-                    ),
-                  );
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BookDetailsPage(),
+                        settings: RouteSettings(arguments: books[index]),
+                      ));
                 },
                 child: Hero(
                   tag: 'logo$index',
@@ -52,7 +45,7 @@ class GridPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       image: DecorationImage(
-                        image: AssetImage(_books[index].path),
+                        image: AssetImage(books[index].cover),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -61,7 +54,7 @@ class GridPage extends StatelessWidget {
               ),
             );
           },
-          itemCount: _books.length,
+          itemCount: books.length,
         ),
       ),
     );

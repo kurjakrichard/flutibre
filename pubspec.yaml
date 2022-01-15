@@ -32,6 +32,7 @@ dependencies:
   sqflite_common_ffi:
   path_provider:
   intl: ^0.17.0
+  equatable: ^2.0.3
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -77,16 +78,13 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: NotoSans
+    - family: Roboto
       fonts:
-        - asset: fonts/NotoSans-Regular.ttf
+        - asset: fonts/Roboto-Regular.ttf
           weight: 400
-        - asset: fonts/NotoSans-Italic.ttf
-          weight: 400
-        - asset: fonts/NotoSans-Bold.ttf
+        - asset: fonts/Roboto-Bold.ttf
           weight: 700
-        - asset: fonts/NotoSans-BoldItalic.ttf
-          weight: 700  
+
 
     
   

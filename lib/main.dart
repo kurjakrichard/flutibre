@@ -1,4 +1,5 @@
 import 'package:flutibre/screens/main_window.dart';
+import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutibre/utils/scroll.dart';
 import 'package:flutter/material.dart';
 
@@ -13,29 +14,42 @@ class Flutibre extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      scrollBehavior: MyCustomScrollBehavior(),
-      home: const MainWindow(),
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.cyan,
-          foregroundColor: Colors.white,
-        ),
-        fontFamily: 'NotoSans',
-        textTheme: const TextTheme(
-          //fejléc szövegek
-          headline1: TextStyle(
-              fontWeight: FontWeight.normal, color: Colors.white, fontSize: 16),
-          //belső fejléc szövegek
-          subtitle1: TextStyle(
-              fontWeight: FontWeight.normal, color: Colors.white, fontSize: 14),
-          //nagyobb belső szövegek
-          bodyText1: TextStyle(
-              fontWeight: FontWeight.normal, color: Colors.black, fontSize: 12),
-          //kisebb belső szövegek
-          bodyText2: TextStyle(
-              fontWeight: FontWeight.normal, color: Colors.black, fontSize: 11),
+    return BookRepositoryProvider(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        scrollBehavior: MyCustomScrollBehavior(),
+        home: MainWindow(),
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.cyan,
+            foregroundColor: Colors.white,
+          ),
+          scaffoldBackgroundColor: Colors.cyan[50],
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+              backgroundColor: Colors.cyan, foregroundColor: Colors.white),
+          fontFamily: 'Roboto',
+          textTheme: const TextTheme(
+            //fejléc szövegek
+            headline1: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.white,
+                fontSize: 18),
+            //belső fejléc szövegek
+            subtitle1: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.white,
+                fontSize: 16),
+            //nagyobb belső szövegek
+            bodyText1: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 15),
+            //kisebb belső szövegek
+            bodyText2: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 12),
+          ),
         ),
       ),
     );
