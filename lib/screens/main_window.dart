@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutibre/models/book_data.dart';
-import 'package:flutibre/screens/details_page.dart';
+import 'package:flutibre/screens/book_details_page.dart';
 import 'package:flutibre/screens/gridview.dart';
 import 'package:flutibre/screens/listview.dart';
 import 'package:flutibre/utils/book_repository.dart';
@@ -38,12 +38,11 @@ class MainWindow extends StatelessWidget {
                     book.cover,
                   ),
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const BookDetailsPage(),
-                          settings: RouteSettings(arguments: book),
-                        ));
+                    Navigator.pushNamed(
+                      context,
+                      '/bookDetails',
+                      arguments: book,
+                    );
                   },
                 )
             ],

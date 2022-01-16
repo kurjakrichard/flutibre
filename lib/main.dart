@@ -1,3 +1,4 @@
+import 'package:flutibre/screens/book_details_page.dart';
 import 'package:flutibre/screens/main_window.dart';
 import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutibre/utils/scroll.dart';
@@ -18,7 +19,11 @@ class Flutibre extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         scrollBehavior: MyCustomScrollBehavior(),
-        home: MainWindow(),
+        home: const MainWindow(),
+        initialRoute: '/',
+        routes: {
+          '/bookDetails': (context) => const BookDetailsPage(),
+        },
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.cyan,

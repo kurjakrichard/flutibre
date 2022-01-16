@@ -35,31 +35,33 @@ class BookDetailsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'Title:  ${book.title}',
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                        Text(
-                          'Author:  ${book.author}',
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                        Text(
-                          'Language:  ${book.language}',
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                        Text(
-                          'Content:  ${book.content}',
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                      ],
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Title:  ${book.title}',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          Text(
+                            'Author:  ${book.author}',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          Text(
+                            'Language:  ${book.language}',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          Text(
+                            'Content:  ${book.content}',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Row(

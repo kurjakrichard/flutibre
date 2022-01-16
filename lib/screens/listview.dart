@@ -1,7 +1,7 @@
 import 'package:flutibre/models/book_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutibre/utils/scroll.dart';
-import 'package:flutibre/screens/details_page.dart';
+import 'package:flutibre/screens/book_details_page.dart';
 
 class ListPage extends StatefulWidget {
   ListPage({Key? key, required this.books}) : super(key: key);
@@ -37,13 +37,8 @@ class _ListPageState extends State<ListPage> {
           style: Theme.of(context).textTheme.headline1,
         ),
       ),
-      body: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          scrollBehavior: MyCustomScrollBehavior(),
-          // Create a grid with columns fit to screen. If you change the scrollDirection to
-          // horizontal, this produces rows.
-
-          home: SingleChildScrollView(
+      body: SingleChildScrollView(
+          child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -53,12 +48,11 @@ class _ListPageState extends State<ListPage> {
                     return DataRow(
                       selected: selectedBook.contains(data),
                       onSelectChanged: (value) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const BookDetailsPage(),
-                              settings: RouteSettings(arguments: data),
-                            ));
+                        Navigator.pushNamed(
+                          context,
+                          '/bookDetails',
+                          arguments: data,
+                        );
                       },
                       cells: [
                         DataCell(Text(data.author)),
