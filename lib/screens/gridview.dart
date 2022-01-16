@@ -33,7 +33,7 @@ class GridPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushNamed(
                     context,
-                    '/bookDetails',
+                    '/book/${book.id}',
                     arguments: book,
                   );
                 },

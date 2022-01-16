@@ -45,20 +45,20 @@ class _ListPageState extends State<ListPage> {
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
                   columns: getColumns(columns),
-                  rows: books.map((data) {
+                  rows: books.map((book) {
                     return DataRow(
-                      selected: selectedBook.contains(data),
+                      selected: selectedBook.contains(book),
                       onSelectChanged: (value) {
                         Navigator.pushNamed(
                           context,
-                          '/bookDetails',
-                          arguments: data,
+                          '/book/${book.id}',
+                          arguments: book,
                         );
                       },
                       cells: [
-                        DataCell(Text(data.author)),
-                        DataCell(Text(data.title)),
-                        DataCell(Text(data.language)),
+                        DataCell(Text(book.author)),
+                        DataCell(Text(book.title)),
+                        DataCell(Text(book.language)),
                       ],
                     );
                   }).toList(),

@@ -1,8 +1,4 @@
-import 'dart:io';
 import 'package:flutibre/models/book_data.dart';
-import 'package:flutibre/screens/book_details_page.dart';
-import 'package:flutibre/screens/gridview.dart';
-import 'package:flutibre/screens/listview.dart';
 import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +36,7 @@ class MainWindow extends StatelessWidget {
                   onTap: () {
                     Navigator.pushNamed(
                       context,
-                      '/bookDetails',
+                      '/book/${book.id}',
                       arguments: book,
                     );
                   },
@@ -83,6 +79,7 @@ class MainWindow extends StatelessWidget {
                 ),
                 hoverColor: hovercolor,
                 onTap: () {
+                  Navigator.pop(context);
                   Navigator.pushNamed(
                     context,
                     '/listPage',
@@ -127,9 +124,8 @@ class BookElement extends StatelessWidget {
       child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           child: ListTile(
-            leading: Image.file(
-              File(book.cover),
-            ),
+            leading: Image(image: AssetImage(book.cover)),
+            //Image.file(File(book.cover),),
             title: Text(
               book.author,
               style: Theme.of(context).textTheme.bodyText1,

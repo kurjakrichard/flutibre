@@ -1,3 +1,5 @@
+import 'package:flutter/rendering.dart';
+
 class BookData {
   final int id;
   final String author;
@@ -8,7 +10,7 @@ class BookData {
   final String content;
   final String cover;
 
-  BookData(this.id, this.author, this.title, this.series, this.language,
+  const BookData(this.id, this.author, this.title, this.series, this.language,
       this.publisher, this.content, this.cover);
 
   @override
