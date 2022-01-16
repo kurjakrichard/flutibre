@@ -4,17 +4,16 @@ import 'package:flutibre/utils/scroll.dart';
 import 'package:flutibre/screens/book_details_page.dart';
 
 class ListPage extends StatefulWidget {
-  ListPage({Key? key, required this.books}) : super(key: key);
+  ListPage({Key? key}) : super(key: key);
 
-  final List<BookData> books;
+  // final List<BookData> books;
 
   @override
-  _ListPageState createState() => _ListPageState(books: books);
+  _ListPageState createState() => _ListPageState();
 }
 
 class _ListPageState extends State<ListPage> {
-  _ListPageState({required this.books});
-  List<BookData> books;
+  late List<BookData> books;
 
   final columns = ['Author', 'Title', 'Language'];
   int? sortColumnIndex;
@@ -29,6 +28,8 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
+    var routeSettings = ModalRoute.of(context)!.settings;
+    var books = routeSettings.arguments as List<BookData>;
     return Scaffold(
       backgroundColor: Colors.cyan[50],
       appBar: AppBar(

@@ -83,12 +83,10 @@ class MainWindow extends StatelessWidget {
                 ),
                 hoverColor: hovercolor,
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
+                  Navigator.pushNamed(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ListPage(books: repository.books)),
+                    '/listPage',
+                    arguments: repository.books,
                   );
                 },
               ),
@@ -100,11 +98,10 @@ class MainWindow extends StatelessWidget {
                 hoverColor: hovercolor,
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(
+                  Navigator.pushNamed(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            GridPage(books: repository.books)),
+                    '/gridPage',
+                    arguments: repository.books,
                   );
                 },
               ),

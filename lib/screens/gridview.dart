@@ -4,12 +4,12 @@ import 'package:flutibre/models/book_data.dart';
 import 'package:flutibre/screens/book_details_page.dart';
 
 class GridPage extends StatelessWidget {
-  const GridPage({Key? key, required this.books}) : super(key: key);
-
-  final List<BookData> books;
+  GridPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var routeSettings = ModalRoute.of(context)!.settings;
+    var books = routeSettings.arguments as List<BookData>;
     int size = MediaQuery.of(context).size.width.round();
     return Scaffold(
       backgroundColor: Colors.cyan[50],

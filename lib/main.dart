@@ -1,4 +1,6 @@
 import 'package:flutibre/screens/book_details_page.dart';
+import 'package:flutibre/screens/gridview.dart';
+import 'package:flutibre/screens/listview.dart';
 import 'package:flutibre/screens/main_window.dart';
 import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutibre/utils/scroll.dart';
@@ -23,6 +25,8 @@ class Flutibre extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/bookDetails': (context) => const BookDetailsPage(),
+          '/listPage': (context) => ListPage(),
+          '/gridPage': (context) => GridPage(),
         },
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
