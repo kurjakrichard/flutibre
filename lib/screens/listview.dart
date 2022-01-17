@@ -1,7 +1,5 @@
 import 'package:flutibre/models/book_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutibre/utils/scroll.dart';
-import 'package:flutibre/screens/book_details_page.dart';
 
 class ListPage extends StatefulWidget {
   ListPage({Key? key}) : super(key: key);
@@ -29,7 +27,8 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     var routeSettings = ModalRoute.of(context)!.settings;
-    var books = routeSettings.arguments as List<BookData>;
+    List<BookData> books = routeSettings.arguments as List<BookData>;
+
     return Scaffold(
       backgroundColor: Colors.cyan[50],
       appBar: AppBar(
@@ -43,26 +42,28 @@ class _ListPageState extends State<ListPage> {
               scrollDirection: Axis.vertical,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: getColumns(columns),
-                  rows: books.map((book) {
-                    return DataRow(
-                      selected: selectedBook.contains(book),
-                      onSelectChanged: (value) {
-                        Navigator.pushNamed(
-                          context,
-                          '/book/${book.id}',
-                          arguments: book,
-                        );
-                      },
-                      cells: [
-                        DataCell(Text(book.author)),
-                        DataCell(Text(book.title)),
-                        DataCell(Text(book.language)),
-                      ],
-                    );
-                  }).toList(),
-                ),
+                child: Builder(builder: (context) {
+                  return DataTable(
+                    columns: getColumns(columns),
+                    rows: books.map((book) {
+                      return DataRow(
+                        selected: selectedBook.contains(book),
+                        onSelectChanged: (value) {
+                          Navigator.pushNamed(
+                            context,
+                            '/book/${book.id}',
+                            arguments: book,
+                          );
+                        },
+                        cells: [
+                          DataCell(Text(book.author)),
+                          DataCell(Text(book.title)),
+                          DataCell(Text(book.language)),
+                        ],
+                      );
+                    }).toList(),
+                  );
+                }),
               ))),
     );
   }
@@ -85,10 +86,7 @@ class _ListPageState extends State<ListPage> {
       .toList();
 
   List<DataRow> getRows(List<BookData> books) => books.map((BookData book) {
-        final cells = [
-          book.author,
-          book.title,
-        ];
+        final cells = [book.author, book.title, book.language];
 
         return DataRow(cells: getCells(cells));
       }).toList();
@@ -99,10 +97,13 @@ class _ListPageState extends State<ListPage> {
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
       books.sort((book1, book2) =>
-          compareString(ascending, '${book1.author}', '${book2.author}'));
+          compareString(ascending, book1.author, book2.author));
     } else if (columnIndex == 1) {
       books.sort(
           (book1, book2) => compareString(ascending, book1.title, book2.title));
+    } else if (columnIndex == 2) {
+      books.sort((book1, book2) =>
+          compareString(ascending, book1.language, book2.language));
     }
 
     setState(() {

@@ -48,7 +48,9 @@ class MainWindow extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         backgroundColor: Colors.cyan,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/modifyBookPage');
+        },
       ),
       drawer: Drawer(
         child: Material(
@@ -75,7 +77,7 @@ class MainWindow extends StatelessWidget {
               ListTile(
                 title: Text(
                   "List",
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.headline1,
                 ),
                 hoverColor: hovercolor,
                 onTap: () {
@@ -90,7 +92,7 @@ class MainWindow extends StatelessWidget {
               ListTile(
                 title: Text(
                   "Tiles",
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.headline1,
                 ),
                 hoverColor: hovercolor,
                 onTap: () {

@@ -1,3 +1,4 @@
+import 'package:flutibre/screens/modify_book.dart';
 import 'package:flutibre/screens/book_details_page.dart';
 import 'package:flutibre/screens/gridview.dart';
 import 'package:flutibre/screens/listview.dart';
@@ -6,10 +7,7 @@ import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutibre/utils/scroll.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MaterialApp(
-      home: Flutibre(),
-      debugShowCheckedModeBanner: false,
-    ));
+void main() => runApp(const Flutibre());
 
 class Flutibre extends StatelessWidget {
   const Flutibre({Key? key}) : super(key: key);
@@ -27,6 +25,7 @@ class Flutibre extends StatelessWidget {
             //'/bookDetails': (context) => const BookDetailsPage(),
             '/listPage': (context) => ListPage(),
             '/gridPage': (context) => GridPage(),
+            '/modifyBookPage': (context) => ModifyBookPage(),
           },
           onGenerateRoute: (settings) {
             if (settings.name?.startsWith('/book/') ?? false) {
@@ -48,6 +47,12 @@ class Flutibre extends StatelessWidget {
             floatingActionButtonTheme: const FloatingActionButtonThemeData(
                 backgroundColor: Colors.cyan, foregroundColor: Colors.white),
             fontFamily: 'Roboto',
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                onPrimary: Colors.white,
+                primary: Colors.cyan,
+              ),
+            ),
             textTheme: const TextTheme(
               //fejléc szövegek
               headline1: TextStyle(
@@ -57,8 +62,17 @@ class Flutibre extends StatelessWidget {
               //belső fejléc szövegek
               subtitle1: TextStyle(
                   fontWeight: FontWeight.normal,
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 16),
+              subtitle2: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black,
+                  fontSize: 15),
+              //gombszövegek
+              headline3: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white,
+                  fontSize: 15),
               //nagyobb belső szövegek
               bodyText1: TextStyle(
                   fontWeight: FontWeight.normal,
@@ -69,6 +83,7 @@ class Flutibre extends StatelessWidget {
                   fontWeight: FontWeight.normal,
                   color: Colors.black,
                   fontSize: 12),
+              //vastag belső szövegek
               headline2: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,

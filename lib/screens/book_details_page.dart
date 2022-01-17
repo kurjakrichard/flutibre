@@ -17,24 +17,23 @@ class BookDetailsPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text('Are you sure?'),
+                  title: const Text('Are you sure?'),
                   actions: [
                     TextButton(
-                      child: Text('Cancel'),
+                      child: const Text('Cancel'),
                       onPressed: () {
                         Navigator.pop(context);
                       },
                     ),
                     TextButton(
-                      child: Text('Delete'),
+                      child: const Text('Delete'),
                       onPressed: () {
                         Navigator.pop(context);
-
                         BookRepository.of(context).onDeleteBook(book.id);
                         Navigator.pop(context);
                       },
@@ -92,40 +91,42 @@ class BookDetailsPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            backgroundColor: Colors.cyan,
-                          ),
-                          child: Text(
-                            'Back',
-                            style: Theme.of(context).textTheme.subtitle1,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            backgroundColor: Colors.cyan,
-                          ),
-                          child: Text(
-                            'Open',
-                            style: Theme.of(context).textTheme.subtitle1,
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              backgroundColor: Colors.cyan,
+                            ),
+                            child: Text(
+                              'Back',
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              backgroundColor: Colors.cyan,
+                            ),
+                            child: Text(
+                              'Open',
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),
