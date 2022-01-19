@@ -41,7 +41,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
   void initState() {
     _repositoryData = BookRepositoryData(
       [
-        BookData(
+        const BookData(
           1,
           'R.R. Tolkien',
           'A gyűrűk ura',
@@ -51,7 +51,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/1.jpg',
         ),
-        BookData(
+        const BookData(
           2,
           'Robert Jordan',
           'Az alkony keresztútján',
@@ -61,7 +61,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           'Ide egy nagyon hosszú szoveget fogok írni. Megnézzük, hogy tördeli be',
           'images/2.jpg',
         ),
-        BookData(
+        const BookData(
           3,
           'Stephen King',
           'Ragyogás',
@@ -71,7 +71,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/3.jpg',
         ),
-        BookData(
+        const BookData(
           4,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -81,7 +81,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/4.jpg',
         ),
-        BookData(
+        const BookData(
           5,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -91,7 +91,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/5.jpg',
         ),
-        BookData(
+        const BookData(
           6,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -101,7 +101,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/6.jpg',
         ),
-        BookData(
+        const BookData(
           7,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -111,7 +111,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/7.jpg',
         ),
-        BookData(
+        const BookData(
           8,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -121,7 +121,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/8.jpg',
         ),
-        BookData(
+        const BookData(
           9,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -131,7 +131,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/9.jpg',
         ),
-        BookData(
+        const BookData(
           10,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -141,7 +141,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/10.jpg',
         ),
-        BookData(
+        const BookData(
           11,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -151,7 +151,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/11.jpg',
         ),
-        BookData(
+        const BookData(
           12,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -161,7 +161,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/12.jpg',
         ),
-        BookData(
+        const BookData(
           13,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -171,7 +171,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/13.jpg',
         ),
-        BookData(
+        const BookData(
           14,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -181,7 +181,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/14.jpg',
         ),
-        BookData(
+        const BookData(
           15,
           'Robert Jordan',
           'Újjászületett sárkány',
@@ -191,7 +191,7 @@ class _BookRepositoryProviderState extends State<BookRepositoryProvider> {
           '',
           'images/15.jpg',
         ),
-        BookData(
+        const BookData(
           16,
           'Robert Jordan',
           'Újjászületett sárkány',

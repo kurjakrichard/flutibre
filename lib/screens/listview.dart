@@ -1,22 +1,20 @@
 import 'package:flutibre/models/book_data.dart';
+import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutter/material.dart';
 
 class ListPage extends StatefulWidget {
-  ListPage({Key? key}) : super(key: key);
-
-  // final List<BookData> books;
+  const ListPage({Key? key}) : super(key: key);
 
   @override
   _ListPageState createState() => _ListPageState();
 }
 
 class _ListPageState extends State<ListPage> {
-  late List<BookData> books;
-
   final columns = ['Author', 'Title', 'Language'];
   int? sortColumnIndex;
   bool isAscending = false;
   late List<BookData> selectedBook;
+  late List<BookData> books;
 
   @override
   void initState() {
@@ -26,8 +24,8 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    var routeSettings = ModalRoute.of(context)!.settings;
-    List<BookData> books = routeSettings.arguments as List<BookData>;
+    var repository = BookRepository.of(context);
+    var books = repository.books;
 
     return Scaffold(
       backgroundColor: Colors.cyan[50],

@@ -1,3 +1,4 @@
+import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutibre/models/book_data.dart';
 
@@ -6,6 +7,8 @@ class GridPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var repository = BookRepository.of(context);
+    var books = repository.books;
     int size = MediaQuery.of(context).size.width.round();
     return Scaffold(
       backgroundColor: Colors.cyan[50],
@@ -16,8 +19,6 @@ class GridPage extends StatelessWidget {
         ),
       ),
       body: Builder(builder: (context) {
-        var routeSettings = ModalRoute.of(context)!.settings;
-        var books = routeSettings.arguments as List<BookData>;
         return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: (size / 200).round(),

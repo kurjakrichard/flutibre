@@ -27,14 +27,17 @@ class ModifyBookPage extends StatelessWidget {
                     keyboardType: TextInputType.text,
                     onSaved: (value) {},
                   ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                        icon: Icon(Icons.person),
-                        labelText: 'Author',
-                        hintText: 'Book author',
-                        border: OutlineInputBorder()),
-                    keyboardType: TextInputType.name,
-                    onSaved: (value) {},
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                          icon: Icon(Icons.person),
+                          labelText: 'Author',
+                          hintText: 'Book author',
+                          border: OutlineInputBorder()),
+                      keyboardType: TextInputType.name,
+                      onSaved: (value) {},
+                    ),
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
