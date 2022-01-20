@@ -1,13 +1,21 @@
+import 'package:flutibre/models/book_data.dart';
+import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class ModifyBookPage extends StatelessWidget {
-  const ModifyBookPage({Key? key}) : super(key: key);
+  const ModifyBookPage({Key? key, required this.title, required this.size})
+      : super(key: key);
+
+  final int size;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add book'),
+        title: Text(title),
       ),
       body: Center(
         child: Container(
@@ -15,47 +23,70 @@ class ModifyBookPage extends StatelessWidget {
           alignment: Alignment.center,
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Form(
+            child: FormBuilder(
               child: Column(
                 children: [
-                  TextFormField(
+                  FormBuilderTextField(
+                    name: 'title',
                     decoration: const InputDecoration(
                         icon: Icon(Icons.book),
                         labelText: 'Title',
                         hintText: 'Book title',
                         border: OutlineInputBorder()),
                     keyboardType: TextInputType.text,
-                    onSaved: (value) {},
+                    validator:
+                        MinLengthValidator(1, errorText: 'Title is required!'),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                    child: TextFormField(
+                    child: FormBuilderTextField(
+                      name: 'author',
                       decoration: const InputDecoration(
                           icon: Icon(Icons.person),
                           labelText: 'Author',
                           hintText: 'Book author',
                           border: OutlineInputBorder()),
                       keyboardType: TextInputType.name,
-                      onSaved: (value) {},
+                      validator: MinLengthValidator(1,
+                          errorText: 'Author is required!'),
                     ),
                   ),
-                  TextFormField(
+                  FormBuilderTextField(
+                    name: 'language',
                     decoration: const InputDecoration(
                         icon: Icon(Icons.language),
                         labelText: 'Language',
                         hintText: 'Language',
                         border: OutlineInputBorder()),
                     keyboardType: TextInputType.text,
-                    onSaved: (value) {},
+                    validator: MinLengthValidator(1,
+                        errorText: 'Language is required!'),
                   ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                          child: Text('Create',
-                              style: Theme.of(context).textTheme.headline3),
-                          onPressed: () {}),
+                      child: Builder(builder: (context) {
+                        return ElevatedButton(
+                            child: Text('Create',
+                                style: Theme.of(context).textTheme.headline3),
+                            onPressed: () {
+                              var form = FormBuilder.of(context)!;
+                              if (form.saveAndValidate()) {
+                                var book = BookData(
+                                    size + 1,
+                                    form.value['author']!,
+                                    form.value['title']!,
+                                    '',
+                                    form.value['language']!,
+                                    '',
+                                    '',
+                                    'images/16.jpg');
+                                BookRepository.of(context).onBookAdded(book);
+                                Navigator.pop(context);
+                              }
+                            });
+                      }),
                     ),
                   )
                 ],

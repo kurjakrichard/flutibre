@@ -29,10 +29,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  #sqlite adatbázishoz kell
   sqflite_common_ffi:
+  #ez nem tudom mihez kell
   path_provider:
+  #ez nem tudom mihez kell
   intl: ^0.17.0
+  #ez nem tudom mihez kell
   equatable: ^2.0.3
+  #inputmezők validálásához kell
+  form_field_validator: ^1.1.0
+  #inputmezőkhöz kell
+  flutter_form_builder: ^7.0.0
+
 
 
   # The following adds the Cupertino Icons font to your application.
