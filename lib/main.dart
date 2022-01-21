@@ -19,13 +19,14 @@ class Flutibre extends StatelessWidget {
       child: Builder(builder: (context) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
+          //Scrolling do not work on Linux desktop without this.
           scrollBehavior: MyCustomScrollBehavior(),
           home: const MainWindow(),
           routes: {
             //'/bookDetails': (context) => const BookDetailsPage(),
-            '/listPage': (context) => const ListPage(),
-            '/gridPage': (context) => GridPage(),
-            '/modifyBookPage': (context) =>
+            '/ListPage': (context) => const ListPage(),
+            '/GridPage': (context) => const GridPage(),
+            '/AddBookPage': (context) =>
                 const ModifyBookPage(title: 'Add book', size: 16),
           },
           onGenerateRoute: (settings) {

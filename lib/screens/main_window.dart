@@ -17,39 +17,44 @@ class MainWindow extends StatelessWidget {
           style: Theme.of(context).textTheme.headline1,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Builder(builder: (context) {
-          return Column(
-            children: [
-              for (var book in repository.books)
-                BookElement(
-                  book: BookData(
-                    book.id,
-                    book.author,
-                    book.title,
-                    book.series,
-                    book.language,
-                    book.publisher,
-                    book.content,
-                    book.cover,
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/book/${book.id}',
-                      arguments: book,
-                    );
-                  },
-                )
-            ],
-          );
-        }),
-      ),
+      body: Builder(builder: (context) {
+        return ListView.separated(
+          cacheExtent: 0,
+          itemBuilder: (context, index) {
+            var book = repository.books[index];
+            return BookElement(
+              book: BookData(
+                book.id,
+                book.author,
+                book.title,
+                book.series,
+                book.language,
+                book.publisher,
+                book.content,
+                book.cover,
+              ),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/book/${book.id}',
+                  arguments: book,
+                );
+              },
+            );
+          },
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          separatorBuilder: (context, index) => const Divider(
+            height: 6,
+            color: Colors.transparent,
+          ),
+          itemCount: repository.books.length,
+        );
+      }),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         backgroundColor: Colors.cyan,
         onPressed: () {
-          Navigator.pushNamed(context, '/modifyBookPage');
+          Navigator.pushNamed(context, '/AddBookPage');
         },
       ),
       drawer: Drawer(
@@ -84,7 +89,7 @@ class MainWindow extends StatelessWidget {
                   Navigator.pop(context);
                   Navigator.pushNamed(
                     context,
-                    '/listPage',
+                    '/ListPage',
                     arguments: repository.books,
                   );
                 },
@@ -99,7 +104,7 @@ class MainWindow extends StatelessWidget {
                   Navigator.pop(context);
                   Navigator.pushNamed(
                     context,
-                    '/gridPage',
+                    '/GridPage',
                     arguments: repository.books,
                   );
                 },
@@ -123,21 +128,22 @@ class BookElement extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-          child: ListTile(
-            leading: Image(image: AssetImage(book.cover)),
-            //Image.file(File(book.cover),),
-            title: Text(
-              book.author,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            subtitle: Text(
-              book.title,
-              style: Theme.of(context).textTheme.bodyText2,
-            ),
-            tileColor: const Color.fromRGBO(98, 163, 191, 0.5),
-          )),
+      child: ListTile(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+
+        leading: Image(image: AssetImage(book.cover)),
+        //Image.file(File(book.cover),),
+        title: Text(
+          book.author,
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
+        subtitle: Text(
+          book.title,
+          style: Theme.of(context).textTheme.bodyText2,
+        ),
+        tileColor: const Color.fromRGBO(98, 163, 191, 0.5),
+      ),
     );
   }
 }
