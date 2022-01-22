@@ -27,7 +27,7 @@ class Flutibre extends StatelessWidget {
             '/ListPage': (context) => const ListPage(),
             '/GridPage': (context) => const GridPage(),
             '/AddBookPage': (context) =>
-                const ModifyBookPage(title: 'Add book', size: 16),
+                const ModifyBookPage(title: 'Add book'),
           },
           onGenerateRoute: (settings) {
             if (settings.name?.startsWith('/book/') ?? false) {

@@ -54,7 +54,8 @@ class MainWindow extends StatelessWidget {
         child: const Icon(Icons.add),
         backgroundColor: Colors.cyan,
         onPressed: () {
-          Navigator.pushNamed(context, '/AddBookPage');
+          Navigator.pushNamed(context, '/AddBookPage',
+              arguments: {'size': repository.books.length});
         },
       ),
       drawer: Drawer(

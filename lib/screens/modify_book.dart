@@ -5,10 +5,8 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class ModifyBookPage extends StatelessWidget {
-  const ModifyBookPage({Key? key, required this.title, required this.size})
-      : super(key: key);
+  const ModifyBookPage({Key? key, required this.title}) : super(key: key);
 
-  final int size;
   final String title;
 
   @override
@@ -94,6 +92,11 @@ class ModifyBookPage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Builder(builder: (context) {
+                          dynamic args =
+                              ModalRoute.of(context)!.settings.arguments;
+                          int size = args!['size'] as int;
+                          size++;
+
                           return ElevatedButton(
                               child: Text('Create',
                                   style: Theme.of(context).textTheme.headline3),
@@ -102,14 +105,14 @@ class ModifyBookPage extends StatelessWidget {
 
                                 if (form.saveAndValidate()) {
                                   var book = BookData(
-                                      size + 1,
+                                      size,
                                       form.value['author']!,
                                       form.value['title']!,
                                       '',
                                       form.value['language']!,
                                       '',
                                       '',
-                                      'images/16.jpg');
+                                      'images/$size.jpg');
                                   BookRepository.of(context).onBookAdded(book);
                                   Navigator.pop(context);
                                 }
