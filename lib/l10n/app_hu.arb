@@ -1,0 +1,18 @@
+{
+    "@@locale": "hu",
+    "ok": "OK",
+    "cancel": "Mégse",
+    "navigation": "Navigáció",
+    "list": "Lista nézet",
+    "tiles": "Rács nézet",
+    "addbook": "Könyv hozzáadása",
+    "title": "Cím",
+    "author": "Szerző",
+    "language": "Nyelv",
+    "create": "Hozzáad",
+    "confirmation": "Biztos vagy benne?",
+    "titlerequired": "A cím megadása kötelező!",
+    "authorrequired": "A szerző megadása kötelező!",
+    "languagerequired": "A nyelv megadása kötelező!",
+    "wanttodelete": "Biztosan törlöd?"
+}

@@ -3,6 +3,7 @@ import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ModifyBookPage extends StatelessWidget {
   const ModifyBookPage({Key? key, required this.title}) : super(key: key);
@@ -16,17 +17,17 @@ class ModifyBookPage extends StatelessWidget {
         var result = await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Are you sure?'),
+            title: Text(AppLocalizations.of(context)!.confirmation),
             actions: [
               TextButton(
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(context)!.cancel),
                 onPressed: () {
                   Navigator.pop(context, false);
                 },
               ),
               TextButton(
-                child: const Text(
-                  'Leave',
+                child: Text(
+                  AppLocalizations.of(context)!.ok,
                 ),
                 onPressed: () {
                   Navigator.pop(context, true);
@@ -53,39 +54,42 @@ class ModifyBookPage extends StatelessWidget {
                   children: [
                     FormBuilderTextField(
                       name: 'title',
-                      decoration: const InputDecoration(
-                          icon: Icon(Icons.book),
-                          labelText: 'Title',
-                          hintText: 'Book title',
-                          border: OutlineInputBorder()),
+                      decoration: InputDecoration(
+                          icon: const Icon(Icons.book),
+                          labelText: AppLocalizations.of(context)!.title,
+                          hintText: AppLocalizations.of(context)!.title,
+                          border: const OutlineInputBorder()),
                       keyboardType: TextInputType.text,
                       validator: MinLengthValidator(1,
-                          errorText: 'Title is required!'),
+                          errorText:
+                              AppLocalizations.of(context)!.titlerequired),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                       child: FormBuilderTextField(
                         name: 'author',
-                        decoration: const InputDecoration(
-                            icon: Icon(Icons.person),
-                            labelText: 'Author',
-                            hintText: 'Book author',
-                            border: OutlineInputBorder()),
+                        decoration: InputDecoration(
+                            icon: const Icon(Icons.person),
+                            labelText: AppLocalizations.of(context)!.author,
+                            hintText: AppLocalizations.of(context)!.author,
+                            border: const OutlineInputBorder()),
                         keyboardType: TextInputType.name,
                         validator: MinLengthValidator(1,
-                            errorText: 'Author is required!'),
+                            errorText:
+                                AppLocalizations.of(context)!.authorrequired),
                       ),
                     ),
                     FormBuilderTextField(
                       name: 'language',
-                      decoration: const InputDecoration(
-                          icon: Icon(Icons.language),
-                          labelText: 'Language',
-                          hintText: 'Language',
-                          border: OutlineInputBorder()),
+                      decoration: InputDecoration(
+                          icon: const Icon(Icons.language),
+                          labelText: AppLocalizations.of(context)!.language,
+                          hintText: AppLocalizations.of(context)!.language,
+                          border: const OutlineInputBorder()),
                       keyboardType: TextInputType.text,
                       validator: MinLengthValidator(1,
-                          errorText: 'Language is required!'),
+                          errorText:
+                              AppLocalizations.of(context)!.languagerequired),
                     ),
                     Align(
                       alignment: Alignment.centerRight,
@@ -96,9 +100,8 @@ class ModifyBookPage extends StatelessWidget {
                               ModalRoute.of(context)!.settings.arguments;
                           int size = args!['size'] as int;
                           size++;
-
                           return ElevatedButton(
-                              child: Text('Create',
+                              child: Text(AppLocalizations.of(context)!.create,
                                   style: Theme.of(context).textTheme.headline3),
                               onPressed: () {
                                 var form = FormBuilder.of(context)!;

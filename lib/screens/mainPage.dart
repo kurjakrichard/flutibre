@@ -1,9 +1,12 @@
 import 'package:flutibre/models/book_data.dart';
 import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class MainWindow extends StatelessWidget {
-  const MainWindow({Key? key}) : super(key: key);
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key, required this.onBookTapped}) : super(key: key);
+
+  final void Function(BookData) onBookTapped;
   final color = Colors.white;
   final hovercolor = const Color.fromRGBO(98, 163, 191, 1);
 
@@ -34,11 +37,7 @@ class MainWindow extends StatelessWidget {
                 book.cover,
               ),
               onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  '/book/${book.id}',
-                  arguments: book,
-                );
+                onBookTapped(book);
               },
             );
           },
@@ -68,7 +67,7 @@ class MainWindow extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        "Navigation",
+                        AppLocalizations.of(context)!.navigation,
                         style: Theme.of(context).textTheme.headline1,
                       ),
                       const SizedBox(
@@ -82,7 +81,7 @@ class MainWindow extends StatelessWidget {
               ),
               ListTile(
                 title: Text(
-                  "List",
+                  AppLocalizations.of(context)!.list,
                   style: Theme.of(context).textTheme.headline1,
                 ),
                 hoverColor: hovercolor,
@@ -97,7 +96,7 @@ class MainWindow extends StatelessWidget {
               ),
               ListTile(
                 title: Text(
-                  "Tiles",
+                  AppLocalizations.of(context)!.tiles,
                   style: Theme.of(context).textTheme.headline1,
                 ),
                 hoverColor: hovercolor,

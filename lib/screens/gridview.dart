@@ -1,6 +1,7 @@
 import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutibre/models/book_data.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GridPage extends StatelessWidget {
   const GridPage({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class GridPage extends StatelessWidget {
       backgroundColor: Colors.cyan[50],
       appBar: AppBar(
         title: Text(
-          "Tiles",
+          AppLocalizations.of(context)!.tiles,
           style: Theme.of(context).textTheme.headline1,
         ),
       ),

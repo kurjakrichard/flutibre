@@ -1,11 +1,14 @@
+import 'package:flutibre/models/book_data.dart';
 import 'package:flutibre/screens/modify_book.dart';
 import 'package:flutibre/screens/book_details_page.dart';
 import 'package:flutibre/screens/gridview.dart';
-import 'package:flutibre/screens/listview.dart';
-import 'package:flutibre/screens/main_window.dart';
+import 'package:flutibre/screens/datatable_view.dart';
+import 'package:flutibre/screens/mainPage.dart';
 import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutibre/utils/scroll.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() => runApp(const Flutibre());
 
@@ -18,16 +21,28 @@ class Flutibre extends StatelessWidget {
     return BookRepositoryProvider(
       child: Builder(builder: (context) {
         return MaterialApp(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', ''),
+            Locale('hu', ''),
+          ],
+
+          locale: const Locale('hu'),
           debugShowCheckedModeBanner: false,
           //Scrolling do not work on Linux desktop without this.
           scrollBehavior: MyCustomScrollBehavior(),
-          home: const MainWindow(),
+          home: const ResponsiveHomePage(),
           routes: {
             //'/bookDetails': (context) => const BookDetailsPage(),
             '/ListPage': (context) => const ListPage(),
             '/GridPage': (context) => const GridPage(),
             '/AddBookPage': (context) =>
-                const ModifyBookPage(title: 'Add book'),
+                ModifyBookPage(title: AppLocalizations.of(context)!.addbook),
           },
           onGenerateRoute: (settings) {
             if (settings.name?.startsWith('/book/') ?? false) {
@@ -95,5 +110,56 @@ class Flutibre extends StatelessWidget {
         );
       }),
     );
+  }
+}
+
+class ResponsiveHomePage extends StatefulWidget {
+  const ResponsiveHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<ResponsiveHomePage> createState() => _ResponsiveHomePageState();
+}
+
+class _ResponsiveHomePageState extends State<ResponsiveHomePage> {
+  BookData? book;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      var isWideLayout = constraints.maxWidth > 600;
+      if (!isWideLayout) {
+        return MainPage(
+          onBookTapped: (book) {
+            Navigator.pushNamed(
+              context,
+              '/book/${book.id}',
+              arguments: book,
+            );
+          },
+        );
+      } else {
+        return Row(
+          children: [
+            Expanded(child: MainPage(
+              onBookTapped: (book) {
+                setState(() {
+                  this.book = book;
+                });
+              },
+            )),
+            const VerticalDivider(
+              color: Colors.cyan,
+              thickness: 3,
+              width: 3,
+            ),
+            SizedBox(
+                width: 300,
+                child: BookDetailsContent(
+                  book: book,
+                )),
+          ],
+        );
+      }
+    });
   }
 }

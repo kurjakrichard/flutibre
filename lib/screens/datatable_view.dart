@@ -1,6 +1,7 @@
 import 'package:flutibre/models/book_data.dart';
 import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({Key? key}) : super(key: key);
@@ -10,7 +11,6 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  final columns = ['Author', 'Title', 'Language'];
   int? sortColumnIndex;
   bool isAscending = false;
   late List<BookData> selectedBook;
@@ -26,12 +26,17 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     var repository = BookRepository.of(context);
     var books = repository.books;
+    final columns = [
+      AppLocalizations.of(context)!.author,
+      AppLocalizations.of(context)!.title,
+      AppLocalizations.of(context)!.language
+    ];
 
     return Scaffold(
       backgroundColor: Colors.cyan[50],
       appBar: AppBar(
         title: Text(
-          "List",
+          AppLocalizations.of(context)!.list,
           style: Theme.of(context).textTheme.headline1,
         ),
       ),
@@ -41,25 +46,28 @@ class _ListPageState extends State<ListPage> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Builder(builder: (context) {
-                  return DataTable(
-                    columns: getColumns(columns),
-                    rows: books.map((book) {
-                      return DataRow(
-                        selected: selectedBook.contains(book),
-                        onSelectChanged: (value) {
-                          Navigator.pushNamed(
-                            context,
-                            '/book/${book.id}',
-                            arguments: book,
-                          );
-                        },
-                        cells: [
-                          DataCell(Text(book.author)),
-                          DataCell(Text(book.title)),
-                          DataCell(Text(book.language)),
-                        ],
-                      );
-                    }).toList(),
+                  return Container(
+                    width: double.infinity,
+                    child: DataTable(
+                      columns: getColumns(columns),
+                      rows: books.map((book) {
+                        return DataRow(
+                          selected: selectedBook.contains(book),
+                          onSelectChanged: (value) {
+                            Navigator.pushNamed(
+                              context,
+                              '/book/${book.id}',
+                              arguments: book,
+                            );
+                          },
+                          cells: [
+                            DataCell(Text(book.author)),
+                            DataCell(Text(book.title)),
+                            DataCell(Text(book.language)),
+                          ],
+                        );
+                      }).toList(),
+                    ),
                   );
                 }),
               ))),

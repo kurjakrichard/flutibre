@@ -1,6 +1,7 @@
 import 'package:flutibre/models/book_data.dart';
 import 'package:flutibre/utils/book_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BookDetailsPage extends StatelessWidget {
   const BookDetailsPage({Key? key}) : super(key: key);
@@ -9,10 +10,25 @@ class BookDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     dynamic routeSettings = ModalRoute.of(context)!.settings;
     dynamic book = routeSettings.arguments as BookData;
+    return BookDetailsContent(
+      book: book,
+    );
+  }
+}
+
+class BookDetailsContent extends StatelessWidget {
+  const BookDetailsContent({Key? key, this.book}) : super(key: key);
+  final BookData? book;
+
+  @override
+  Widget build(BuildContext context) {
+    if (book == null) {
+      return const Scaffold();
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          book.title,
+          book!.title,
           style: Theme.of(context).textTheme.headline1,
         ),
         actions: [
@@ -22,19 +38,19 @@ class BookDetailsPage extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('Are you sure?'),
+                  title: Text(AppLocalizations.of(context)!.wanttodelete),
                   actions: [
                     TextButton(
-                      child: const Text('Cancel'),
+                      child: Text(AppLocalizations.of(context)!.cancel),
                       onPressed: () {
                         Navigator.pop(context);
                       },
                     ),
                     TextButton(
-                      child: const Text('Delete'),
+                      child: Text(AppLocalizations.of(context)!.ok),
                       onPressed: () {
                         Navigator.pop(context);
-                        BookRepository.of(context).onDeleteBook(book.id);
+                        BookRepository.of(context).onDeleteBook(book!.id);
                         Navigator.pop(context);
                       },
                     ),
@@ -54,7 +70,7 @@ class BookDetailsPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(30)),
                   image: DecorationImage(
-                    image: AssetImage(book.cover),
+                    image: AssetImage(book!.cover),
                     fit: BoxFit.fitHeight,
                   ),
                 ),
@@ -72,17 +88,22 @@ class BookDetailsPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         BookDetailElement(
-                            detailType: 'Title:', detailContent: book.title),
+                            detailType:
+                                '${AppLocalizations.of(context)!.title}:',
+                            detailContent: book!.title),
                         BookDetailElement(
-                            detailType: 'Author:', detailContent: book.author),
+                            detailType:
+                                '${AppLocalizations.of(context)!.author}:',
+                            detailContent: book!.author),
                         BookDetailElement(
-                            detailType: 'Language:',
-                            detailContent: book.language),
+                            detailType:
+                                '${AppLocalizations.of(context)!.language}:',
+                            detailContent: book!.language),
                         const SizedBox(
                           height: 8,
                         ),
                         Text(
-                          book.content,
+                          book!.content,
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
                         const SizedBox(
