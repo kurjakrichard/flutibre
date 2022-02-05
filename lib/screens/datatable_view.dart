@@ -46,28 +46,25 @@ class _ListPageState extends State<ListPage> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Builder(builder: (context) {
-                  return Container(
-                    width: double.infinity,
-                    child: DataTable(
-                      columns: getColumns(columns),
-                      rows: books.map((book) {
-                        return DataRow(
-                          selected: selectedBook.contains(book),
-                          onSelectChanged: (value) {
-                            Navigator.pushNamed(
-                              context,
-                              '/book/${book.id}',
-                              arguments: book,
-                            );
-                          },
-                          cells: [
-                            DataCell(Text(book.author)),
-                            DataCell(Text(book.title)),
-                            DataCell(Text(book.language)),
-                          ],
-                        );
-                      }).toList(),
-                    ),
+                  return DataTable(
+                    columns: getColumns(columns),
+                    rows: books.map((book) {
+                      return DataRow(
+                        selected: selectedBook.contains(book),
+                        onSelectChanged: (value) {
+                          Navigator.pushNamed(
+                            context,
+                            '/BookDetailsPage',
+                            arguments: book,
+                          );
+                        },
+                        cells: [
+                          DataCell(Text(book.author)),
+                          DataCell(Text(book.title)),
+                          DataCell(Text(book.language)),
+                        ],
+                      );
+                    }).toList(),
                   );
                 }),
               ))),

@@ -43,18 +43,9 @@ class Flutibre extends StatelessWidget {
             '/GridPage': (context) => const GridPage(),
             '/AddBookPage': (context) =>
                 ModifyBookPage(title: AppLocalizations.of(context)!.addbook),
+            '/BookDetailsPage': (context) => const BookDetailsPage(),
           },
-          onGenerateRoute: (settings) {
-            if (settings.name?.startsWith('/book/') ?? false) {
-              var id = int.parse(settings.name!.split('/')[2]);
-              var repository = BookRepository.of(context);
-              var bookList = repository.books;
-              var book = bookList.firstWhere((element) => element.id == id);
-              return MaterialPageRoute(
-                  builder: (context) => const BookDetailsPage(),
-                  settings: settings.copyWith(arguments: book));
-            }
-          },
+
           theme: ThemeData(
             appBarTheme: const AppBarTheme(
               backgroundColor: Colors.cyan,
@@ -132,7 +123,7 @@ class _ResponsiveHomePageState extends State<ResponsiveHomePage> {
           onBookTapped: (book) {
             Navigator.pushNamed(
               context,
-              '/book/${book.id}',
+              '/BookDetailsPage',
               arguments: book,
             );
           },
