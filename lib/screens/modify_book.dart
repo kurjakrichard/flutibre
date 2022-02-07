@@ -1,5 +1,5 @@
 import 'package:flutibre/models/book_data.dart';
-import 'package:flutibre/utils/book_repository.dart';
+import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -116,7 +116,7 @@ class ModifyBookPage extends StatelessWidget {
                                       '',
                                       '',
                                       'images/$size.jpg');
-                                  BookRepository.of(context).onBookAdded(book);
+                                  //  BookRepository.of(context).onBookAdded(book);
                                   Navigator.pop(context);
                                 }
                               });

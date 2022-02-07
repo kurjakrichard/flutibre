@@ -1,7 +1,8 @@
 import 'package:flutibre/models/book_data.dart';
-import 'package:flutibre/utils/book_repository.dart';
+import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key, required this.onBookTapped}) : super(key: key);
@@ -12,19 +13,18 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var repository = BookRepository.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Flutibre',
-          style: Theme.of(context).textTheme.headline1,
+    return Consumer<BookProvider>(builder: (context, value, listTile) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Flutibre',
+            style: Theme.of(context).textTheme.headline1,
+          ),
         ),
-      ),
-      body: Builder(builder: (context) {
-        return ListView.separated(
+        body: ListView.separated(
           cacheExtent: 0,
           itemBuilder: (context, index) {
-            var book = repository.books[index];
+            var book = value.books[index];
             return BookElement(
               book: BookData(
                 book.id,
@@ -46,74 +46,74 @@ class MainPage extends StatelessWidget {
             height: 6,
             color: Colors.transparent,
           ),
-          itemCount: repository.books.length,
-        );
-      }),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.cyan,
-        onPressed: () {
-          Navigator.pushNamed(context, '/AddBookPage',
-              arguments: {'size': repository.books.length});
-        },
-      ),
-      drawer: Drawer(
-        child: Material(
-          color: const Color.fromRGBO(98, 163, 191, 0.5),
-          child: ListView(
-            children: <Widget>[
-              DrawerHeader(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.navigation,
-                        style: Theme.of(context).textTheme.headline1,
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      const FlutterLogo(
-                        size: 40,
-                      )
-                    ]),
-                decoration: const BoxDecoration(color: Colors.cyan),
-              ),
-              ListTile(
-                title: Text(
-                  AppLocalizations.of(context)!.list,
-                  style: Theme.of(context).textTheme.headline1,
+          itemCount: value.books.length,
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          backgroundColor: Colors.cyan,
+          onPressed: () {
+            Navigator.pushNamed(context, '/AddBookPage',
+                arguments: {'size': value.books.length});
+          },
+        ),
+        drawer: Drawer(
+          child: Material(
+            color: const Color.fromRGBO(98, 163, 191, 0.5),
+            child: ListView(
+              children: <Widget>[
+                DrawerHeader(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.navigation,
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        const FlutterLogo(
+                          size: 40,
+                        )
+                      ]),
+                  decoration: const BoxDecoration(color: Colors.cyan),
                 ),
-                hoverColor: hovercolor,
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(
-                    context,
-                    '/ListPage',
-                    arguments: repository.books,
-                  );
-                },
-              ),
-              ListTile(
-                title: Text(
-                  AppLocalizations.of(context)!.tiles,
-                  style: Theme.of(context).textTheme.headline1,
+                ListTile(
+                  title: Text(
+                    AppLocalizations.of(context)!.list,
+                    style: Theme.of(context).textTheme.headline1,
+                  ),
+                  hoverColor: hovercolor,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(
+                      context,
+                      '/ListPage',
+                      arguments: value.books,
+                    );
+                  },
                 ),
-                hoverColor: hovercolor,
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(
-                    context,
-                    '/GridPage',
-                    arguments: repository.books,
-                  );
-                },
-              ),
-            ],
+                ListTile(
+                  title: Text(
+                    AppLocalizations.of(context)!.tiles,
+                    style: Theme.of(context).textTheme.headline1,
+                  ),
+                  hoverColor: hovercolor,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(
+                      context,
+                      '/GridPage',
+                      arguments: value.books,
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 

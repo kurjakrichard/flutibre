@@ -1,7 +1,8 @@
 import 'package:flutibre/models/book_data.dart';
-import 'package:flutibre/utils/book_repository.dart';
+import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({Key? key}) : super(key: key);
@@ -24,8 +25,6 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    var repository = BookRepository.of(context);
-    var books = repository.books;
     final columns = [
       AppLocalizations.of(context)!.author,
       AppLocalizations.of(context)!.title,
@@ -41,33 +40,39 @@ class _ListPageState extends State<ListPage> {
         ),
       ),
       body: SingleChildScrollView(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Builder(builder: (context) {
-                  return DataTable(
-                    columns: getColumns(columns),
-                    rows: books.map((book) {
-                      return DataRow(
-                        selected: selectedBook.contains(book),
-                        onSelectChanged: (value) {
-                          Navigator.pushNamed(
-                            context,
-                            '/BookDetailsPage',
-                            arguments: book,
-                          );
-                        },
-                        cells: [
-                          DataCell(Text(book.author)),
-                          DataCell(Text(book.title)),
-                          DataCell(Text(book.language)),
-                        ],
-                      );
-                    }).toList(),
-                  );
-                }),
-              ))),
+            scrollDirection: Axis.horizontal,
+            child: Builder(builder: (context) {
+              return Consumer<BookProvider>(
+                  builder: (context, value, listTile) {
+                books = value.books;
+                return DataTable(
+                  columns: getColumns(columns),
+                  rows: books.map((book) {
+                    return DataRow(
+                      selected: selectedBook.contains(book),
+                      onSelectChanged: (value) {
+                        Navigator.pushNamed(
+                          context,
+                          '/BookDetailsPage',
+                          arguments: book,
+                        );
+                      },
+                      cells: [
+                        DataCell(Text(book.author)),
+                        DataCell(Text(book.title)),
+                        DataCell(Text(book.language)),
+                      ],
+                    );
+                  }).toList(),
+                );
+              });
+            }),
+          ),
+        ),
+      ),
     );
   }
 

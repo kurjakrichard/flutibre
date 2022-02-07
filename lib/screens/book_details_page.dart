@@ -1,18 +1,20 @@
 import 'package:flutibre/models/book_data.dart';
-import 'package:flutibre/utils/book_repository.dart';
+import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class BookDetailsPage extends StatelessWidget {
   const BookDetailsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    dynamic routeSettings = ModalRoute.of(context)!.settings;
-    dynamic book = routeSettings.arguments as BookData;
-    return BookDetailsContent(
-      book: book,
-    );
+    return Consumer<BookProvider>(
+        builder: (BuildContext context, value, ListTile) {
+      return BookDetailsContent(
+        book: value.books.firstWhere((element) => false),
+      );
+    });
   }
 }
 
@@ -50,7 +52,7 @@ class BookDetailsContent extends StatelessWidget {
                       child: Text(AppLocalizations.of(context)!.ok),
                       onPressed: () {
                         Navigator.pop(context);
-                        BookRepository.of(context).onDeleteBook(book!.id);
+                        //BookRepository.of(context).onDeleteBook(book!.id);
                         Navigator.pop(context);
                       },
                     ),

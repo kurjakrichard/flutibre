@@ -1,15 +1,14 @@
-import 'package:flutibre/utils/book_repository.dart';
+import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutibre/models/book_data.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class GridPage extends StatelessWidget {
   const GridPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var repository = BookRepository.of(context);
-    var books = repository.books;
     int size = MediaQuery.of(context).size.width.round();
     return Scaffold(
       backgroundColor: Colors.cyan[50],
@@ -19,7 +18,7 @@ class GridPage extends StatelessWidget {
           style: Theme.of(context).textTheme.headline1,
         ),
       ),
-      body: Builder(builder: (context) {
+      body: Consumer<BookProvider>(builder: (context, value, listTile) {
         return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: (size / 200).round(),
@@ -27,13 +26,13 @@ class GridPage extends StatelessWidget {
             mainAxisSpacing: 10,
           ),
           itemBuilder: (context, index) {
-            BookData book = books[index];
+            BookData book = value.books[index];
             return Center(
               child: RawMaterialButton(
                 onPressed: () {
                   Navigator.pushNamed(
                     context,
-                    '/BookDetailsPage',
+                    '/BookDetailsPage ',
                     arguments: book,
                   );
                 },
@@ -43,7 +42,7 @@ class GridPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       image: DecorationImage(
-                        image: AssetImage(books[index].cover),
+                        image: AssetImage(value.books[index].cover),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -52,7 +51,7 @@ class GridPage extends StatelessWidget {
               ),
             );
           },
-          itemCount: books.length,
+          itemCount: value.books.length,
         );
       }),
     );
