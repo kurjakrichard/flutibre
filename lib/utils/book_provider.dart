@@ -166,7 +166,7 @@ class BookProvider extends ChangeNotifier {
   ];
 
   void onDelete(int bookId) {
-    books.removeAt(bookId);
+    books.removeWhere((item) => item.id == bookId);
     notifyListeners();
   }
 
