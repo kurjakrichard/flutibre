@@ -116,7 +116,7 @@ class ModifyBookPage extends StatelessWidget {
                                       '',
                                       '',
                                       'images/$size.jpg');
-                                  //  BookRepository.of(context).onBookAdded(book);
+                                  args.onBookAdd(book);
                                   Navigator.pop(context);
                                 }
                               });

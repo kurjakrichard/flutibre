@@ -2,7 +2,7 @@ import 'package:flutibre/models/book_data.dart';
 import 'package:flutter/cupertino.dart';
 
 class BookProvider extends ChangeNotifier {
-  late List<BookData> books = [
+  List<BookData> books = [
     const BookData(
       1,
       'R.R. Tolkien',
@@ -165,8 +165,13 @@ class BookProvider extends ChangeNotifier {
     ),
   ];
 
+  void onChange() {
+    notifyListeners();
+  }
+
   void onDelete(int bookId) {
     books.removeAt(bookId);
+    onChange();
   }
 
   void onAddBook(BookData newBook) => {books.add(newBook)};

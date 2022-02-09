@@ -19,70 +19,83 @@ class Flutibre extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en', ''),
-        Locale('hu', ''),
-      ],
+    return ChangeNotifierProvider<BookProvider>(
+      create: (context) => BookProvider(),
+      child: MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', ''),
+          Locale('hu', ''),
+        ],
 
-      locale: const Locale('hu'),
-      debugShowCheckedModeBanner: false,
-      //Scrolling do not work on Linux desktop without this.
-      scrollBehavior: MyCustomScrollBehavior(),
-      home: ChangeNotifierProvider<BookProvider>(
-          create: (context) => BookProvider(),
-          child: const ResponsiveHomePage()),
-      routes: {
-        //'/bookDetails': (context) => const BookDetailsPage(),
-        '/ListPage': (context) => const ListPage(),
-        '/GridPage': (context) => const GridPage(),
-        '/AddBookPage': (context) =>
-            ModifyBookPage(title: AppLocalizations.of(context)!.addbook),
-        '/BookDetailsPage': (context) => const BookDetailsPage(),
-      },
+        locale: const Locale('hu'),
+        debugShowCheckedModeBanner: false,
+        //Scrolling do not work on Linux desktop without this.
+        scrollBehavior: MyCustomScrollBehavior(),
+        home: const ResponsiveHomePage(),
+        routes: {
+          //'/bookDetails': (context) => const BookDetailsPage(),
+          '/ListPage': (context) => const ListPage(),
+          '/GridPage': (context) => const GridPage(),
+          '/AddBookPage': (context) =>
+              ModifyBookPage(title: AppLocalizations.of(context)!.addbook),
+          '/BookDetailsPage': (context) => const BookDetailsPage(),
+        },
 
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.cyan,
-          foregroundColor: Colors.white,
-        ),
-        scaffoldBackgroundColor: Colors.cyan[50],
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-            backgroundColor: Colors.cyan, foregroundColor: Colors.white),
-        fontFamily: 'Roboto',
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            onPrimary: Colors.white,
-            primary: Colors.cyan,
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.cyan,
+            foregroundColor: Colors.white,
           ),
-        ),
-        textTheme: const TextTheme(
-          //fejléc szövegek
-          headline1: TextStyle(
-              fontWeight: FontWeight.normal, color: Colors.white, fontSize: 18),
-          //belső fejléc szövegek
-          subtitle1: TextStyle(
-              fontWeight: FontWeight.normal, color: Colors.black, fontSize: 16),
-          subtitle2: TextStyle(
-              fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
-          //gombszövegek
-          headline3: TextStyle(
-              fontWeight: FontWeight.normal, color: Colors.white, fontSize: 15),
-          //nagyobb belső szövegek
-          bodyText1: TextStyle(
-              fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
-          //kisebb belső szövegek
-          bodyText2: TextStyle(
-              fontWeight: FontWeight.normal, color: Colors.black, fontSize: 12),
-          //vastag belső szövegek
-          headline2: TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
+          scaffoldBackgroundColor: Colors.cyan[50],
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+              backgroundColor: Colors.cyan, foregroundColor: Colors.white),
+          fontFamily: 'Roboto',
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              onPrimary: Colors.white,
+              primary: Colors.cyan,
+            ),
+          ),
+          textTheme: const TextTheme(
+            //fejléc szövegek
+            headline1: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.white,
+                fontSize: 18),
+            //belső fejléc szövegek
+            subtitle1: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 16),
+            subtitle2: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 15),
+            //gombszövegek
+            headline3: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.white,
+                fontSize: 15),
+            //nagyobb belső szövegek
+            bodyText1: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 15),
+            //kisebb belső szövegek
+            bodyText2: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 12),
+            //vastag belső szövegek
+            headline2: TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
+          ),
         ),
       ),
     );

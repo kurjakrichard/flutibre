@@ -10,50 +10,51 @@ class GridPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int size = MediaQuery.of(context).size.width.round();
-    return Scaffold(
-      backgroundColor: Colors.cyan[50],
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.tiles,
-          style: Theme.of(context).textTheme.headline1,
-        ),
-      ),
-      body: Consumer<BookProvider>(builder: (context, value, listTile) {
-        return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: (size / 200).round(),
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
+    return Consumer<BookProvider>(builder: (context, value, listTile) {
+      return Scaffold(
+          backgroundColor: Colors.cyan[50],
+          appBar: AppBar(
+            title: Text(
+              AppLocalizations.of(context)!.tiles,
+              style: Theme.of(context).textTheme.headline1,
+            ),
           ),
-          itemBuilder: (context, index) {
-            BookData book = value.books[index];
-            return Center(
-              child: RawMaterialButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/BookDetailsPage ',
-                    arguments: book,
-                  );
-                },
-                child: Hero(
-                  tag: 'logo$index',
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      image: DecorationImage(
-                        image: AssetImage(value.books[index].cover),
-                        fit: BoxFit.cover,
+          body: Builder(builder: (context) {
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: (size / 200).round(),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (context, index) {
+                BookData book = value.books[index];
+                return Center(
+                  child: RawMaterialButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/BookDetailsPage',
+                        arguments: book,
+                      );
+                    },
+                    child: Hero(
+                      tag: 'logo$index',
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                            image: AssetImage(value.books[index].cover),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
+              itemCount: value.books.length,
             );
-          },
-          itemCount: value.books.length,
-        );
-      }),
-    );
+          }));
+    });
   }
 }

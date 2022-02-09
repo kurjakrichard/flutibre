@@ -44,31 +44,28 @@ class _ListPageState extends State<ListPage> {
           scrollDirection: Axis.vertical,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Builder(builder: (context) {
-              return Consumer<BookProvider>(
-                  builder: (context, value, listTile) {
-                books = value.books;
-                return DataTable(
-                  columns: getColumns(columns),
-                  rows: books.map((book) {
-                    return DataRow(
-                      selected: selectedBook.contains(book),
-                      onSelectChanged: (value) {
-                        Navigator.pushNamed(
-                          context,
-                          '/BookDetailsPage',
-                          arguments: book,
-                        );
-                      },
-                      cells: [
-                        DataCell(Text(book.author)),
-                        DataCell(Text(book.title)),
-                        DataCell(Text(book.language)),
-                      ],
-                    );
-                  }).toList(),
-                );
-              });
+            child: Consumer<BookProvider>(builder: (context, value, listTile) {
+              books = value.books;
+              return DataTable(
+                columns: getColumns(columns),
+                rows: books.map((book) {
+                  return DataRow(
+                    selected: selectedBook.contains(book),
+                    onSelectChanged: (value) {
+                      Navigator.pushNamed(
+                        context,
+                        '/BookDetailsPage',
+                        arguments: book,
+                      );
+                    },
+                    cells: [
+                      DataCell(Text(book.author)),
+                      DataCell(Text(book.title)),
+                      DataCell(Text(book.language)),
+                    ],
+                  );
+                }).toList(),
+              );
             }),
           ),
         ),
