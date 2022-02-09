@@ -55,6 +55,7 @@ class BookDetailsContent extends StatelessWidget {
                         child: Text(AppLocalizations.of(context)!.ok),
                         onPressed: () {
                           Navigator.pop(context);
+                          print(book!.id);
                           value.onDelete(book!.id);
                           Navigator.pop(context);
                         },

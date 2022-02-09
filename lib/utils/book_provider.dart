@@ -165,14 +165,13 @@ class BookProvider extends ChangeNotifier {
     ),
   ];
 
-  void onChange() {
+  void onDelete(int bookId) {
+    books.removeAt(bookId);
     notifyListeners();
   }
 
-  void onDelete(int bookId) {
-    books.removeAt(bookId);
-    onChange();
+  void onAddBook(BookData newBook) {
+    books.add(newBook);
+    notifyListeners();
   }
-
-  void onAddBook(BookData newBook) => {books.add(newBook)};
 }
