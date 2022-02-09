@@ -3,6 +3,7 @@ import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:open_file/open_file.dart';
 
 class BookDetailsPage extends StatelessWidget {
   const BookDetailsPage({Key? key}) : super(key: key);
@@ -16,7 +17,6 @@ class BookDetailsPage extends StatelessWidget {
         book: book,
       );
     }
-    ;
   }
 }
 
@@ -105,6 +105,10 @@ class BookDetailsContent extends StatelessWidget {
                               detailType:
                                   '${AppLocalizations.of(context)!.language}:',
                               detailContent: book!.language),
+                          BookDetailElement(
+                              detailType:
+                                  '${AppLocalizations.of(context)!.language}:',
+                              detailContent: book!.cover),
                           const SizedBox(
                             height: 8,
                           ),
@@ -142,7 +146,10 @@ class BookDetailsContent extends StatelessWidget {
                           ),
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                print(book!.cover);
+                                OpenFile.open('images\\1.jpg');
+                              },
                               style: TextButton.styleFrom(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 15),
