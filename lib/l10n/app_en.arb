@@ -16,7 +16,6 @@
   "@list": {
     "description": "List button"
   },
-  
   "tiles": "Tiles",
   "@tiles": {
     "description": "Tiles button"
@@ -60,5 +59,13 @@
   "wanttodelete": "Want to delete?",
   "@wanttodelete": {
     "description": "Want to delete?"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back button"
+  },
+  "open": "Open",
+  "@open": {
+    "description": "Open button"
   }
 }

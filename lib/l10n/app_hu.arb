@@ -14,5 +14,7 @@
     "titlerequired": "A cím megadása kötelező!",
     "authorrequired": "A szerző megadása kötelező!",
     "languagerequired": "A nyelv megadása kötelező!",
-    "wanttodelete": "Biztosan törlöd?"
+    "wanttodelete": "Biztosan törlöd?",
+    "back": "Vissza",
+    "open": "Megnyit"
 }

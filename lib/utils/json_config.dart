@@ -6,7 +6,7 @@ class JsonConfig {
     final configFile = File('assets/config/flutter_config.json');
     final jsonString = await configFile.readAsString();
     final dynamic jsonMap = jsonDecode(jsonString);
-    print(jsonMap['path']);
+    //print(jsonMap['path']);
     return jsonMap['path'];
   }
 }

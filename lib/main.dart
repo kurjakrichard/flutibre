@@ -39,7 +39,6 @@ class Flutibre extends StatelessWidget {
         scrollBehavior: MyCustomScrollBehavior(),
         home: const ResponsiveHomePage(),
         routes: {
-          //'/bookDetails': (context) => const BookDetailsPage(),
           '/ListPage': (context) => const ListPage(),
           '/GridPage': (context) => const GridPage(),
           '/AddBookPage': (context) =>
@@ -142,10 +141,12 @@ class _ResponsiveHomePageState extends State<ResponsiveHomePage> {
               width: 3,
             ),
             SizedBox(
-                width: 300,
-                child: BookDetailsContent(
-                  book: book,
-                )),
+              width: 300,
+              //TODO: Kell csinálni egy másik widgetet
+              child: BookDetailsContent(
+                book: book,
+              ),
+            ),
           ],
         );
       }

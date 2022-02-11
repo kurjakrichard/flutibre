@@ -112,8 +112,8 @@ class _ListPageState extends State<ListPage> {
     }
 
     setState(() {
-      this.sortColumnIndex = columnIndex;
-      this.isAscending = ascending;
+      sortColumnIndex = columnIndex;
+      isAscending = ascending;
     });
   }
 

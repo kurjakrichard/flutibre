@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:open_file/open_file.dart';
+import 'dart:io' show Platform;
 
 class BookDetailsPage extends StatelessWidget {
   const BookDetailsPage({Key? key}) : super(key: key);
@@ -55,7 +56,6 @@ class BookDetailsContent extends StatelessWidget {
                         child: Text(AppLocalizations.of(context)!.ok),
                         onPressed: () {
                           Navigator.pop(context);
-                          print(book!.id);
                           value.onDelete(book!.id);
                           Navigator.pop(context);
                         },
@@ -105,10 +105,6 @@ class BookDetailsContent extends StatelessWidget {
                               detailType:
                                   '${AppLocalizations.of(context)!.language}:',
                               detailContent: book!.language),
-                          BookDetailElement(
-                              detailType:
-                                  '${AppLocalizations.of(context)!.language}:',
-                              detailContent: book!.cover),
                           const SizedBox(
                             height: 8,
                           ),
@@ -136,7 +132,7 @@ class BookDetailsContent extends StatelessWidget {
                                 backgroundColor: Colors.cyan,
                               ),
                               child: Text(
-                                'Back',
+                                AppLocalizations.of(context)!.back,
                                 style: Theme.of(context).textTheme.headline3,
                               ),
                             ),
@@ -147,8 +143,12 @@ class BookDetailsContent extends StatelessWidget {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
-                                print(book!.cover);
-                                OpenFile.open('images\\1.jpg');
+                                if (Platform.isWindows) {
+                                  OpenFile.open(
+                                      book!.cover.replaceAll('/', '\\'));
+                                } else {
+                                  OpenFile.open(book!.cover);
+                                }
                               },
                               style: TextButton.styleFrom(
                                 padding:
@@ -156,7 +156,7 @@ class BookDetailsContent extends StatelessWidget {
                                 backgroundColor: Colors.cyan,
                               ),
                               child: Text(
-                                'Open',
+                                AppLocalizations.of(context)!.open,
                                 style: Theme.of(context).textTheme.headline3,
                               ),
                             ),

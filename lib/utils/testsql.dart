@@ -17,6 +17,7 @@ Future main() async {
   await db.insert('Product', <String, Object?>{'title': 'Product 1'});
 
   var result = await db.query('Product');
+  // ignore: avoid_print
   print(result);
   // prints [{id: 1, title: Product 1}, {id: 2, title: Product 1}]
   await db.close();
