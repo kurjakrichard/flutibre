@@ -31,8 +31,8 @@ dependencies:
     sdk: flutter
   #sqlite adatbázishoz kell
   sqflite_common_ffi:
-  #ez nem tudom mihez kell
-  #path_provider:
+  #Ez a fájlrendszer tipikus helyeit találja meg
+  path_provider:
   #ez nem tudom mihez kell
   equatable: ^2.0.3
   #inputmezők validálásához kell

@@ -3,7 +3,6 @@
 *.log
 *.pyc
 *.swp
-*.lock
 .DS_Store
 .atom/
 .buildlog/
@@ -30,13 +29,12 @@
 .packages
 .pub-cache/
 .pub/
-.vscode/
+.idea/
 /build/
-/linux/
-/test/
-/web/
-/ios/
 /android/
+/ios/
+/linux/
+/web/
 /windows/
 
 # Web related
