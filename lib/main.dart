@@ -6,6 +6,7 @@ import 'package:flutibre/screens/datatable_view.dart';
 import 'package:flutibre/screens/mainPage.dart';
 import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutibre/utils/scroll.dart';
+import 'package:flutibre/utils/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,6 +18,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BookProvider()),
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
       ],
       child: const Flutibre(),
     ),
