@@ -30,7 +30,8 @@ dependencies:
   flutter:
     sdk: flutter
   #sqlite adatbázishoz kell
-  sqflite_common_ffi:
+  sqflite: ^2.0.1
+  sqflite_common_ffi: ^2.1.0+2
   #Ez a fájlrendszer tipikus helyeit találja meg
   path_provider:
   #ez nem tudom mihez kell

@@ -1,4 +1,4 @@
-import 'package:flutibre/models/book_data.dart';
+import 'package:flutibre/models/book.dart';
 import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,8 +14,8 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   int? sortColumnIndex;
   bool isAscending = false;
-  late List<BookData> selectedBook;
-  late List<BookData> books;
+  late List<Book> selectedBook;
+  late List<Book> books;
 
   @override
   void initState() {
@@ -28,7 +28,6 @@ class _ListPageState extends State<ListPage> {
     final columns = [
       AppLocalizations.of(context)!.author,
       AppLocalizations.of(context)!.title,
-      AppLocalizations.of(context)!.language
     ];
 
     return Scaffold(
@@ -59,9 +58,8 @@ class _ListPageState extends State<ListPage> {
                       );
                     },
                     cells: [
-                      DataCell(Text(book.author)),
+                      DataCell(Text(book.author_sort)),
                       DataCell(Text(book.title)),
-                      DataCell(Text(book.language)),
                     ],
                   );
                 }).toList(),
@@ -73,7 +71,7 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
-  onSelectedRow(bool selected, BookData book) async {
+  onSelectedRow(bool selected, Book book) async {
     setState(() {
       if (selected) {
         selectedBook.add(book);
@@ -90,8 +88,8 @@ class _ListPageState extends State<ListPage> {
           ))
       .toList();
 
-  List<DataRow> getRows(List<BookData> books) => books.map((BookData book) {
-        final cells = [book.author, book.title, book.language];
+  List<DataRow> getRows(List<Book> books) => books.map((Book book) {
+        final cells = [book.author_sort, book.title];
 
         return DataRow(cells: getCells(cells));
       }).toList();
@@ -102,13 +100,10 @@ class _ListPageState extends State<ListPage> {
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
       books.sort((book1, book2) =>
-          compareString(ascending, book1.author, book2.author));
+          compareString(ascending, book1.author_sort, book2.author_sort));
     } else if (columnIndex == 1) {
       books.sort(
           (book1, book2) => compareString(ascending, book1.title, book2.title));
-    } else if (columnIndex == 2) {
-      books.sort((book1, book2) =>
-          compareString(ascending, book1.language, book2.language));
     }
 
     setState(() {

@@ -1,4 +1,4 @@
-import 'package:flutibre/models/book_data.dart';
+import 'package:flutibre/models/book.dart';
 import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,7 +12,7 @@ class BookDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var routeSettings = ModalRoute.of(context)!.settings;
-    var book = routeSettings.arguments as BookData;
+    var book = routeSettings.arguments as Book;
     {
       return BookDetailsContent(
         book: book,
@@ -23,7 +23,7 @@ class BookDetailsPage extends StatelessWidget {
 
 class BookDetailsContent extends StatelessWidget {
   const BookDetailsContent({Key? key, this.book}) : super(key: key);
-  final BookData? book;
+  final Book? book;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class BookDetailsContent extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(30)),
                     image: DecorationImage(
-                      image: AssetImage(book!.cover),
+                      image: AssetImage(book!.path),
                       fit: BoxFit.fitHeight,
                     ),
                   ),
@@ -100,17 +100,9 @@ class BookDetailsContent extends StatelessWidget {
                           BookDetailElement(
                               detailType:
                                   '${AppLocalizations.of(context)!.author}:',
-                              detailContent: book!.author),
-                          BookDetailElement(
-                              detailType:
-                                  '${AppLocalizations.of(context)!.language}:',
-                              detailContent: book!.language),
+                              detailContent: book!.author_sort),
                           const SizedBox(
                             height: 8,
-                          ),
-                          Text(
-                            book!.content,
-                            style: Theme.of(context).textTheme.bodyText2,
                           ),
                           const SizedBox(
                             height: 10,
@@ -145,9 +137,9 @@ class BookDetailsContent extends StatelessWidget {
                               onPressed: () {
                                 if (Platform.isWindows) {
                                   OpenFile.open(
-                                      book!.cover.replaceAll('/', '\\'));
+                                      book!.path.replaceAll('/', '\\'));
                                 } else {
-                                  OpenFile.open(book!.cover);
+                                  OpenFile.open(book!.path);
                                 }
                               },
                               style: TextButton.styleFrom(

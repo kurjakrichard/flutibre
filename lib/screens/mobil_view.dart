@@ -1,13 +1,13 @@
-import 'package:flutibre/models/book_data.dart';
+import 'package:flutibre/models/book.dart';
 import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-class MainPage extends StatelessWidget {
-  const MainPage({Key? key, required this.onBookTapped}) : super(key: key);
+class MobilView extends StatelessWidget {
+  const MobilView({Key? key, required this.onBookTapped}) : super(key: key);
 
-  final void Function(BookData) onBookTapped;
+  final void Function(Book) onBookTapped;
   final color = Colors.white;
   final hovercolor = const Color.fromRGBO(98, 163, 191, 1);
 
@@ -26,15 +26,12 @@ class MainPage extends StatelessWidget {
           itemBuilder: (context, index) {
             var book = value.books[index];
             return BookElement(
-              book: BookData(
+              book: Book(
                 book.id,
-                book.author,
+                book.author_sort,
                 book.title,
-                book.series,
-                book.language,
-                book.publisher,
-                book.content,
-                book.cover,
+                book.series_index,
+                book.path,
               ),
               onTap: () {
                 onBookTapped(book);
@@ -51,6 +48,7 @@ class MainPage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           backgroundColor: Colors.cyan,
+          tooltip: AppLocalizations.of(context)!.addbook,
           onPressed: () {
             Navigator.pushNamed(context, '/AddBookPage',
                 arguments: {'size': value.books.length});
@@ -118,7 +116,7 @@ class MainPage extends StatelessWidget {
 }
 
 class BookElement extends StatelessWidget {
-  final BookData book;
+  final Book book;
   final VoidCallback onTap;
 
   const BookElement({Key? key, required this.book, required this.onTap})
@@ -132,10 +130,10 @@ class BookElement extends StatelessWidget {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
 
-        leading: Image(image: AssetImage(book.cover)),
+        leading: Image(image: AssetImage(book.path)),
         //Image.file(File(book.cover),),
         title: Text(
-          book.author,
+          book.author_sort,
           style: Theme.of(context).textTheme.bodyText1,
         ),
         subtitle: Text(

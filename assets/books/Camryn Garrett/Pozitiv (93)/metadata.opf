@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier opf:scheme="calibre" id="calibre_id">93</dc:identifier>
+        <dc:identifier opf:scheme="uuid" id="uuid_id">1683c2aa-5717-4e77-9424-7aa756fcb68b</dc:identifier>
+        <dc:title>Pozitív</dc:title>
+        <dc:creator opf:file-as="Garrett, Camryn" opf:role="aut">Camryn Garrett</dc:creator>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (5.38.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:date>2020-12-10T23:00:00+00:00</dc:date>
+        <dc:identifier opf:scheme="MOBI-ASIN">72766d72-2586-4eeb-8fb1-63604e8b966c</dc:identifier>
+        <dc:language>hun</dc:language>
+        <meta name="calibre:author_link_map" content="{&quot;Camryn Garrett&quot;: &quot;&quot;}"/>
+        <meta name="calibre:timestamp" content="2022-03-13T13:22:39.985412+00:00"/>
+        <meta name="calibre:title_sort" content="Pozitív"/>
+    </metadata>
+    <guide>
+        <reference type="cover" title="Borító" href="cover.jpg"/>
+    </guide>
+</package>

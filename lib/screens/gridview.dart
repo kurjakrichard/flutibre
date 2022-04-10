@@ -1,6 +1,6 @@
 import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutibre/models/book_data.dart';
+import 'package:flutibre/models/book.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +27,7 @@ class GridPage extends StatelessWidget {
                 mainAxisSpacing: 10,
               ),
               itemBuilder: (context, index) {
-                BookData book = value.books[index];
+                Book book = value.books[index];
                 return Center(
                   child: RawMaterialButton(
                     onPressed: () {
@@ -43,7 +43,7 @@ class GridPage extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           image: DecorationImage(
-                            image: AssetImage(value.books[index].cover),
+                            image: AssetImage(value.books[index].path),
                             fit: BoxFit.cover,
                           ),
                         ),

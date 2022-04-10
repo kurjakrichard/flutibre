@@ -1,4 +1,4 @@
-import 'package:flutibre/models/book_data.dart';
+import 'package:flutibre/models/book.dart';
 import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -111,14 +111,11 @@ class ModifyBookPage extends StatelessWidget {
                                   var form = FormBuilder.of(context)!;
 
                                   if (form.saveAndValidate()) {
-                                    var book = BookData(
+                                    var book = Book(
                                         size,
                                         form.value['author']!,
                                         form.value['title']!,
-                                        '',
-                                        form.value['language']!,
-                                        '',
-                                        '',
+                                        1,
                                         'images/$size.jpg');
                                     value.onAddBook(book);
                                     Navigator.pop(context);

@@ -1,9 +1,8 @@
-import 'package:flutibre/models/book_data.dart';
 import 'package:flutibre/screens/modify_book.dart';
 import 'package:flutibre/screens/book_details_page.dart';
 import 'package:flutibre/screens/gridview.dart';
 import 'package:flutibre/screens/datatable_view.dart';
-import 'package:flutibre/screens/mainPage.dart';
+import 'package:flutibre/screens/responsive_homepage.dart';
 import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutibre/utils/scroll.dart';
 import 'package:flutibre/utils/settings_provider.dart';
@@ -27,7 +26,6 @@ void main() {
 
 class Flutibre extends StatelessWidget {
   const Flutibre({Key? key}) : super(key: key);
-  //final String path = readJsonData().toString();
 
   @override
   Widget build(BuildContext context) {
@@ -95,58 +93,5 @@ class Flutibre extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class ResponsiveHomePage extends StatefulWidget {
-  const ResponsiveHomePage({Key? key}) : super(key: key);
-
-  @override
-  State<ResponsiveHomePage> createState() => _ResponsiveHomePageState();
-}
-
-class _ResponsiveHomePageState extends State<ResponsiveHomePage> {
-  BookData? book;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      var isWideLayout = constraints.maxWidth > 600;
-      if (!isWideLayout) {
-        return MainPage(
-          onBookTapped: (book) {
-            Navigator.pushNamed(
-              context,
-              '/BookDetailsPage',
-              arguments: book,
-            );
-          },
-        );
-      } else {
-        return Row(
-          children: [
-            Expanded(child: MainPage(
-              onBookTapped: (book) {
-                setState(() {
-                  this.book = book;
-                });
-              },
-            )),
-            const VerticalDivider(
-              color: Colors.cyan,
-              thickness: 3,
-              width: 3,
-            ),
-            SizedBox(
-              width: 300,
-              //TODO: Kell csinálni egy másik widgetet
-              child: BookDetailsContent(
-                book: book,
-              ),
-            ),
-          ],
-        );
-      }
-    });
   }
 }
