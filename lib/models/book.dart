@@ -1,7 +1,9 @@
 class Book {
   final int id;
+  // ignore: non_constant_identifier_names
   final String author_sort;
   final String title;
+  // ignore: non_constant_identifier_names
   final double series_index;
   final String path;
 
