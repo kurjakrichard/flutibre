@@ -1,5 +1,5 @@
 import 'package:flutibre/screens/settingspage.dart';
-import 'package:flutibre/utils/database_handler.dart';
+import 'package:flutibre/repositories/database_connection.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/mainwindow.dart';
@@ -7,8 +7,9 @@ import 'screens/mainwindow.dart';
 void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isPath = await prefs.containsKey("path");
-  DatabaseHandler db = DatabaseHandler();
-  bool isDb = db.isDb();
+  DatabaseConnection db = DatabaseConnection();
+  await db.initializeDB();
+  bool isDb = await db.isDatabaseExist;
   runApp(Flutibre(isPath, isDb));
 }
 
@@ -22,6 +23,6 @@ class Flutibre extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: isPath && isDb ? MyApp() : SettingsPage());
+        home: isPath && isDb ? MainWindow() : SettingsPage());
   }
 }
