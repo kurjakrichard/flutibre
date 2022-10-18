@@ -9,7 +9,7 @@ class DatabaseHandler {
     'tableName': 'books',
     'colId': 'id',
     'colTitle': 'title',
-    'colDescription': 'description'
+    'colPath': 'path'
   };
 
   DatabaseHandler() {
@@ -19,7 +19,7 @@ class DatabaseHandler {
   static Database? _database;
 
   Future<Database>? get database async {
-    if (_database != null) {
+    if (_database == null) {
       _database = await _databaseConnection!.initializeDB();
       return _database!;
     }
@@ -32,6 +32,17 @@ class DatabaseHandler {
     //var result = await db.rawQuery('SELECT * FROM ${table['tablename']} order by ${table['colPriority']} ASC');
     var result = await db!.query(table, orderBy: order);
     return result;
+  }
+
+  // Get the MapList and convert it to NoteList
+  Future<List<Book>> getBookList(String table, String order) async {
+    List<Map<String, dynamic>> bookMapList = await getData(table, order);
+    int count = bookMapList.length;
+    List<Book> bookList = <Book>[];
+    for (int i = 0; i < count; i++) {
+      bookList.add(Book.fromMap(bookMapList[i]));
+    }
+    return bookList;
   }
 
   // Insert Operation: Insert new record to database
@@ -63,16 +74,5 @@ class DatabaseHandler {
         await db.rawQuery('SELECT COUNT (*) FROM ${table['tablename']}');
     int result = Sqflite.firstIntValue(records) ?? 0;
     return result;
-  }
-
-  // Get the MapList and convert it to NoteList
-  Future<List<Book>> getBookList(String table, String order) async {
-    List<Map<String, dynamic>> bookMapList = await getData(table, order);
-    int count = bookMapList.length;
-    List<Book> bookList = <Book>[];
-    for (int i = 0; i < count; i++) {
-      bookList.add(Book.fromMap(bookMapList[i]));
-    }
-    return bookList;
   }
 }

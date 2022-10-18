@@ -7,6 +7,12 @@ import 'dart:io';
 class DatabaseConnection {
   static DatabaseConnection? _databaseConnection;
   DatabaseConnection._createInstance();
+  Map table = {
+    'tableName': 'categories',
+    'colId': 'id',
+    'colName': 'name',
+    'colDescription': 'description'
+  };
 
   bool _isDatabaseExist = false;
 
@@ -33,7 +39,7 @@ class DatabaseConnection {
       return database;
     } else {
       return openDatabase(
-        join(path!, 'metadata.db'),
+        join(path!, '/metadata.db'),
         onCreate: (database, version) async {
           _isDatabaseExist = true;
           //never run

@@ -1,14 +1,18 @@
 class Book {
-  final int id;
+  int id;
   // ignore: non_constant_identifier_names
-  final String author_sort;
-  final String title;
+  String author_sort;
+  String title;
   // ignore: non_constant_identifier_names
-  final double series_index;
-  final String path;
+  double series_index;
+  String path;
 
-  const Book(
-      this.id, this.author_sort, this.title, this.series_index, this.path);
+  Book(
+      {this.id = 0,
+      this.author_sort = '',
+      this.title = '',
+      this.series_index = 0.0,
+      this.path = ''});
 
   @override
   bool operator ==(Object other) =>

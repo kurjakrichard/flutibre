@@ -22,6 +22,21 @@ class Flutibre extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.cyan,
+            foregroundColor: Colors.white,
+          ),
+          scaffoldBackgroundColor: Colors.cyan[50],
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+              backgroundColor: Colors.cyan, foregroundColor: Colors.white),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.cyan,
+            ),
+          ),
+        ),
         debugShowCheckedModeBanner: false,
         home: isPath && isDb ? MainWindow() : SettingsPage());
   }

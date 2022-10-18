@@ -15,7 +15,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   final List<String> _languages = ['magyar', 'angol'];
   String? _languageSelected;
@@ -24,7 +23,9 @@ class _SettingsPageState extends State<SettingsPage> {
   String? _tempPath;
   //check if path/Ebooks exists
   bool _newFolder = false;
+  // ignore: unused_field
   bool _isLoading = false;
+  // ignore: unused_field
   bool _userAborted = false;
 
   @override
