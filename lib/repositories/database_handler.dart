@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutibre/models/book.dart';
 import 'package:flutibre/repositories/database_connection.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHandler {
@@ -39,8 +42,10 @@ class DatabaseHandler {
     List<Map<String, dynamic>> bookMapList = await getData(table, order);
     int count = bookMapList.length;
     List<Book> bookList = <Book>[];
+
     for (int i = 0; i < count; i++) {
-      bookList.add(Book.fromMap(bookMapList[i]));
+      Book book = Book.fromMap(bookMapList[i]);
+      bookList.add(book);
     }
     return bookList;
   }
@@ -74,5 +79,12 @@ class DatabaseHandler {
         await db.rawQuery('SELECT COUNT (*) FROM ${table['tablename']}');
     int result = Sqflite.firstIntValue(records) ?? 0;
     return result;
+  }
+
+  Future<String> getCoverPath(String dbPath) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? path = await prefs.getString('path');
+    String coverPath = path! + '/' + dbPath + '/cover.jpg';
+    return await File(coverPath).exists() ? coverPath : 'images/cover.jpg';
   }
 }

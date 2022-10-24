@@ -11,7 +11,7 @@ class DatabaseConnection {
     'tableName': 'categories',
     'colId': 'id',
     'colName': 'name',
-    'colDescription': 'description'
+    'colPath': 'path'
   };
 
   bool _isDatabaseExist = false;

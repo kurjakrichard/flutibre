@@ -46,18 +46,20 @@ class _MainWindowState extends State<MainWindow> {
   }
 
   Widget bookItem(int index) {
-    String? bookPath = _bookList?[index].path ?? 'images';
-    String coverPath = bookPath == 'images'
-        ? 'images' + '/cover.jpg'
-        : path! + '/' + bookPath + '/cover.jpg';
-    print(coverPath);
     return Padding(
       padding: const EdgeInsets.only(top: 4.0, left: 8.0),
       child: Card(
         elevation: 8.0,
         child: ListTile(
           tileColor: const Color.fromRGBO(98, 163, 191, 0.5),
-          leading: Image.file(File(coverPath.toString())),
+          leading: _bookList?.length != null
+              ? Image.file(
+                  File(_bookList?[index].path != null
+                      ? coverPath(
+                          path! + '/' + _bookList![index].path + '/cover.jpg')!
+                      : 'images/cover.jpg'),
+                )
+              : Image.file(File('images/cover.jpg')),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -116,8 +118,8 @@ class _MainWindowState extends State<MainWindow> {
     });
   }
 
-  Future<String> getCoverPath(String coverPath) async {
-    return await File(coverPath).exists() ? coverPath : 'images/cover.jpg';
+  String? coverPath(String path) {
+    return File(path).existsSync() ? path : 'images/cover.jpg';
   }
 
   // ignore: unused_element
