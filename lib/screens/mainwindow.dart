@@ -19,7 +19,14 @@ class _MainWindowState extends State<MainWindow> {
   Book _book = Book();
   EbookService _bookService = EbookService();
   List<Book>? _bookList;
+  late List<Book> selectedBook;
   String? path;
+  int? sortColumnIndex;
+  bool isAscending = false;
+  final columns = [
+    'author',
+    'title',
+  ];
 
   @override
   void initState() {
@@ -30,18 +37,80 @@ class _MainWindowState extends State<MainWindow> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: DrawerNavigation(context),
-      floatingActionButton:
-          FloatingActionButton(child: Icon(Icons.add), onPressed: () {}),
-      appBar: AppBar(
-        title: Text('Flutibre'),
+    return DefaultTabController(
+      initialIndex: 1,
+      length: 3,
+      child: Scaffold(
+        drawer: DrawerNavigation(context),
+        floatingActionButton:
+            FloatingActionButton(child: Icon(Icons.add), onPressed: () {}),
+        appBar: AppBar(
+          bottom: const TabBar(
+            //Azért nem kell index, mert maga a widget azonosítja a tabot.
+            labelColor: Colors.white,
+            indicatorColor: Colors.orange,
+            unselectedLabelColor: Colors.grey,
+            tabs: <Widget>[
+              Tab(
+                icon: Icon(Icons.list),
+                text: "Lista",
+              ),
+              Tab(
+                icon: Icon(Icons.grid_4x4),
+                text: "Rács",
+              ),
+              Tab(
+                icon: Icon(Icons.dataset),
+                text: "Adattábla",
+              ),
+            ],
+          ),
+          title: Text('Flutibre'),
+        ),
+        body: TabBarView(
+          children: <Widget>[
+            Center(child: listView()),
+            Center(
+              child: Text("Második fül"),
+            ),
+            Container(child: dataTable()),
+          ],
+        ),
       ),
-      body: ListView.builder(
-          itemCount: _bookList?.length,
-          itemBuilder: ((context, index) {
-            return bookItem(index);
-          })),
+    );
+  }
+
+  //ListView tab
+  Widget listView() {
+    return ListView.builder(
+        itemCount: _bookList?.length,
+        itemBuilder: ((context, index) {
+          return bookItem(index);
+        }));
+  }
+
+  //DataTable tab
+  Widget dataTable() {
+    selectedBook = [];
+    return DataTable(
+      showCheckboxColumn: false,
+      columns: getColumns(columns),
+      rows: _bookList!.map((book) {
+        return DataRow(
+          selected: selectedBook.contains(book),
+          onSelectChanged: (value) {
+            Navigator.pushNamed(
+              context,
+              '/BookDetailsPage',
+              arguments: book,
+            );
+          },
+          cells: [
+            DataCell(Text(book.author_sort)),
+            DataCell(Text(book.title)),
+          ],
+        );
+      }).toList(),
     );
   }
 
@@ -109,6 +178,40 @@ class _MainWindowState extends State<MainWindow> {
       ]),
     );
   }
+
+  List<DataColumn> getColumns(List<String> columns) => columns
+      .map((String column) => DataColumn(
+            label: Text(column),
+            onSort: onSort,
+          ))
+      .toList();
+
+  List<DataRow> getRows(List<Book> books) => books.map((Book book) {
+        final cells = [book.author_sort, book.title];
+
+        return DataRow(cells: getCells(cells));
+      }).toList();
+
+  List<DataCell> getCells(List<dynamic> cells) =>
+      cells.map((books) => DataCell(Text('$books'))).toList();
+
+  void onSort(int columnIndex, bool ascending) {
+    if (columnIndex == 0) {
+      _bookList!.sort((book1, book2) =>
+          compareString(ascending, book1.author_sort, book2.author_sort));
+    } else if (columnIndex == 1) {
+      _bookList!.sort(
+          (book1, book2) => compareString(ascending, book1.title, book2.title));
+    }
+
+    setState(() {
+      sortColumnIndex = columnIndex;
+      isAscending = ascending;
+    });
+  }
+
+  int compareString(bool ascending, String value1, String value2) =>
+      ascending ? value1.compareTo(value2) : value2.compareTo(value1);
 
   void getBooks() async {
     _bookList = await _bookService.readBooks('books', 'title');
