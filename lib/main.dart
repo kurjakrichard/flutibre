@@ -3,10 +3,13 @@ import 'package:flutibre/repositories/database_connection.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/mainwindow.dart';
+import 'utils/custom_scroll_behavior.dart';
 
 void main() async {
+  //Check path
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isPath = await prefs.containsKey("path");
+  //Check database
   DatabaseConnection db = DatabaseConnection();
   await db.initializeDB();
   bool isDb = await db.isDatabaseExist;
@@ -37,7 +40,9 @@ class Flutibre extends StatelessWidget {
             ),
           ),
         ),
+        scrollBehavior: CustomScrollBehavior(),
         debugShowCheckedModeBanner: false,
+        //Settingspage if database not set or not exist
         home: isPath && isDb ? MainWindow() : SettingsPage());
   }
 }

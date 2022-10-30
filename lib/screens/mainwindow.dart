@@ -31,7 +31,6 @@ class _MainWindowState extends State<MainWindow> {
   @override
   void initState() {
     super.initState();
-    getBooks();
     getPath();
   }
 
@@ -69,11 +68,11 @@ class _MainWindowState extends State<MainWindow> {
         ),
         body: TabBarView(
           children: <Widget>[
-            Center(child: listView()),
+            listView(),
             Center(
               child: Text("Második fül"),
             ),
-            Container(child: dataTable()),
+            Container(child: null),
           ],
         ),
       ),
@@ -81,12 +80,60 @@ class _MainWindowState extends State<MainWindow> {
   }
 
   //ListView tab
-  Widget listView() {
-    return ListView.builder(
-        itemCount: _bookList?.length,
-        itemBuilder: ((context, index) {
-          return bookItem(index);
-        }));
+  FutureBuilder listView() {
+    return FutureBuilder(
+        future: _bookService.readBooks('books', 'title'),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data?.length,
+              itemBuilder: ((context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                  child: Card(
+                    elevation: 8.0,
+                    child: ListTile(
+                      tileColor: const Color.fromRGBO(98, 163, 191, 0.5),
+                      leading: snapshot.data?.length != null
+                          ? Image.file(
+                              File(snapshot.data?[index].path != null
+                                  ? coverPath(path! +
+                                      '/' +
+                                      snapshot.data![index].path +
+                                      '/cover.jpg')!
+                                  : 'images/cover.jpg'),
+                            )
+                          : Image.file(File('images/cover.jpg')),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            snapshot.data?.length != null
+                                ? snapshot.data![index].author_sort
+                                : '',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          IconButton(
+                              icon: const Icon(Icons.delete),
+                              color: Colors.red,
+                              onPressed: () {})
+                        ],
+                      ),
+                      subtitle: Text(
+                        snapshot.data?.length != null
+                            ? snapshot.data![index].title
+                            : '',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
   }
 
   //DataTable tab
@@ -111,43 +158,6 @@ class _MainWindowState extends State<MainWindow> {
           ],
         );
       }).toList(),
-    );
-  }
-
-  Widget bookItem(int index) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-      child: Card(
-        elevation: 8.0,
-        child: ListTile(
-          tileColor: const Color.fromRGBO(98, 163, 191, 0.5),
-          leading: _bookList?.length != null
-              ? Image.file(
-                  File(_bookList?[index].path != null
-                      ? coverPath(
-                          path! + '/' + _bookList![index].path + '/cover.jpg')!
-                      : 'images/cover.jpg'),
-                )
-              : Image.file(File('images/cover.jpg')),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                _bookList?.length != null ? _bookList![index].author_sort : '',
-                overflow: TextOverflow.ellipsis,
-              ),
-              IconButton(
-                  icon: const Icon(Icons.delete),
-                  color: Colors.red,
-                  onPressed: () {})
-            ],
-          ),
-          subtitle: Text(
-            _bookList?.length != null ? _bookList![index].title : '',
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ),
     );
   }
 
@@ -213,14 +223,6 @@ class _MainWindowState extends State<MainWindow> {
   int compareString(bool ascending, String value1, String value2) =>
       ascending ? value1.compareTo(value2) : value2.compareTo(value1);
 
-  void getBooks() async {
-    _bookList = await _bookService.readBooks('books', 'title');
-
-    setState(() {
-      _bookList;
-    });
-  }
-
   String? coverPath(String path) {
     return File(path).existsSync() ? path : 'images/cover.jpg';
   }
@@ -239,7 +241,7 @@ class _MainWindowState extends State<MainWindow> {
                   // ignore: unused_local_variable
                   int result = await _bookService.insertBook('books', _book);
                   setState(() {
-                    getBooks();
+                    _bookService.readBooks('books', 'title');
                   });
                   _titleController = TextEditingController();
                   _authorController = TextEditingController();
@@ -288,6 +290,7 @@ class _MainWindowState extends State<MainWindow> {
         });
   }
 
+  //Database path
   void getPath() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     path = await prefs.getString('path');
