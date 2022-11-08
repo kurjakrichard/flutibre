@@ -37,7 +37,7 @@ class _MainWindowState extends State<MainWindow> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      initialIndex: 1,
+      initialIndex: 0,
       length: 3,
       child: Scaffold(
         drawer: DrawerNavigation(context),
@@ -72,101 +72,17 @@ class _MainWindowState extends State<MainWindow> {
             Center(
               child: Text("Második fül"),
             ),
-            Container(child: null),
+            dataTable(),
           ],
         ),
       ),
     );
   }
 
-  //ListView tab
-  FutureBuilder listView() {
-    return FutureBuilder(
-        future: _bookService.readBooks('books', 'title'),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data?.length,
-              itemBuilder: ((context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                  child: Card(
-                    elevation: 8.0,
-                    child: ListTile(
-                      tileColor: const Color.fromRGBO(98, 163, 191, 0.5),
-                      leading: snapshot.data?.length != null
-                          ? Image.file(
-                              File(snapshot.data?[index].path != null
-                                  ? coverPath(path! +
-                                      '/' +
-                                      snapshot.data![index].path +
-                                      '/cover.jpg')!
-                                  : 'images/cover.jpg'),
-                            )
-                          : Image.file(File('images/cover.jpg')),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            snapshot.data?.length != null
-                                ? snapshot.data![index].author_sort
-                                : '',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          IconButton(
-                              icon: const Icon(Icons.delete),
-                              color: Colors.red,
-                              onPressed: () {})
-                        ],
-                      ),
-                      subtitle: Text(
-                        snapshot.data?.length != null
-                            ? snapshot.data![index].title
-                            : '',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
-  }
-
-  //DataTable tab
-  Widget dataTable() {
-    selectedBook = [];
-    return DataTable(
-      showCheckboxColumn: false,
-      columns: getColumns(columns),
-      rows: _bookList!.map((book) {
-        return DataRow(
-          selected: selectedBook.contains(book),
-          onSelectChanged: (value) {
-            Navigator.pushNamed(
-              context,
-              '/BookDetailsPage',
-              arguments: book,
-            );
-          },
-          cells: [
-            DataCell(Text(book.author_sort)),
-            DataCell(Text(book.title)),
-          ],
-        );
-      }).toList(),
-    );
-  }
-
   Widget DrawerNavigation(context) {
     return Drawer(
       child: ListView(children: [
-        DrawerHeader(
-            //decoration: BoxDecoration(color: Colors.blue),
-            child: Image.asset('images/bookshelf-icon.png')),
+        DrawerHeader(child: Image.asset('images/bookshelf-icon.png')),
         ListTile(
           leading: Icon(Icons.home),
           title: Text('Main window'),
@@ -187,6 +103,113 @@ class _MainWindowState extends State<MainWindow> {
         )
       ]),
     );
+  }
+
+  //ListView tab
+  FutureBuilder listView() {
+    return FutureBuilder(
+        future: _bookService.readBooks('books', 'title'),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data?.length as int,
+              itemBuilder: ((context, index) {
+                return bookItem(snapshot.data[index]);
+              }),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
+  }
+
+  Widget bookItem(book) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          color: Color.fromRGBO(98, 163, 191, 0.4),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.1),
+              offset: Offset(2, 2),
+              blurRadius: 40,
+            )
+          ],
+        ),
+        height: 70,
+        child: Row(
+          children: [
+            SizedBox(
+                width: 50,
+                child: Image.file(
+                  File(coverPath(path! + '/' + book.path + '/cover.jpg') ??
+                      'images/cover.jpg'),
+                )),
+            SizedBox(
+              width: 16,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      book.author_sort ?? '',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      book.title ?? '',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  //DataTable tab
+  Widget dataTable() {
+    selectedBook = [];
+    return FutureBuilder(
+        future: _bookService.readBooks('books', 'title'),
+        builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
+          if (snapshot.hasData) {
+            _bookList = snapshot.data;
+            return DataTable(
+              showCheckboxColumn: false,
+              columns: getColumns(columns),
+              rows: snapshot.data!.map((book) {
+                return DataRow(
+                  selected: selectedBook.contains(book),
+                  onSelectChanged: (value) {
+                    Navigator.pushNamed(
+                      context,
+                      '/BookDetailsPage',
+                      arguments: book,
+                    );
+                  },
+                  cells: [
+                    DataCell(Text(book.author_sort)),
+                    DataCell(Text(book.title)),
+                  ],
+                );
+              }).toList(),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
   }
 
   List<DataColumn> getColumns(List<String> columns) => columns
