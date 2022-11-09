@@ -145,8 +145,7 @@ class _MainWindowState extends State<MainWindow> {
             SizedBox(
                 width: 50,
                 child: Image.file(
-                  File(coverPath(path! + '/' + book.path + '/cover.jpg') ??
-                      'images/cover.jpg'),
+                  File(coverPath(path! + '/' + book.path + '/cover.jpg')),
                 )),
             SizedBox(
               width: 16,
@@ -246,7 +245,7 @@ class _MainWindowState extends State<MainWindow> {
   int compareString(bool ascending, String value1, String value2) =>
       ascending ? value1.compareTo(value2) : value2.compareTo(value1);
 
-  String? coverPath(String path) {
+  String coverPath(String path) {
     return File(path).existsSync() ? path : 'images/cover.jpg';
   }
 
