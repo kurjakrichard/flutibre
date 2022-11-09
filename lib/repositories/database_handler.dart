@@ -51,9 +51,21 @@ class DatabaseHandler {
   }
 
   // Insert Operation: Insert new record to database
-  Future<int> insert(String table, Map<String, dynamic> book) async {
+  Future<int> insert(String table, Book book) async {
     Database db = await database!;
-    return await db.insert(table, book);
+    if (Platform.isWindows || Platform.isLinux) {
+      try {
+        await db.execute('DROP TRIGGER books_insert_trg');
+        return await db.insert('books', book.toMap());
+      } catch (e) {
+        throw Exception('Some error$e');
+      } finally {
+        await db.rawQuery(
+            'CREATE TRIGGER books_insert_trg AFTER INSERT ON books BEGIN UPDATE books SET sort=title_sort(NEW.title),uuid=uuid4() WHERE id=NEW.id; END');
+      }
+    } else {
+      return await db.insert('books', book.toMap());
+    }
   }
 
   // Update Operation: Update record in the database

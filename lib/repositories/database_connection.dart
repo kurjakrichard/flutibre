@@ -7,12 +7,6 @@ import 'dart:io';
 class DatabaseConnection {
   static DatabaseConnection? _databaseConnection;
   DatabaseConnection._createInstance();
-  Map table = {
-    'tableName': 'categories',
-    'colId': 'id',
-    'colName': 'name',
-    'colPath': 'path'
-  };
 
   bool _isDatabaseExist = false;
 

@@ -42,7 +42,6 @@ class Book {
 
   Map<String, Object?> toMap() {
     return {
-      'id': id,
       'author_sort': author_sort,
       'title': title,
       'series_index': series_index,

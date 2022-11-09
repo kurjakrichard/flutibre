@@ -41,8 +41,11 @@ class _MainWindowState extends State<MainWindow> {
       length: 3,
       child: Scaffold(
         drawer: DrawerNavigation(context),
-        floatingActionButton:
-            FloatingActionButton(child: Icon(Icons.add), onPressed: () {}),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              _showFormDialog(context);
+            }),
         appBar: AppBar(
           bottom: const TabBar(
             //Azért nem kell index, mert maga a widget azonosítja a tabot.
@@ -79,6 +82,7 @@ class _MainWindowState extends State<MainWindow> {
     );
   }
 
+  //DrawerNavigation widget
   Widget DrawerNavigation(context) {
     return Drawer(
       child: ListView(children: [
@@ -290,20 +294,19 @@ class _MainWindowState extends State<MainWindow> {
                 ),
               ),
             ],
-            title: const Text('Categories Form'),
+            title: const Text('Add book'),
             content: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
                   TextField(
                     controller: _titleController,
                     decoration: const InputDecoration(
-                        hintText: 'Write a category', labelText: 'Category'),
+                        hintText: 'Write a Title', labelText: 'Title'),
                   ),
                   TextField(
                     controller: _authorController,
                     decoration: const InputDecoration(
-                        hintText: 'Write a description',
-                        labelText: 'Description'),
+                        hintText: 'Write a author', labelText: 'Author'),
                   ),
                 ],
               ),

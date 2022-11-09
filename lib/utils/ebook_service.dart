@@ -9,7 +9,7 @@ class EbookService {
   }
   //Save data to table
   saveBook(Book book) async {
-    return await _databaseHandler!.insert('books', book.toMap());
+    return await _databaseHandler!.insert('books', book);
   }
 
   //Read books as a list
@@ -19,6 +19,6 @@ class EbookService {
 
   //Insert new category
   Future<int> insertBook(String table, Book book) async {
-    return await _databaseHandler!.insert(table, book.toMap());
+    return await _databaseHandler!.insert(table, book);
   }
 }
