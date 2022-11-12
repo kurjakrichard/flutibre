@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/book.dart';
 import '../utils/ebook_service.dart';
 
+enum Page { list, grid, datatable }
+
 class MainWindow extends StatefulWidget {
   const MainWindow({Key? key}) : super(key: key);
 
@@ -19,11 +21,12 @@ class _MainWindowState extends State<MainWindow> {
   Book _book = Book();
   EbookService _bookService = EbookService();
   List<Book>? _bookList;
-  late List<Book> selectedBook;
-  String? path;
+  late List<Book> _selectedBook;
+  String? _path;
   int? sortColumnIndex;
   bool isAscending = false;
-  final columns = [
+  Page currentPage = Page.list;
+  final _columns = [
     'author',
     'title',
   ];
@@ -47,36 +50,39 @@ class _MainWindowState extends State<MainWindow> {
               _showFormDialog(context);
             }),
         appBar: AppBar(
-          bottom: const TabBar(
+          title: Text('Flutibre'),
+          bottom: TabBar(
             //Azért nem kell index, mert maga a widget azonosítja a tabot.
             labelColor: Colors.white,
             indicatorColor: Colors.orange,
             unselectedLabelColor: Colors.grey,
             tabs: <Widget>[
               Tab(
-                icon: Icon(Icons.list),
-                text: "Lista",
+                icon: Tooltip(child: Icon(Icons.list), message: 'Lista'),
               ),
               Tab(
-                icon: Icon(Icons.grid_4x4),
-                text: "Rács",
+                icon: Tooltip(child: Icon(Icons.grid_4x4), message: 'Rács'),
               ),
               Tab(
-                icon: Icon(Icons.dataset),
-                text: "Adattábla",
+                icon: Tooltip(child: Icon(Icons.dataset), message: 'Adattábla'),
               ),
             ],
+            onTap: (index) {
+              setState(() {
+                currentPage = Page.values[index];
+              });
+            },
           ),
-          title: Text('Flutibre'),
         ),
-        body: TabBarView(
-          children: <Widget>[
+        body: IndexedStack(
+          children: [
             listView(),
             Center(
               child: Text("Második fül"),
             ),
             dataTable(),
           ],
+          index: currentPage.index,
         ),
       ),
     );
@@ -86,7 +92,10 @@ class _MainWindowState extends State<MainWindow> {
   Widget DrawerNavigation(context) {
     return Drawer(
       child: ListView(children: [
-        DrawerHeader(child: Image.asset('images/bookshelf-icon.png')),
+        DrawerHeader(
+            child: Container(
+                color: Color.fromRGBO(119, 179, 212, 1),
+                child: Image.asset('images/bookshelf-icon.png'))),
         ListTile(
           leading: Icon(Icons.home),
           title: Text('Main window'),
@@ -128,8 +137,7 @@ class _MainWindowState extends State<MainWindow> {
   }
 
   Widget bookItem(book) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
+    return Card(
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -149,7 +157,7 @@ class _MainWindowState extends State<MainWindow> {
             SizedBox(
                 width: 50,
                 child: Image.file(
-                  File(coverPath(path! + '/' + book.path + '/cover.jpg')),
+                  File(coverPath(_path! + '/' + book.path + '/cover.jpg')),
                 )),
             SizedBox(
               width: 16,
@@ -162,6 +170,7 @@ class _MainWindowState extends State<MainWindow> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       book.author_sort ?? '',
+                      style: Theme.of(context).textTheme.subtitle1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -169,6 +178,7 @@ class _MainWindowState extends State<MainWindow> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       book.title ?? '',
+                      style: Theme.of(context).textTheme.subtitle2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -183,31 +193,38 @@ class _MainWindowState extends State<MainWindow> {
 
   //DataTable tab
   Widget dataTable() {
-    selectedBook = [];
+    _selectedBook = [];
     return FutureBuilder(
         future: _bookService.readBooks('books', 'title'),
         builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
           if (snapshot.hasData) {
             _bookList = snapshot.data;
-            return DataTable(
-              showCheckboxColumn: false,
-              columns: getColumns(columns),
-              rows: snapshot.data!.map((book) {
-                return DataRow(
-                  selected: selectedBook.contains(book),
-                  onSelectChanged: (value) {
-                    Navigator.pushNamed(
-                      context,
-                      '/BookDetailsPage',
-                      arguments: book,
+            return SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  showCheckboxColumn: false,
+                  dataRowHeight: 40,
+                  columns: getColumns(_columns),
+                  rows: snapshot.data!.map((book) {
+                    return DataRow(
+                      selected: _selectedBook.contains(book),
+                      onSelectChanged: (value) {
+                        Navigator.pushNamed(
+                          context,
+                          '/BookDetailsPage',
+                          arguments: book,
+                        );
+                      },
+                      cells: [
+                        DataCell(Text(book.author_sort)),
+                        DataCell(Text(book.title)),
+                      ],
                     );
-                  },
-                  cells: [
-                    DataCell(Text(book.author_sort)),
-                    DataCell(Text(book.title)),
-                  ],
-                );
-              }).toList(),
+                  }).toList(),
+                ),
+              ),
             );
           } else {
             return const Center(child: CircularProgressIndicator());
@@ -318,10 +335,10 @@ class _MainWindowState extends State<MainWindow> {
   //Database path
   void getPath() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    path = await prefs.getString('path');
+    _path = await prefs.getString('path');
 
     setState(() {
-      path;
+      _path;
     });
   }
 }

@@ -31,6 +31,7 @@ class Flutibre extends StatelessWidget {
             foregroundColor: Colors.white,
           ),
           scaffoldBackgroundColor: Colors.cyan[50],
+          fontFamily: 'Roboto',
           floatingActionButtonTheme: const FloatingActionButtonThemeData(
               backgroundColor: Colors.cyan, foregroundColor: Colors.white),
           elevatedButtonTheme: ElevatedButtonThemeData(
@@ -39,10 +40,44 @@ class Flutibre extends StatelessWidget {
               backgroundColor: Colors.cyan,
             ),
           ),
+          textTheme: const TextTheme(
+            //fejléc szövegek
+            headline1: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.white,
+                fontSize: 18),
+            //belső fejléc szövegek
+            subtitle1: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 16),
+            subtitle2: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 15),
+            //gombszövegek
+            headline3: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.white,
+                fontSize: 15),
+            //nagyobb belső szövegek
+            bodyText1: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 15),
+            //kisebb belső szövegek
+            bodyText2: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 12),
+            //vastag belső szövegek
+            headline2: TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
+          ),
         ),
         scrollBehavior: CustomScrollBehavior(),
         debugShowCheckedModeBanner: false,
-        //Settingspage if database not set or not exist
+        //Load SettingsPage if database not set or not exist
         home: isPath && isDb ? MainWindow() : SettingsPage());
   }
 }

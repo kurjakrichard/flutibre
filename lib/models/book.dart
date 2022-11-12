@@ -11,7 +11,7 @@ class Book {
       {this.id = 0,
       this.author_sort = '',
       this.title = '',
-      this.series_index = 0.0,
+      this.series_index = 1.0,
       this.path = ''});
 
   @override
