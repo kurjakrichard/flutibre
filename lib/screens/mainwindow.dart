@@ -121,13 +121,30 @@ class _MainWindowState extends State<MainWindow> {
   //ListView tab
   FutureBuilder listView() {
     return FutureBuilder(
-        future: _bookService.readBooks('books', 'title'),
+        future: _bookService.readBooks('title'),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data?.length as int,
               itemBuilder: ((context, index) {
-                return bookItem(snapshot.data[index]);
+                return GestureDetector(
+                  onTap: () {
+                    snapshot.data[index].path.toString().contains('cover.jpg')
+                        ? snapshot.data[index].path
+                        : snapshot.data[index].path = coverPath(_path! +
+                            '/' +
+                            snapshot.data[index].path +
+                            '/cover.jpg');
+                    Navigator.pushNamed(
+                      context,
+                      '/BookDetailsPage',
+                      arguments: snapshot.data[index],
+                    );
+                  },
+                  child: bookItem(
+                    snapshot.data[index],
+                  ),
+                );
               }),
             );
           } else {
@@ -155,10 +172,11 @@ class _MainWindowState extends State<MainWindow> {
         child: Row(
           children: [
             SizedBox(
-                width: 50,
-                child: Image.file(
-                  File(coverPath(_path! + '/' + book.path + '/cover.jpg')),
-                )),
+              width: 50,
+              child: Image.file(
+                File(coverPath(_path! + '/' + book.path + '/cover.jpg')),
+              ),
+            ),
             SizedBox(
               width: 16,
             ),
@@ -195,7 +213,7 @@ class _MainWindowState extends State<MainWindow> {
   Widget dataTable() {
     _selectedBook = [];
     return FutureBuilder(
-        future: _bookService.readBooks('books', 'title'),
+        future: _bookService.readBooks('title'),
         builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
           if (snapshot.hasData) {
             _bookList = snapshot.data;
@@ -210,7 +228,11 @@ class _MainWindowState extends State<MainWindow> {
                   rows: snapshot.data!.map((book) {
                     return DataRow(
                       selected: _selectedBook.contains(book),
-                      onSelectChanged: (value) {
+                      onSelectChanged: (value) async {
+                        book.path.contains('cover.jpg')
+                            ? book.path
+                            : book.path = coverPath(
+                                _path! + '/' + book.path + '/cover.jpg');
                         Navigator.pushNamed(
                           context,
                           '/BookDetailsPage',
@@ -282,9 +304,9 @@ class _MainWindowState extends State<MainWindow> {
                   _book.title = _titleController.text;
                   _book.author_sort = _authorController.text;
                   // ignore: unused_local_variable
-                  int result = await _bookService.insertBook('books', _book);
+                  int result = await _bookService.insertBook(_book);
                   setState(() {
-                    _bookService.readBooks('books', 'title');
+                    _bookService.readBooks('title');
                   });
                   _titleController = TextEditingController();
                   _authorController = TextEditingController();

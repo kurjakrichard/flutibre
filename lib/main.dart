@@ -2,6 +2,7 @@ import 'package:flutibre/screens/settingspage.dart';
 import 'package:flutibre/repositories/database_connection.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'screens/book_details_page.dart';
 import 'screens/mainwindow.dart';
 import 'utils/custom_scroll_behavior.dart';
 
@@ -25,6 +26,9 @@ class Flutibre extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        routes: {
+          '/BookDetailsPage': (context) => const BookDetailsPage(),
+        },
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.cyan,
@@ -40,44 +44,36 @@ class Flutibre extends StatelessWidget {
               backgroundColor: Colors.cyan,
             ),
           ),
-          textTheme: const TextTheme(
-            //fejléc szövegek
-            headline1: TextStyle(
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
-                fontSize: 18),
-            //belső fejléc szövegek
-            subtitle1: TextStyle(
-                fontWeight: FontWeight.normal,
-                color: Colors.black,
-                fontSize: 16),
-            subtitle2: TextStyle(
-                fontWeight: FontWeight.normal,
-                color: Colors.black,
-                fontSize: 15),
-            //gombszövegek
-            headline3: TextStyle(
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
-                fontSize: 15),
-            //nagyobb belső szövegek
-            bodyText1: TextStyle(
-                fontWeight: FontWeight.normal,
-                color: Colors.black,
-                fontSize: 15),
-            //kisebb belső szövegek
-            bodyText2: TextStyle(
-                fontWeight: FontWeight.normal,
-                color: Colors.black,
-                fontSize: 12),
-            //vastag belső szövegek
-            headline2: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
-          ),
+          textTheme: textTheme(),
         ),
         scrollBehavior: CustomScrollBehavior(),
         debugShowCheckedModeBanner: false,
         //Load SettingsPage if database not set or not exist
         home: isPath && isDb ? MainWindow() : SettingsPage());
+  }
+
+  TextTheme textTheme() {
+    return const TextTheme(
+      //fejléc szövegek
+      headline1: TextStyle(
+          fontWeight: FontWeight.normal, color: Colors.white, fontSize: 18),
+      //belső fejléc szövegek
+      subtitle1: TextStyle(
+          fontWeight: FontWeight.normal, color: Colors.black, fontSize: 16),
+      subtitle2: TextStyle(
+          fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
+      //gombszövegek
+      headline3: TextStyle(
+          fontWeight: FontWeight.normal, color: Colors.white, fontSize: 15),
+      //nagyobb lista szövegek
+      bodyText1: TextStyle(
+          fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
+      //kisebb lista szövegek
+      bodyText2: TextStyle(
+          fontWeight: FontWeight.normal, color: Colors.black, fontSize: 12),
+      //vastag belső szövegek
+      headline2: TextStyle(
+          fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
+    );
   }
 }
