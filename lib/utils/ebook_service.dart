@@ -1,5 +1,6 @@
 import 'package:flutibre/repositories/database_handler.dart';
 import '../models/book.dart';
+import '../models/data.dart';
 
 class EbookService {
   DatabaseHandler? _databaseHandler;
@@ -15,6 +16,11 @@ class EbookService {
   //Read books as a list
   Future<List<Book>> readBooks(String order) async {
     return await _databaseHandler!.getAllBooks();
+  }
+
+  //Load book formats as a list
+  Future<List<Data>> readBookFormats(int bookId) async {
+    return await _databaseHandler!.getFormatsById(bookId);
   }
 
   //Insert new book

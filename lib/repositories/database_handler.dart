@@ -5,6 +5,8 @@ import 'package:flutibre/repositories/database_connection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../models/data.dart';
+
 class DatabaseHandler {
   DatabaseConnection? _databaseConnection;
 
@@ -31,9 +33,24 @@ class DatabaseHandler {
 
     for (var item in bookMapList) {
       Book book = Book.fromMap(item);
+      book.formats = await getFormatsById(book.id);
       bookList.add(book);
     }
     return bookList;
+  }
+
+  // Get book formats from database
+  Future<List<Data>> getFormatsById(int id) async {
+    Database? db = await database;
+    List<Map<String, dynamic>> dataMapList =
+        await db!.query('data', where: 'book = ?', whereArgs: [id]);
+    List<Data> dataList = <Data>[];
+
+    for (var item in dataMapList) {
+      Data data = Data.fromMap(item);
+      dataList.add(data);
+    }
+    return dataList;
   }
 
   // Insert Operation: Insert new record to database

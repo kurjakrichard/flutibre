@@ -1,3 +1,7 @@
+import 'package:flutibre/models/authors.dart';
+
+import 'data.dart';
+
 class Book {
   int id;
   // ignore: non_constant_identifier_names
@@ -6,13 +10,15 @@ class Book {
   // ignore: non_constant_identifier_names
   double series_index;
   String path;
+  List<Data>? formats;
 
   Book(
       {this.id = 0,
       this.author_sort = '',
       this.title = '',
       this.series_index = 1.0,
-      this.path = ''});
+      this.path = '',
+      this.formats});
 
   @override
   bool operator ==(Object other) =>
