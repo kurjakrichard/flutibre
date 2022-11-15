@@ -222,14 +222,19 @@ class _MainWindowState extends State<MainWindow> {
                 mainAxisSpacing: 10,
               ),
               itemBuilder: (context, index) {
-                Book book = snapshot.data[index];
                 return Center(
                   child: RawMaterialButton(
                     onPressed: () {
+                      snapshot.data[index].path.toString().contains('cover.jpg')
+                          ? snapshot.data[index].path
+                          : snapshot.data[index].path = coverPath(_path! +
+                              '/' +
+                              snapshot.data[index].path +
+                              '/cover.jpg');
                       Navigator.pushNamed(
                         context,
                         '/BookDetailsPage',
-                        arguments: book,
+                        arguments: snapshot.data[index],
                       );
                     },
                     child: Hero(
@@ -257,7 +262,6 @@ class _MainWindowState extends State<MainWindow> {
           } else {
             return const Center(child: CircularProgressIndicator());
           }
-          ;
         });
   }
 
