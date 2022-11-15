@@ -1,9 +1,7 @@
 import 'package:flutibre/models/book.dart';
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
-import '../models/data.dart';
 import '../utils/ebook_service.dart';
 
 class BookDetailsPage extends StatelessWidget {
@@ -115,6 +113,12 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                                   String bookPath = widget.book!.path
                                       .replaceAll(
                                           'cover.jpg',
+                                          widget.book!.formats![0].name +
+                                              '.' +
+                                              widget.book!.formats![0].format
+                                                  .toLowerCase())
+                                      .replaceAll(
+                                          'cover.png',
                                           widget.book!.formats![0].name +
                                               '.' +
                                               widget.book!.formats![0].format

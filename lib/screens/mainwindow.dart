@@ -77,9 +77,7 @@ class _MainWindowState extends State<MainWindow> {
         body: IndexedStack(
           children: [
             listView(),
-            Center(
-              child: Text("Második fül"),
-            ),
+            gridView(),
             dataTable(),
           ],
           index: currentPage.index,
@@ -91,6 +89,7 @@ class _MainWindowState extends State<MainWindow> {
   //DrawerNavigation widget
   Widget DrawerNavigation(context) {
     return Drawer(
+      backgroundColor: Colors.cyan[100],
       child: ListView(children: [
         DrawerHeader(
             child: Container(
@@ -209,6 +208,59 @@ class _MainWindowState extends State<MainWindow> {
     );
   }
 
+  //GridView tab
+  FutureBuilder gridView() {
+    int size = MediaQuery.of(context).size.width.round();
+    return FutureBuilder(
+        future: _bookService.readBooks('title'),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: (size / 200).round(),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (context, index) {
+                Book book = snapshot.data[index];
+                return Center(
+                  child: RawMaterialButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/BookDetailsPage',
+                        arguments: book,
+                      );
+                    },
+                    child: Hero(
+                      tag: 'logo$index',
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                            image: FileImage(
+                              File(coverPath(_path! +
+                                  '/' +
+                                  snapshot.data[index].path +
+                                  '/cover.jpg')),
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              itemCount: snapshot.data.length,
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+          ;
+        });
+  }
+
   //DataTable tab
   Widget dataTable() {
     _selectedBook = [];
@@ -289,7 +341,7 @@ class _MainWindowState extends State<MainWindow> {
       ascending ? value1.compareTo(value2) : value2.compareTo(value1);
 
   String coverPath(String path) {
-    return File(path).existsSync() ? path : 'images/cover.jpg';
+    return File(path).existsSync() ? path : 'images/cover.png';
   }
 
   // ignore: unused_element
