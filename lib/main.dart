@@ -28,6 +28,8 @@ class Flutibre extends StatelessWidget {
     return MaterialApp(
         routes: {
           '/BookDetailsPage': (context) => const BookDetailsPage(),
+          '/MainWindow': (context) => MainWindow(),
+          '/SettingsPage': (context) => SettingsPage()
         },
         theme: ThemeData(
           appBarTheme: const AppBarTheme(

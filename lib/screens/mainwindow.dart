@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:flutibre/screens/settingspage.dart';
 import 'package:flutter/material.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/book.dart';
 import '../utils/ebook_service.dart';
@@ -26,6 +26,8 @@ class _MainWindowState extends State<MainWindow> {
   int? sortColumnIndex;
   bool isAscending = false;
   Page currentPage = Page.list;
+  Widget? bookDetails;
+  String formats = "";
   final _columns = [
     'author',
     'title',
@@ -35,6 +37,7 @@ class _MainWindowState extends State<MainWindow> {
   void initState() {
     super.initState();
     getPath();
+    bookDetails = bookDetailsItem();
   }
 
   @override
@@ -50,7 +53,10 @@ class _MainWindowState extends State<MainWindow> {
               _showFormDialog(context);
             }),
         appBar: AppBar(
-          title: Text('Flutibre'),
+          title: Text(
+            'Flutibre',
+            style: Theme.of(context).textTheme.headline1,
+          ),
           bottom: TabBar(
             //Azért nem kell index, mert maga a widget azonosítja a tabot.
             labelColor: Colors.white,
@@ -76,7 +82,27 @@ class _MainWindowState extends State<MainWindow> {
         ),
         body: IndexedStack(
           children: [
-            listView(),
+            LayoutBuilder(builder: (context, constraints) {
+              var isWideLayout = constraints.maxWidth > 850;
+              if (!isWideLayout) {
+                return listView(false);
+              } else {
+                return Row(
+                  children: [
+                    Expanded(child: listView(true)),
+                    const VerticalDivider(
+                      color: Colors.cyan,
+                      thickness: 3,
+                      width: 3,
+                    ),
+                    SizedBox(
+                      width: 450,
+                      child: bookDetails,
+                    ),
+                  ],
+                );
+              }
+            }),
             gridView(),
             dataTable(),
           ],
@@ -89,36 +115,47 @@ class _MainWindowState extends State<MainWindow> {
   //DrawerNavigation widget
   Widget DrawerNavigation(context) {
     return Drawer(
-      backgroundColor: Colors.cyan[100],
-      child: ListView(children: [
-        DrawerHeader(
-            child: Container(
-                color: Color.fromRGBO(119, 179, 212, 1),
-                child: Image.asset('images/bookshelf-icon.png'))),
-        ListTile(
-          leading: Icon(Icons.home),
-          title: Text('Main window'),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => MainWindow()));
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.settings),
-          title: Text('Settings page'),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => SettingsPage()));
-          },
-        )
-      ]),
+      child: Material(
+        color: Color.fromRGBO(98, 163, 191, 0.9),
+        child: ListView(children: [
+          DrawerHeader(
+              decoration: const BoxDecoration(color: Colors.cyan),
+              child: Container(
+                  // color: Color.fromRGBO(119, 179, 212, 1),
+                  child: Image.asset('images/bookshelf-icon.png'))),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text(
+              'Main window',
+              style: Theme.of(context).textTheme.headline1,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => MainWindow()));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text(
+              'Settings page',
+              style: Theme.of(context).textTheme.headline1,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(
+                context,
+                '/SettingsPage',
+              );
+            },
+          )
+        ]),
+      ),
     );
   }
 
   //ListView tab
-  FutureBuilder listView() {
+  FutureBuilder listView(bool isWide) {
     return FutureBuilder(
         future: _bookService.readBooks('title'),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -128,17 +165,24 @@ class _MainWindowState extends State<MainWindow> {
               itemBuilder: ((context, index) {
                 return GestureDetector(
                   onTap: () {
-                    snapshot.data[index].path.toString().contains('cover.jpg')
-                        ? snapshot.data[index].path
-                        : snapshot.data[index].path = coverPath(_path! +
-                            '/' +
-                            snapshot.data[index].path +
-                            '/cover.jpg');
-                    Navigator.pushNamed(
-                      context,
-                      '/BookDetailsPage',
-                      arguments: snapshot.data[index],
-                    );
+                    if (!isWide) {
+                      snapshot.data[index].path.toString().contains('cover.jpg')
+                          ? snapshot.data[index].path
+                          : snapshot.data[index].path = coverPath(_path! +
+                              '/' +
+                              snapshot.data[index].path +
+                              '/cover.jpg');
+                      Navigator.pushNamed(
+                        context,
+                        '/BookDetailsPage',
+                        arguments: snapshot.data[index],
+                      );
+                    } else {
+                      setState(() {
+                        bookDetails =
+                            bookDetailsItem(book: snapshot.data[index]);
+                      });
+                    }
                   },
                   child: bookItem(
                     snapshot.data[index],
@@ -158,7 +202,7 @@ class _MainWindowState extends State<MainWindow> {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(4)),
-          color: Color.fromRGBO(98, 163, 191, 0.4),
+          color: Color.fromRGBO(98, 163, 191, 0.5),
           boxShadow: [
             BoxShadow(
               color: Color.fromRGBO(0, 0, 0, 0.1),
@@ -418,5 +462,122 @@ class _MainWindowState extends State<MainWindow> {
     setState(() {
       _path;
     });
+  }
+
+  Widget bookDetailsItem({Book? book}) {
+    List<String> formats = [];
+    if (book == null) {
+      return Center(child: Text('Nincs könyv kiválasztva'));
+    } else {
+      for (var item in book.formats!) {
+        formats.add(item.format.toLowerCase());
+      }
+      return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Image.file(
+                  File(coverPath(_path! + '/' + book.path + '/cover.jpg')),
+                ),
+              ),
+              SizedBox(
+                height: 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          bookDetailElement(
+                              detailType: 'Title:', detailContent: book.title),
+                          bookDetailElement(
+                              detailType: 'Author:',
+                              detailContent: book.author_sort),
+                          Text(
+                              'Formats: ${formats.toString().replaceAll('[', '').replaceAll(']', '')}',
+                              style: Theme.of(context).textTheme.bodyText1),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              style: TextButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                backgroundColor: Colors.cyan,
+                              ),
+                              child: Text(
+                                'Back',
+                                style: Theme.of(context).textTheme.headline3,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                print(book.path);
+                                String bookPath = await _path! +
+                                    '/' +
+                                    book.path +
+                                    '/' +
+                                    book.formats![0].name +
+                                    '.' +
+                                    book.formats![0].format.toLowerCase();
+                                if (Platform.isWindows) {
+                                  OpenFilex.open(
+                                      bookPath.replaceAll('/', '\\'));
+                                } else {
+                                  OpenFilex.open(bookPath);
+                                }
+                              },
+                              style: TextButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                backgroundColor: Colors.cyan,
+                              ),
+                              child: Text(
+                                'Open',
+                                style: Theme.of(context).textTheme.headline3,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 60)
+            ],
+          ));
+    }
+  }
+
+  Widget bookDetailElement(
+      {required String detailType, required String detailContent}) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Text(detailType, style: Theme.of(context).textTheme.headline2),
+        const VerticalDivider(),
+        Text(detailContent, style: Theme.of(context).textTheme.bodyText1),
+      ],
+    );
   }
 }

@@ -70,10 +70,10 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            BookDetailElement(
+                            bookDetailElement(
                                 detailType: 'Title:',
                                 detailContent: widget.book!.title),
-                            BookDetailElement(
+                            bookDetailElement(
                                 detailType: 'Author:',
                                 detailContent: widget.book!.author_sort),
                             Text(
@@ -175,20 +175,9 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
       ),
     );
   }
-}
 
-class BookDetailElement extends StatelessWidget {
-  final String detailType;
-  final String detailContent;
-
-  const BookDetailElement({
-    Key? key,
-    required this.detailType,
-    required this.detailContent,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget bookDetailElement(
+      {required String detailType, required String detailContent}) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
