@@ -1,0 +1,75 @@
+{
+  "@@locale": "en",
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "mainwindow": "Main Window",
+  "@mainwindow": {
+    "description": "Main Window"
+  },
+    "settingspage": "Settings Page",
+  "@settingspage": {
+    "description": "settingspage"
+  },
+  "list": "List",
+  "@list": {
+    "description": "List button"
+  },
+  "tiles": "Tiles",
+  "@tiles": {
+    "description": "Tiles button"
+  },
+  "addbook": "Add book",
+  "@addbook": {
+    "description": "Add book text"
+  },
+  "title": "Title",
+  "@title": {
+    "description": "Title text"
+  },
+  "author": "Author",
+  "@author": {
+    "description": "Author text"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language text"
+  },
+  "create": "Create",
+  "@create": {
+    "description": "Create button"
+  },
+  "confirmation": "Are you sure?",
+  "@confirmation": {
+    "description": "Are you sure?"
+  },
+  "titlerequired": "Title is required!",
+  "@titlerequired": {
+    "description": "Title is required!"
+  },
+  "authorrequired": "Author is required!",
+  "@authorrequired": {
+    "description": "Author is required!"
+  },
+  "languagerequired": "Language is required!",
+  "@languagerequired": {
+    "description": "Language is required!"
+  },
+  "wanttodelete": "Want to delete?",
+  "@wanttodelete": {
+    "description": "Want to delete?"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back button"
+  },
+  "open": "Open",
+  "@open": {
+    "description": "Open button"
+  }
+}

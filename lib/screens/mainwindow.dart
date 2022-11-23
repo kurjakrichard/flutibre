@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../models/book.dart';
 import '../utils/ebook_service.dart';
 
@@ -126,7 +127,7 @@ class _MainWindowState extends State<MainWindow> {
           ListTile(
             leading: Icon(Icons.home),
             title: Text(
-              'Main window',
+              AppLocalizations.of(context)!.mainwindow,
               style: Theme.of(context).textTheme.headline1,
             ),
             onTap: () {
@@ -138,7 +139,7 @@ class _MainWindowState extends State<MainWindow> {
           ListTile(
             leading: Icon(Icons.settings),
             title: Text(
-              'Settings page',
+              AppLocalizations.of(context)!.settingspage,
               style: Theme.of(context).textTheme.headline1,
             ),
             onTap: () {

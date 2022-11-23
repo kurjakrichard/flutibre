@@ -1,6 +1,8 @@
 import 'package:flutibre/screens/settingspage.dart';
 import 'package:flutibre/repositories/database_connection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/book_details_page.dart';
 import 'screens/mainwindow.dart';
@@ -26,6 +28,17 @@ class Flutibre extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          AppLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', ''),
+          Locale('hu', ''),
+        ],
+        locale: const Locale('hu'),
         routes: {
           '/BookDetailsPage': (context) => const BookDetailsPage(),
           '/MainWindow': (context) => MainWindow(),
