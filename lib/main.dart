@@ -69,9 +69,9 @@ class Flutibre extends StatelessWidget {
 
   TextTheme textTheme() {
     return const TextTheme(
-      //fejléc szövegek
+      //appbar text
       headline1: TextStyle(
-          fontWeight: FontWeight.normal, color: Colors.white, fontSize: 18),
+          fontWeight: FontWeight.normal, color: Colors.white, fontSize: 20),
       //belső fejléc szövegek
       subtitle1: TextStyle(
           fontWeight: FontWeight.normal, color: Colors.black, fontSize: 16),

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:io/io.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 
@@ -38,7 +39,9 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Settings page')),
+      appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.settingspage,
+              style: Theme.of(context).textTheme.headline1)),
       body: ListView(children: [
         Padding(
           padding:
@@ -47,7 +50,8 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               Container(
                 width: 120,
-                child: Text('Choose language:'),
+                child: Text(AppLocalizations.of(context)!.choselanguage + ':',
+                    style: Theme.of(context).textTheme.bodyText1),
               ),
               Container(width: 20),
               dropDown(_languages),
@@ -59,13 +63,15 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(_dbpath ?? ''),
+              child: Text(_dbpath ?? '',
+                  style: Theme.of(context).textTheme.bodyText1),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 onPressed: () => _selectFolder(),
-                child: const Text('Pick folder'),
+                child: Text('Pick folder',
+                    style: Theme.of(context).textTheme.headline3),
               ),
             ),
           ],
@@ -88,7 +94,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context) => MainWindow(),
                     ));
               },
-              child: Text('Ok'),
+              child: Text(AppLocalizations.of(context)!.ok,
+                  style: Theme.of(context).textTheme.headline3),
             ),
           ),
           Padding(
@@ -101,7 +108,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context) => MainWindow(),
                     ));
               },
-              child: Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel,
+                  style: Theme.of(context).textTheme.headline3),
             ),
           ),
         ]),

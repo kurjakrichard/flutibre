@@ -9,7 +9,7 @@
     "addbook": "Könyv hozzáadása",
     "title": "Cím",
     "author": "Szerző",
-    "language": "Nyelv",
+    "choselanguage": "Nyelv választó",
     "create": "Hozzáad",
     "confirmation": "Biztos vagy benne?",
     "titlerequired": "A cím megadása kötelező!",

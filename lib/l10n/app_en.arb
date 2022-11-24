@@ -36,9 +36,9 @@
   "@author": {
     "description": "Author text"
   },
-  "language": "Language",
-  "@language": {
-    "description": "Language text"
+  "choselanguage": "Chose language",
+  "@choselanguage": {
+    "description": "Language selector"
   },
   "create": "Create",
   "@create": {

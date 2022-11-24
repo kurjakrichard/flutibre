@@ -128,7 +128,7 @@ class _MainWindowState extends State<MainWindow> {
             leading: Icon(Icons.home),
             title: Text(
               AppLocalizations.of(context)!.mainwindow,
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.headline3,
             ),
             onTap: () {
               Navigator.pop(context);
@@ -140,7 +140,7 @@ class _MainWindowState extends State<MainWindow> {
             leading: Icon(Icons.settings),
             title: Text(
               AppLocalizations.of(context)!.settingspage,
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.headline3,
             ),
             onTap: () {
               Navigator.pop(context);
@@ -341,8 +341,10 @@ class _MainWindowState extends State<MainWindow> {
                         );
                       },
                       cells: [
-                        DataCell(Text(book.author_sort)),
-                        DataCell(Text(book.title)),
+                        DataCell(Text(book.author_sort,
+                            style: Theme.of(context).textTheme.bodyText2)),
+                        DataCell(Text(book.title,
+                            style: Theme.of(context).textTheme.bodyText2)),
                       ],
                     );
                   }).toList(),

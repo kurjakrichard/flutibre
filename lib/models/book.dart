@@ -1,5 +1,3 @@
-import 'package:flutibre/models/authors.dart';
-
 import 'data.dart';
 
 class Book {
