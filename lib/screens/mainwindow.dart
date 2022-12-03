@@ -577,9 +577,15 @@ class _MainWindowState extends State<MainWindow> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Text(detailType, style: Theme.of(context).textTheme.headline2),
+        Text(detailType,
+            style: Theme.of(context).textTheme.headline2,
+            overflow: TextOverflow.ellipsis),
         const VerticalDivider(),
-        Text(detailContent, style: Theme.of(context).textTheme.bodyText1),
+        Flexible(
+          child: Text(detailContent,
+              style: Theme.of(context).textTheme.bodyText1,
+              overflow: TextOverflow.ellipsis),
+        ),
       ],
     );
   }

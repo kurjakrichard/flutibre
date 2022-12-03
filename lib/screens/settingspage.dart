@@ -22,6 +22,7 @@ class _SettingsPageState extends State<SettingsPage> {
   // path to save SharePreferences
   String? _dbpath;
   String? _tempPath;
+  bool? _isPath;
   //check if path/Ebooks exists
   bool _newFolder = false;
   // ignore: unused_field
@@ -80,36 +81,38 @@ class _SettingsPageState extends State<SettingsPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
+              child: Text(AppLocalizations.of(context)!.ok,
+                  style: Theme.of(context).textTheme.headline3),
               onPressed: () {
                 if (_tempPath != null) {
                   _savePath(_tempPath!);
-                  if (_newFolder) {
+                  if (_tempPath != null && _newFolder) {
                     copyPath('assets/Ebooks', _tempPath!);
                     _newFolder = false;
                   }
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MainWindow(),
+                      ));
                 }
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MainWindow(),
-                    ));
               },
-              child: Text(AppLocalizations.of(context)!.ok,
-                  style: Theme.of(context).textTheme.headline3),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MainWindow(),
-                    ));
-              },
               child: Text(AppLocalizations.of(context)!.cancel,
                   style: Theme.of(context).textTheme.headline3),
+              onPressed: () {
+                if (_isPath!) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MainWindow(),
+                      ));
+                }
+              },
             ),
           ),
         ]),
@@ -119,7 +122,11 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<String?> _loadPath() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? path = await prefs.getString('path');
+    _tempPath = await prefs.getString('path');
+    _isPath = await File('$_tempPath/metadata.db').exists();
+    _tempPath = null;
+
+    String? path = _isPath! ? await prefs.getString('path') : null;
 
     if (path != null) {
       setState(() {

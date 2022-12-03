@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 import 'screens/book_details_page.dart';
 import 'screens/mainwindow.dart';
 import 'utils/custom_scroll_behavior.dart';
@@ -12,11 +13,18 @@ void main() async {
   //Check path
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isPath = await prefs.containsKey("path");
+
   //Check database
-  DatabaseConnection db = DatabaseConnection();
-  await db.initializeDB();
-  bool isDb = await db.isDatabaseExist;
-  runApp(Flutibre(isPath, isDb));
+  bool isDb = await databaseFactory
+      .databaseExists(await prefs.getString("path")! + '/metadata.db');
+  if (isDb) {
+    DatabaseConnection db = DatabaseConnection();
+    await db.initializeDB();
+  }
+
+  runApp(
+    Flutibre(isPath, isDb),
+  );
 }
 
 class Flutibre extends StatelessWidget {
