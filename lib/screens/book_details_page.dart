@@ -1,4 +1,4 @@
-import 'package:flutibre/models/book.dart';
+import 'package:flutibre/model/book.dart';
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'dart:io';

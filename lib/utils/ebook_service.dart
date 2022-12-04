@@ -1,6 +1,6 @@
-import 'package:flutibre/repositories/database_handler.dart';
-import '../models/book.dart';
-import '../models/data.dart';
+import 'package:flutibre/repository/database_handler.dart';
+import '../model/book.dart';
+import '../model/data.dart';
 
 class EbookService {
   DatabaseHandler? _databaseHandler;

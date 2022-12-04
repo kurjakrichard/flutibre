@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../models/book.dart';
+import '../model/book.dart';
 import '../utils/ebook_service.dart';
 
 enum Page { list, grid, datatable }

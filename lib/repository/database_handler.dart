@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:flutibre/models/book.dart';
-import 'package:flutibre/repositories/database_connection.dart';
+import 'package:flutibre/model/book.dart';
+import 'package:flutibre/repository/database_connection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../models/data.dart';
+import '../model/data.dart';
 
 class DatabaseHandler {
   DatabaseConnection? _databaseConnection;
