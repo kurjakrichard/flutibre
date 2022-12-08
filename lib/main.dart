@@ -1,8 +1,10 @@
 import 'package:flutibre/screens/settingspage.dart';
 import 'package:flutibre/repository/database_connection.dart';
+import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'screens/book_details_page.dart';
@@ -10,6 +12,8 @@ import 'screens/mainwindow.dart';
 import 'utils/custom_scroll_behavior.dart';
 
 void main() async {
+  Provider.debugCheckInvalidValueType = null;
+
   //Check path
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isPath = await prefs.containsKey("path");
@@ -23,7 +27,12 @@ void main() async {
   }
 
   runApp(
-    Flutibre(isPath, isDb),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => BookProvider()),
+      ],
+      child: Flutibre(isPath, isDb),
+    ),
   );
 }
 

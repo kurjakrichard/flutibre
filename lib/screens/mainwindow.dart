@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../model/book.dart';
@@ -21,7 +23,8 @@ class _MainWindowState extends State<MainWindow> {
 
   Book _book = Book();
   EbookService _bookService = EbookService();
-  List<Book>? _bookList;
+  late Future<List<Book>>? _bookList;
+  List<Book>? _dataTableBookList;
   late List<Book> _selectedBook;
   String? _path;
   int? sortColumnIndex;
@@ -39,6 +42,7 @@ class _MainWindowState extends State<MainWindow> {
     super.initState();
     getPath();
     bookDetails = bookDetailsItem();
+    _bookList = Provider.of<BookProvider>(context, listen: false).getAllBooks();
   }
 
   @override
@@ -105,7 +109,7 @@ class _MainWindowState extends State<MainWindow> {
               }
             }),
             gridView(),
-            dataTable(),
+            //dataTable(),
           ],
           index: currentPage.index,
         ),
@@ -158,7 +162,7 @@ class _MainWindowState extends State<MainWindow> {
   //ListView tab
   FutureBuilder listView(bool isWide) {
     return FutureBuilder(
-        future: _bookService.readBooks('title'),
+        future: _bookList,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
@@ -257,7 +261,7 @@ class _MainWindowState extends State<MainWindow> {
   FutureBuilder gridView() {
     int size = MediaQuery.of(context).size.width.round();
     return FutureBuilder(
-        future: _bookService.readBooks('title'),
+        future: _bookList,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return GridView.builder(
@@ -314,10 +318,10 @@ class _MainWindowState extends State<MainWindow> {
   Widget dataTable() {
     _selectedBook = [];
     return FutureBuilder(
-        future: _bookService.readBooks('title'),
+        future: _bookList,
         builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
           if (snapshot.hasData) {
-            _bookList = snapshot.data;
+            _dataTableBookList = snapshot.data;
             return SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: SingleChildScrollView(
@@ -375,10 +379,10 @@ class _MainWindowState extends State<MainWindow> {
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      _bookList!.sort((book1, book2) =>
+      _dataTableBookList!.sort((book1, book2) =>
           compareString(ascending, book1.author_sort, book2.author_sort));
     } else if (columnIndex == 1) {
-      _bookList!.sort(
+      _dataTableBookList!.sort(
           (book1, book2) => compareString(ascending, book1.title, book2.title));
     }
 
