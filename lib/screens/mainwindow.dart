@@ -69,13 +69,19 @@ class _MainWindowState extends State<MainWindow> {
             unselectedLabelColor: Colors.grey,
             tabs: <Widget>[
               Tab(
-                icon: Tooltip(child: Icon(Icons.list), message: 'Lista'),
+                icon: Tooltip(
+                    child: Icon(Icons.list),
+                    message: AppLocalizations.of(context)!.list),
               ),
               Tab(
-                icon: Tooltip(child: Icon(Icons.grid_4x4), message: 'Rács'),
+                icon: Tooltip(
+                    child: Icon(Icons.grid_4x4),
+                    message: AppLocalizations.of(context)!.tiles),
               ),
               Tab(
-                icon: Tooltip(child: Icon(Icons.dataset), message: 'Adattábla'),
+                icon: Tooltip(
+                    child: Icon(Icons.dataset),
+                    message: AppLocalizations.of(context)!.datatable),
               ),
             ],
             onTap: (index) {

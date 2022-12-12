@@ -6,6 +6,7 @@
     "settingspage": "Beállítások",
     "list": "Lista nézet",
     "tiles": "Rács nézet",
+    "datatable": "Részletes lista",
     "addbook": "Könyv hozzáadása",
     "title": "Cím",
     "author": "Szerző",
@@ -17,5 +18,6 @@
     "languagerequired": "A nyelv megadása kötelező!",
     "wanttodelete": "Biztosan törlöd?",
     "back": "Vissza",
-    "open": "Megnyit"
+    "open": "Megnyit",
+    "pickfolder": "Mappa választó"
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutibre/model/book.dart';
+import 'package:flutibre/model/booklist_item.dart';
 import 'package:flutibre/repository/database_connection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -22,6 +23,21 @@ class DatabaseHandler {
       return _database!;
     }
     return _database!;
+  }
+
+  // Get Booklist from database
+  Future<List<BookListItem>> getBookList() async {
+    Database? db = await database;
+    List<Map<String, dynamic>> bookMapList = await db!.rawQuery(
+        'SELECT books.id, name, author_sort, title, books.sort, series_index, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id');
+    List<BookListItem> bookListItems = <BookListItem>[];
+
+    for (var item in bookMapList) {
+      BookListItem bookListItem = BookListItem.fromMap(item);
+
+      bookListItems.add(bookListItem);
+    }
+    return bookListItems;
   }
 
   // Get Booklist from database

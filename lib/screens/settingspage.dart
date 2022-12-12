@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
-
+import '../repository/database_connection.dart';
 import 'mainwindow.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -71,7 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 onPressed: () => _selectFolder(),
-                child: Text('Pick folder',
+                child: Text(AppLocalizations.of(context)!.pickfolder,
                     style: Theme.of(context).textTheme.headline3),
               ),
             ),
@@ -95,6 +95,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       MaterialPageRoute(
                         builder: (context) => MainWindow(),
                       ));
+                } else {
+                  Navigator.pop(context);
                 }
               },
             ),
@@ -106,11 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: Theme.of(context).textTheme.headline3),
               onPressed: () {
                 if (_isPath!) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MainWindow(),
-                      ));
+                  Navigator.pop(context);
                 }
               },
             ),
@@ -125,7 +123,6 @@ class _SettingsPageState extends State<SettingsPage> {
     _tempPath = await prefs.getString('path');
     _isPath = await File('$_tempPath/metadata.db').exists();
     _tempPath = null;
-
     String? path = _isPath! ? await prefs.getString('path') : null;
 
     if (path != null) {

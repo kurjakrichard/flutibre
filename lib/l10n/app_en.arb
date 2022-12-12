@@ -24,6 +24,10 @@
   "@tiles": {
     "description": "Tiles button"
   },
+  "datatable": "Data table",
+  "@tiles": {
+    "description": "Data table"
+  },
   "addbook": "Add book",
   "@addbook": {
     "description": "Add book text"
@@ -71,5 +75,9 @@
   "open": "Open",
   "@open": {
     "description": "Open button"
+  },
+  "pickfolder": "Pick folder",
+  "@pickfolder": {
+    "description": "Pick folder"
   }
 }
