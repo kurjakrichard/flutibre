@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'package:flutibre/repository/database_connection.dart';
+import 'package:flutibre/repository/database_handler.dart';
 import 'package:io/io.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
-import '../repository/database_connection.dart';
 import 'mainwindow.dart';
 
 class SettingsPage extends StatefulWidget {

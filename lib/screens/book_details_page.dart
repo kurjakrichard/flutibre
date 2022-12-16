@@ -1,6 +1,7 @@
 import 'package:flutibre/model/book.dart';
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import '../utils/ebook_service.dart';
 
@@ -30,6 +31,12 @@ class BookDetailsContent extends StatefulWidget {
 class _BookDetailsContentState extends State<BookDetailsContent> {
   EbookService _bookService = EbookService();
   String formats = "";
+  String? _path;
+  @override
+  void initState() {
+    super.initState();
+    getPath();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +64,7 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
             child: Column(
               children: <Widget>[
                 Expanded(
-                  child: Image.file(File(widget.book!.path)),
+                  child: loadCover(),
                 ),
                 SizedBox(
                   height: 160,
@@ -149,6 +156,22 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                 ),
               ],
             )));
+  }
+
+  void getPath() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _path = await prefs.getString('path');
+
+    setState(() {
+      _path;
+    });
+  }
+
+  Image loadCover() {
+    String path = widget.book!.path;
+    return path != 'cover.jpg'
+        ? Image.file(File(_path! + '/' + path + '/cover.jpg'))
+        : Image.asset('images/cover.png');
   }
 
   Future<dynamic> deleteDialog(BuildContext context) {

@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../model/book.dart';
+import '../model/booklist_item.dart';
+import '../model/data.dart';
 import '../utils/ebook_service.dart';
 
 enum Page { list, grid, datatable }
@@ -23,9 +25,9 @@ class _MainWindowState extends State<MainWindow> {
 
   Book _book = Book();
   EbookService _bookService = EbookService();
-  late Future<List<Book>>? _bookList;
-  List<Book>? _dataTableBookList;
-  late List<Book> _selectedBook;
+  late Future<List<BookListItem>>? _bookList;
+  List<BookListItem>? _dataTableBookList;
+  late List<Book> _selectedBooks;
   String? _path;
   int? sortColumnIndex;
   bool isAscending = false;
@@ -42,7 +44,7 @@ class _MainWindowState extends State<MainWindow> {
     super.initState();
     getPath();
     bookDetails = bookDetailsItem();
-    _bookList = Provider.of<BookProvider>(context, listen: false).getAllBooks();
+    _bookList = Provider.of<BookProvider>(context, listen: false).getBookList();
   }
 
   @override
@@ -167,37 +169,40 @@ class _MainWindowState extends State<MainWindow> {
 
   //ListView tab
   FutureBuilder listView(bool isWide) {
+    Book? selectedBook;
     return FutureBuilder(
         future: _bookList,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data?.length as int,
+              itemExtent: 90,
               itemBuilder: ((context, index) {
                 return GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    List<Data>? formats = await _bookService
+                        .readBookFormats(snapshot.data[index].id);
+                    selectedBook = Book(
+                        id: snapshot.data[index].id,
+                        title: snapshot.data[index].title,
+                        author_sort: snapshot.data[index].author_sort,
+                        path: snapshot.data[index].path,
+                        has_cover: snapshot.data[index].has_cover,
+                        series_index: snapshot.data[index].series_index,
+                        formats: formats);
                     if (!isWide) {
-                      snapshot.data[index].path.toString().contains('cover.jpg')
-                          ? snapshot.data[index].path
-                          : snapshot.data[index].path = coverPath(_path! +
-                              '/' +
-                              snapshot.data[index].path +
-                              '/cover.jpg');
                       Navigator.pushNamed(
                         context,
                         '/BookDetailsPage',
-                        arguments: snapshot.data[index],
+                        arguments: selectedBook,
                       );
                     } else {
                       setState(() {
-                        bookDetails =
-                            bookDetailsItem(book: snapshot.data[index]);
+                        bookDetails = bookDetailsItem(book: selectedBook);
                       });
                     }
                   },
-                  child: bookItem(
-                    snapshot.data[index],
-                  ),
+                  child: bookItem(snapshot.data[index]),
                 );
               }),
             );
@@ -227,9 +232,7 @@ class _MainWindowState extends State<MainWindow> {
           children: [
             SizedBox(
               width: 50,
-              child: Image.file(
-                File(coverPath(_path! + '/' + book.path + '/cover.jpg')),
-              ),
+              child: loadCover(book.has_cover, book.path),
             ),
             SizedBox(
               width: 16,
@@ -279,17 +282,21 @@ class _MainWindowState extends State<MainWindow> {
               itemBuilder: (context, index) {
                 return Center(
                   child: RawMaterialButton(
-                    onPressed: () {
-                      snapshot.data[index].path.toString().contains('cover.jpg')
-                          ? snapshot.data[index].path
-                          : snapshot.data[index].path = coverPath(_path! +
-                              '/' +
-                              snapshot.data[index].path +
-                              '/cover.jpg');
+                    onPressed: () async {
+                      List<Data>? formats = await _bookService
+                          .readBookFormats(snapshot.data[index].id);
+                      Book selectedBook = Book(
+                          id: snapshot.data[index].id,
+                          title: snapshot.data[index].title,
+                          author_sort: snapshot.data[index].author_sort,
+                          path: snapshot.data[index].path,
+                          has_cover: snapshot.data[index].has_cover,
+                          series_index: snapshot.data[index].series_index,
+                          formats: formats);
                       Navigator.pushNamed(
                         context,
                         '/BookDetailsPage',
-                        arguments: snapshot.data[index],
+                        arguments: selectedBook,
                       );
                     },
                     child: Hero(
@@ -322,10 +329,11 @@ class _MainWindowState extends State<MainWindow> {
 
   //DataTable tab
   Widget dataTable() {
-    _selectedBook = [];
+    _selectedBooks = [];
     return FutureBuilder(
         future: _bookList,
-        builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<List<BookListItem>> snapshot) {
           if (snapshot.hasData) {
             _dataTableBookList = snapshot.data;
             return SingleChildScrollView(
@@ -338,12 +346,8 @@ class _MainWindowState extends State<MainWindow> {
                   columns: getColumns(_columns),
                   rows: snapshot.data!.map((book) {
                     return DataRow(
-                      selected: _selectedBook.contains(book),
+                      selected: _selectedBooks.contains(book),
                       onSelectChanged: (value) async {
-                        book.path.contains('cover.jpg')
-                            ? book.path
-                            : book.path = coverPath(
-                                _path! + '/' + book.path + '/cover.jpg');
                         Navigator.pushNamed(
                           context,
                           '/BookDetailsPage',
@@ -482,6 +486,7 @@ class _MainWindowState extends State<MainWindow> {
     if (book == null) {
       return Center(child: Text('Nincs könyv kiválasztva'));
     } else {
+      debugPrint(book!.has_cover.toString());
       for (var item in book.formats!) {
         formats.add(item.format.toLowerCase());
       }
@@ -490,9 +495,7 @@ class _MainWindowState extends State<MainWindow> {
           child: Column(
             children: <Widget>[
               Expanded(
-                child: Image.file(
-                  File(coverPath(_path! + '/' + book.path + '/cover.jpg')),
-                ),
+                child: loadCover(book.has_cover, book.path),
               ),
               SizedBox(
                 height: 200,
@@ -580,6 +583,12 @@ class _MainWindowState extends State<MainWindow> {
             ],
           ));
     }
+  }
+
+  Image loadCover(int has_cover, String path) {
+    return has_cover == 1
+        ? Image.file(File(coverPath(_path! + '/' + path + '/cover.jpg')))
+        : Image.asset('images/cover.png');
   }
 
   Widget bookDetailElement(

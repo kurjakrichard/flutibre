@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../model/booklist_item.dart';
 import '../repository/database_handler.dart';
 
 import '../model/book.dart';
@@ -20,6 +21,10 @@ class BookProvider with ChangeNotifier {
 
   Future<List<Book>> getAllBooks() async {
     return await _databaseHandler!.getAllBooks();
+  }
+
+  Future<List<BookListItem>> getBookList() async {
+    return await _databaseHandler!.getBookList();
   }
 
   void getBooks() async {
