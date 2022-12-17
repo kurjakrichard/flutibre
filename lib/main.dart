@@ -22,8 +22,8 @@ void main() async {
   bool isDb = await databaseFactory
       .databaseExists(await prefs.getString("path")! + '/metadata.db');
   if (isDb) {
-    DatabaseConnection db = DatabaseConnection();
-    await db.initializeDB();
+    //DatabaseConnection db = DatabaseConnection();
+    //await db.initializeDB();
   }
 
   runApp(

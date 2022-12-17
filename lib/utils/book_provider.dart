@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import '../model/booklist_item.dart';
+import '../repository/database_connection.dart';
 import '../repository/database_handler.dart';
 
 import '../model/book.dart';
 
 class BookProvider with ChangeNotifier {
   List<Book> _books = [];
+  List<BookListItem> _bookListItems = [];
   List<Book> get books => _books;
   DatabaseHandler? _databaseHandler;
 
   BookProvider() {
     _databaseHandler = DatabaseHandler();
+    DatabaseConnection db = DatabaseConnection();
+    db.initializeDB();
   }
 
   void addBook(Book book) async {

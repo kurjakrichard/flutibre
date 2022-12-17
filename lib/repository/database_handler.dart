@@ -32,9 +32,10 @@ class DatabaseHandler {
 
   // Get Booklist from database
   Future<List<BookListItem>> getBookList() async {
+    String and = '&';
     Database? db = await database;
     List<Map<String, dynamic>> bookMapList = await db!.rawQuery(
-        'SELECT books.id, name, author_sort, title, books.sort, has_cover, series_index, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id ORDER BY books.sort');
+        'SELECT DISTINCT books.id, (SELECT group_concat(name, " & ") from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE book = books.id) as name, author_sort, title, books.sort, series_index, has_cover, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id ORDER BY books.sort');
     List<BookListItem> bookListItems = <BookListItem>[];
 
     for (var item in bookMapList) {

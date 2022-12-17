@@ -3,10 +3,12 @@ import 'package:flutibre/repository/database_connection.dart';
 import 'package:flutibre/repository/database_handler.dart';
 import 'package:io/io.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
+import '../utils/book_provider.dart';
 import 'mainwindow.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -184,6 +186,7 @@ class _SettingsPageState extends State<SettingsPage> {
           await File('$_tempPath/Ebooks/metadata.db').exists()) {
         setState(() {
           _dbpath = _tempPath;
+          Provider.of<BookProvider>(context, listen: false).getBookList();
           _userAborted = _tempPath == null;
         });
       } else {

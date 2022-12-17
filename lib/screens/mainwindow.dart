@@ -244,7 +244,7 @@ class _MainWindowState extends State<MainWindow> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
-                      book.author_sort ?? '',
+                      book.name ?? '',
                       style: Theme.of(context).textTheme.subtitle1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -486,7 +486,6 @@ class _MainWindowState extends State<MainWindow> {
     if (book == null) {
       return Center(child: Text('Nincs könyv kiválasztva'));
     } else {
-      debugPrint(book!.has_cover.toString());
       for (var item in book.formats!) {
         formats.add(item.format.toLowerCase());
       }
@@ -556,10 +555,11 @@ class _MainWindowState extends State<MainWindow> {
                                     '.' +
                                     book.formats![0].format.toLowerCase();
                                 if (Platform.isWindows) {
-                                  OpenFilex.open(
-                                      bookPath.replaceAll('/', '\\'));
+                                  OpenFilex.open(bookPath.replaceAll('/', '\\')
+                                    ..replaceAll('\&', r'\&'));
                                 } else {
-                                  OpenFilex.open(bookPath);
+                                  OpenFilex.open(
+                                      bookPath.replaceAll('\&', r'\&'));
                                 }
                               },
                               style: TextButton.styleFrom(
