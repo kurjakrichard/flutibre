@@ -1,5 +1,4 @@
 import 'package:flutibre/screens/settingspage.dart';
-import 'package:flutibre/repository/database_connection.dart';
 import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -21,10 +20,6 @@ void main() async {
   //Check database
   bool isDb = await databaseFactory
       .databaseExists(await prefs.getString("path")! + '/metadata.db');
-  if (isDb) {
-    //DatabaseConnection db = DatabaseConnection();
-    //await db.initializeDB();
-  }
 
   runApp(
     MultiProvider(

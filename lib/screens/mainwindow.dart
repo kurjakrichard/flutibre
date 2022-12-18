@@ -546,7 +546,6 @@ class _MainWindowState extends State<MainWindow> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () async {
-                                print(book.path);
                                 String bookPath = await _path! +
                                     '/' +
                                     book.path +
@@ -554,12 +553,14 @@ class _MainWindowState extends State<MainWindow> {
                                     book.formats![0].name +
                                     '.' +
                                     book.formats![0].format.toLowerCase();
+                                print(bookPath);
+                                //bookPath.replaceAll('&', '\&');
+                                print(bookPath);
                                 if (Platform.isWindows) {
-                                  OpenFilex.open(bookPath.replaceAll('/', '\\')
-                                    ..replaceAll('\&', r'\&'));
-                                } else {
                                   OpenFilex.open(
-                                      bookPath.replaceAll('\&', r'\&'));
+                                      bookPath.replaceAll('/', '\\'));
+                                } else {
+                                  OpenFilex.open(bookPath);
                                 }
                               },
                               style: TextButton.styleFrom(
