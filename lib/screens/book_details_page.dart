@@ -48,7 +48,7 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
         appBar: AppBar(
           title: Text(
             widget.book!.title,
-            style: Theme.of(context).textTheme.headline1,
+            style: Theme.of(context).textTheme.displayLarge,
           ),
           actions: [
             IconButton(
@@ -85,7 +85,7 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                                 detailContent: widget.book!.author_sort),
                             Text(
                                 'Formats: ${formats.toString().replaceAll('[', '').replaceAll(']', '')}',
-                                style: Theme.of(context).textTheme.bodyText1),
+                                style: Theme.of(context).textTheme.bodyLarge),
                             const SizedBox(
                               height: 10,
                             ),
@@ -107,7 +107,8 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                                 ),
                                 child: Text(
                                   'Back',
-                                  style: Theme.of(context).textTheme.headline3,
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall,
                                 ),
                               ),
                             ),
@@ -144,7 +145,8 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                                 ),
                                 child: Text(
                                   'Open',
-                                  style: Theme.of(context).textTheme.headline3,
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall,
                                 ),
                               ),
                             ),
@@ -205,12 +207,12 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text(detailType,
-            style: Theme.of(context).textTheme.headline2,
+            style: Theme.of(context).textTheme.displayMedium,
             overflow: TextOverflow.ellipsis),
         const VerticalDivider(),
         Flexible(
           child: Text(detailContent,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
               overflow: TextOverflow.ellipsis),
         ),
       ],

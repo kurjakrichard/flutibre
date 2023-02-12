@@ -11,6 +11,7 @@ import 'screens/mainwindow.dart';
 import 'utils/custom_scroll_behavior.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Provider.debugCheckInvalidValueType = null;
 
   //Check path
@@ -18,8 +19,11 @@ void main() async {
   bool isPath = await prefs.containsKey("path");
 
   //Check database
-  bool isDb = await databaseFactory
-      .databaseExists(await prefs.getString("path")! + '/metadata.db');
+  bool isDb = false;
+  isPath
+      ? isDb = await databaseFactory
+          .databaseExists(await prefs.getString("path")! + '/metadata.db')
+      : isDb = false;
 
   runApp(
     MultiProvider(
@@ -80,26 +84,26 @@ class Flutibre extends StatelessWidget {
   }
 
   TextTheme textTheme() {
-    return const TextTheme(
+    return TextTheme(
       //appbar text
-      headline1: TextStyle(
+      displayLarge: TextStyle(
           fontWeight: FontWeight.normal, color: Colors.white, fontSize: 20),
       //belső fejléc szövegek
-      subtitle1: TextStyle(
+      titleMedium: TextStyle(
           fontWeight: FontWeight.normal, color: Colors.black, fontSize: 16),
-      subtitle2: TextStyle(
+      titleSmall: TextStyle(
           fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
       //gombszövegek
-      headline3: TextStyle(
+      displaySmall: TextStyle(
           fontWeight: FontWeight.normal, color: Colors.white, fontSize: 15),
       //nagyobb lista szövegek
-      bodyText1: TextStyle(
+      bodyLarge: TextStyle(
           fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
       //kisebb lista szövegek
-      bodyText2: TextStyle(
+      bodyMedium: TextStyle(
           fontWeight: FontWeight.normal, color: Colors.black, fontSize: 12),
       //vastag belső szövegek
-      headline2: TextStyle(
+      displayMedium: TextStyle(
           fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
     );
   }

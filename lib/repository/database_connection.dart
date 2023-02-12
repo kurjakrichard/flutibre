@@ -23,6 +23,10 @@ class DatabaseConnection {
 
   Future<Database> initializeDB() async {
     String? path = await getPath();
+    print(path);
+    if (path == null) {
+      return await databaseFactoryFfi.openDatabase(inMemoryDatabasePath);
+    }
     if (Platform.isWindows || Platform.isLinux) {
       return await desktopDatabase(path);
     } else {

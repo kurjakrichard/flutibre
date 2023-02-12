@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:flutibre/model/book.dart';
 import 'package:flutibre/model/booklist_item.dart';
 import 'package:flutibre/repository/database_connection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
-
 import '../model/data.dart';
 
 class DatabaseHandler {
@@ -26,13 +24,12 @@ class DatabaseHandler {
   }
 
   void restartDatabase() async {
-    _database!.close();
+    //_database!.close();
     _database = await _databaseConnection!.initializeDB();
   }
 
   // Get Booklist from database
   Future<List<BookListItem>> getBookList() async {
-    String and = '&';
     Database? db = await database;
     List<Map<String, dynamic>> bookMapList = await db!.rawQuery(
         'SELECT DISTINCT books.id, (SELECT group_concat(name, " & ") from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE book = books.id) as name, author_sort, title, books.sort, series_index, has_cover, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id ORDER BY books.sort');

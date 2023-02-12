@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../model/booklist_item.dart';
 import '../repository/database_connection.dart';
 import '../repository/database_handler.dart';
-
 import '../model/book.dart';
 
 class BookProvider with ChangeNotifier {
   List<Book> _books = [];
+  // ignore: unused_field
   List<BookListItem> _bookListItems = [];
   List<Book> get books => _books;
   DatabaseHandler? _databaseHandler;
@@ -24,6 +24,9 @@ class BookProvider with ChangeNotifier {
   }
 
   Future<List<Book>> getAllBooks() async {
+    _databaseHandler = DatabaseHandler();
+    DatabaseConnection db = DatabaseConnection();
+    db.initializeDB();
     return await _databaseHandler!.getAllBooks();
   }
 

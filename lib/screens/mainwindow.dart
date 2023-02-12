@@ -62,7 +62,7 @@ class _MainWindowState extends State<MainWindow> {
         appBar: AppBar(
           title: Text(
             'Flutibre',
-            style: Theme.of(context).textTheme.headline1,
+            style: Theme.of(context).textTheme.displayLarge,
           ),
           bottom: TabBar(
             //Azért nem kell index, mert maga a widget azonosítja a tabot.
@@ -140,7 +140,7 @@ class _MainWindowState extends State<MainWindow> {
             leading: Icon(Icons.home),
             title: Text(
               AppLocalizations.of(context)!.mainwindow,
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.displaySmall,
             ),
             onTap: () {
               Navigator.pop(context);
@@ -152,7 +152,7 @@ class _MainWindowState extends State<MainWindow> {
             leading: Icon(Icons.settings),
             title: Text(
               AppLocalizations.of(context)!.settingspage,
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.displaySmall,
             ),
             onTap: () {
               Navigator.pop(context);
@@ -245,7 +245,7 @@ class _MainWindowState extends State<MainWindow> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       book.name ?? '',
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme.of(context).textTheme.titleMedium,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -253,7 +253,7 @@ class _MainWindowState extends State<MainWindow> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       book.title ?? '',
-                      style: Theme.of(context).textTheme.subtitle2,
+                      style: Theme.of(context).textTheme.titleSmall,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -356,9 +356,9 @@ class _MainWindowState extends State<MainWindow> {
                       },
                       cells: [
                         DataCell(Text(book.author_sort,
-                            style: Theme.of(context).textTheme.bodyText2)),
+                            style: Theme.of(context).textTheme.bodyMedium)),
                         DataCell(Text(book.title,
-                            style: Theme.of(context).textTheme.bodyText2)),
+                            style: Theme.of(context).textTheme.bodyMedium)),
                       ],
                     );
                   }).toList(),
@@ -514,7 +514,7 @@ class _MainWindowState extends State<MainWindow> {
                               detailContent: book.author_sort),
                           Text(
                               'Formats: ${formats.toString().replaceAll('[', '').replaceAll(']', '')}',
-                              style: Theme.of(context).textTheme.bodyText1),
+                              style: Theme.of(context).textTheme.bodyLarge),
                           const SizedBox(
                             height: 10,
                           ),
@@ -536,7 +536,7 @@ class _MainWindowState extends State<MainWindow> {
                               ),
                               child: Text(
                                 'Back',
-                                style: Theme.of(context).textTheme.headline3,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                             ),
                           ),
@@ -570,7 +570,7 @@ class _MainWindowState extends State<MainWindow> {
                               ),
                               child: Text(
                                 'Open',
-                                style: Theme.of(context).textTheme.headline3,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                             ),
                           ),
@@ -598,12 +598,12 @@ class _MainWindowState extends State<MainWindow> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text(detailType,
-            style: Theme.of(context).textTheme.headline2,
+            style: Theme.of(context).textTheme.displayMedium,
             overflow: TextOverflow.ellipsis),
         const VerticalDivider(),
         Flexible(
           child: Text(detailContent,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
               overflow: TextOverflow.ellipsis),
         ),
       ],

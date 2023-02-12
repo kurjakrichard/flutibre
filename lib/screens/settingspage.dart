@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:flutibre/repository/database_connection.dart';
-import 'package:flutibre/repository/database_handler.dart';
 import 'package:io/io.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
+import '../repository/database_handler.dart';
 import '../utils/book_provider.dart';
 import 'mainwindow.dart';
 
@@ -45,7 +44,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.settingspage,
-              style: Theme.of(context).textTheme.headline1)),
+              style: Theme.of(context).textTheme.displayLarge)),
       body: ListView(children: [
         Padding(
           padding:
@@ -55,7 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Container(
                 width: 120,
                 child: Text(AppLocalizations.of(context)!.choselanguage + ':',
-                    style: Theme.of(context).textTheme.bodyText1),
+                    style: Theme.of(context).textTheme.bodyLarge),
               ),
               Container(width: 20),
               dropDown(_languages),
@@ -68,47 +67,53 @@ class _SettingsPageState extends State<SettingsPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(_dbpath ?? '',
-                  style: Theme.of(context).textTheme.bodyText1),
+                  style: Theme.of(context).textTheme.bodyLarge),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 onPressed: () => _selectFolder(),
                 child: Text(AppLocalizations.of(context)!.pickfolder,
-                    style: Theme.of(context).textTheme.headline3),
+                    style: Theme.of(context).textTheme.displaySmall),
               ),
             ),
           ],
         ),
         Row(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              child: Text(AppLocalizations.of(context)!.ok,
-                  style: Theme.of(context).textTheme.headline3),
-              onPressed: () {
-                if (_tempPath != null) {
-                  _savePath(_tempPath!);
-                  if (_tempPath != null && _newFolder) {
-                    copyPath('assets/Ebooks', _tempPath!);
-                    _newFolder = false;
-                  }
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MainWindow(),
-                      ));
-                } else {
-                  Navigator.pop(context);
-                }
-              },
-            ),
+          Consumer<BookProvider>(
+            builder: (BuildContext context, value, Widget? child) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  child: Text(AppLocalizations.of(context)!.ok,
+                      style: Theme.of(context).textTheme.displaySmall),
+                  onPressed: () async {
+                    if (_tempPath != null) {
+                      await _savePath(_tempPath!);
+                      if (_tempPath != null && _newFolder) {
+                        await copyPath('assets/Ebooks', _tempPath!);
+                        _newFolder = false;
+                      }
+
+                      await value.getBookList();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MainWindow(),
+                          ));
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               child: Text(AppLocalizations.of(context)!.cancel,
-                  style: Theme.of(context).textTheme.headline3),
+                  style: Theme.of(context).textTheme.displaySmall),
               onPressed: () {
                 if (_isPath!) {
                   Navigator.pop(context);
@@ -142,6 +147,8 @@ class _SettingsPageState extends State<SettingsPage> {
     final prefs = await SharedPreferences.getInstance();
     if (dbpath != '') {
       await prefs.setString('path', dbpath);
+      DatabaseHandler? _databaseHandler = DatabaseHandler();
+      _databaseHandler.restartDatabase();
     }
   }
 
