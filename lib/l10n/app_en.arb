@@ -1,5 +1,29 @@
 {
   "@@locale": "en",
+  "homepage": "HomePage",
+  "@homepage": {
+    "description": "HomePage"
+  },
+  "settingspage": "Settings Page",
+  "@settingspage": {
+    "description": "settingspage"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme selector"
+  },
+  "darktheme": "Dark Theme",
+  "@darktheme": {
+    "description": "Dark theme"
+  },
+    "librarypath": "Library path",
+  "@librarypath": {
+    "description": "Ebook library path"
+  },
   "ok": "OK",
   "@ok": {
     "description": "OK button"
@@ -7,14 +31,6 @@
   "cancel": "Cancel",
   "@cancel": {
     "description": "Cancel button"
-  },
-  "mainwindow": "Main Window",
-  "@mainwindow": {
-    "description": "Main Window"
-  },
-    "settingspage": "Settings Page",
-  "@settingspage": {
-    "description": "settingspage"
   },
   "list": "List",
   "@list": {
@@ -40,9 +56,9 @@
   "@author": {
     "description": "Author text"
   },
-  "choselanguage": "Chose language",
-  "@choselanguage": {
-    "description": "Language selector"
+  "language": "Language",
+  "@language": {
+    "description": "Language"
   },
   "create": "Create",
   "@create": {

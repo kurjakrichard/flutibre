@@ -1,34 +1,34 @@
+// ignore_for_file: use_build_context_synchronously
 import 'dart:io';
-import 'package:flutibre/utils/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../main.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
 import '../model/data.dart';
+import '../providers/booklist_provider.dart';
 import '../utils/ebook_service.dart';
 
 enum Page { list, grid, datatable }
 
-class MainWindow extends StatefulWidget {
-  const MainWindow({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<MainWindow> createState() => _MainWindowState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MainWindowState extends State<MainWindow> {
+class _HomePageState extends State<HomePage> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _authorController = TextEditingController();
-
-  Book _book = Book();
-  EbookService _bookService = EbookService();
-  late Future<List<BookListItem>>? _bookList;
+  TextEditingController searchController = TextEditingController();
+  final Book _book = Book();
+  final EbookService _bookService = EbookService();
   List<BookListItem>? _dataTableBookList;
   late List<Book> _selectedBooks;
-  String? _path;
+  int _selectedIndex = 0;
   int? sortColumnIndex;
   bool isAscending = false;
   Page currentPage = Page.list;
@@ -42,124 +42,166 @@ class _MainWindowState extends State<MainWindow> {
   @override
   void initState() {
     super.initState();
-    getPath();
     bookDetails = bookDetailsItem();
-    _bookList = Provider.of<BookProvider>(context, listen: false).getBookList();
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      initialIndex: 0,
-      length: 3,
-      child: Scaffold(
-        drawer: DrawerNavigation(context),
-        floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              _showFormDialog(context);
-            }),
-        appBar: AppBar(
-          title: Text(
-            'Flutibre',
-            style: Theme.of(context).textTheme.displayLarge,
+        initialIndex: 0,
+        length: 3,
+        child: Consumer<BookListProvider>(
+          builder: (context, books, child) => Scaffold(
+            drawer: drawerNavigation(context),
+            floatingActionButton: FloatingActionButton(
+                child: const Icon(Icons.add),
+                onPressed: () {
+                  _showFormDialog(context);
+                }),
+            appBar: AppBar(
+              title: const Text(
+                'Flutibre',
+              ),
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showMaterialBanner(
+                      MaterialBanner(
+                        content: TextField(
+                          controller: searchController,
+                          onChanged: (value) {
+                            value.isEmpty
+                                ? books.toggleAllBooks()
+                                : books.filteredBookList(value);
+                          },
+                          textInputAction: TextInputAction.go,
+                          decoration: const InputDecoration(
+                            icon: Icon(
+                              Icons.search,
+                            ),
+                            border: InputBorder.none,
+                            hintText: 'Search term',
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .clearMaterialBanners();
+                            },
+                            child: const Text('Bezárás'),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                )
+              ],
+            ),
+            bottomNavigationBar: bottomNavigationBar(),
+            body: IndexedStack(
+              index: currentPage.index,
+              children: [
+                LayoutBuilder(builder: (context, constraints) {
+                  var isWideLayout = constraints.maxWidth > 850;
+                  if (!isWideLayout) {
+                    return listView(false, books);
+                  } else {
+                    return Row(
+                      children: [
+                        Expanded(child: listView(true, books)),
+                        const VerticalDivider(
+                          color: Colors.cyan,
+                          thickness: 3,
+                          width: 3,
+                        ),
+                        SizedBox(
+                          width: 450,
+                          child: bookDetails,
+                        ),
+                      ],
+                    );
+                  }
+                }),
+                gridView(books),
+                dataTable(books),
+              ],
+            ),
           ),
-          bottom: TabBar(
-            //Azért nem kell index, mert maga a widget azonosítja a tabot.
-            labelColor: Colors.white,
-            indicatorColor: Colors.orange,
-            unselectedLabelColor: Colors.grey,
-            tabs: <Widget>[
-              Tab(
-                icon: Tooltip(
-                    child: Icon(Icons.list),
-                    message: AppLocalizations.of(context)!.list),
-              ),
-              Tab(
-                icon: Tooltip(
-                    child: Icon(Icons.grid_4x4),
-                    message: AppLocalizations.of(context)!.tiles),
-              ),
-              Tab(
-                icon: Tooltip(
-                    child: Icon(Icons.dataset),
-                    message: AppLocalizations.of(context)!.datatable),
-              ),
-            ],
-            onTap: (index) {
-              setState(() {
-                currentPage = Page.values[index];
-              });
-            },
-          ),
+        ));
+  }
+
+  BottomNavigationBar bottomNavigationBar() {
+    return BottomNavigationBar(
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      currentIndex: _selectedIndex,
+      onTap: (index) {
+        setState(() {
+          _selectedIndex = index;
+          currentPage = Page.values[index];
+        });
+      },
+      items: [
+        BottomNavigationBarItem(
+          label: '',
+          icon: Tooltip(
+              message: AppLocalizations.of(context)!.list,
+              child: const Icon(Icons.list)),
         ),
-        body: IndexedStack(
-          children: [
-            LayoutBuilder(builder: (context, constraints) {
-              var isWideLayout = constraints.maxWidth > 850;
-              if (!isWideLayout) {
-                return listView(false);
-              } else {
-                return Row(
-                  children: [
-                    Expanded(child: listView(true)),
-                    const VerticalDivider(
-                      color: Colors.cyan,
-                      thickness: 3,
-                      width: 3,
-                    ),
-                    SizedBox(
-                      width: 450,
-                      child: bookDetails,
-                    ),
-                  ],
-                );
-              }
-            }),
-            gridView(),
-            //dataTable(),
-          ],
-          index: currentPage.index,
+        BottomNavigationBarItem(
+          label: '',
+          icon: Tooltip(
+              message: AppLocalizations.of(context)!.tiles,
+              child: const Icon(Icons.grid_4x4)),
         ),
-      ),
+        BottomNavigationBarItem(
+          label: '',
+          icon: Tooltip(
+              message: AppLocalizations.of(context)!.datatable,
+              child: const Icon(Icons.dataset)),
+        ),
+      ],
     );
   }
 
-  //DrawerNavigation widget
-  Widget DrawerNavigation(context) {
-    return Drawer(
-      child: Material(
-        color: Color.fromRGBO(98, 163, 191, 0.9),
+//DrawerNavigation widget
+  Widget drawerNavigation(context) {
+    return Material(
+      child: Drawer(
         child: ListView(children: [
           DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.cyan),
-              child: Container(
-                  // color: Color.fromRGBO(119, 179, 212, 1),
-                  child: Image.asset('images/bookshelf-icon.png'))),
+              child: Row(
+            children: [
+              Image.asset('images/bookshelf-icon2.png'),
+              const Padding(
+                padding: EdgeInsets.only(left: 12.0),
+                child: Text(
+                  'Flutibre',
+                  style: TextStyle(fontSize: 24),
+                ),
+              ),
+            ],
+          )),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text(
-              AppLocalizations.of(context)!.mainwindow,
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => MainWindow()));
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text(
-              AppLocalizations.of(context)!.settingspage,
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
+            leading: const Icon(Icons.home),
+            title: Text(AppLocalizations.of(context)!.homepage),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(
                 context,
-                '/SettingsPage',
+                '/homepage',
               );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: Text(AppLocalizations.of(context)!.settingspage),
+            onTap: () {
+              ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/settings');
             },
           )
         ]),
@@ -168,10 +210,10 @@ class _MainWindowState extends State<MainWindow> {
   }
 
   //ListView tab
-  FutureBuilder listView(bool isWide) {
+  FutureBuilder listView(bool isWide, BookListProvider books) {
     Book? selectedBook;
     return FutureBuilder(
-        future: _bookList,
+        future: books.currentBooks2,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
@@ -193,7 +235,7 @@ class _MainWindowState extends State<MainWindow> {
                     if (!isWide) {
                       Navigator.pushNamed(
                         context,
-                        '/BookDetailsPage',
+                        '/bookdetailspage',
                         arguments: selectedBook,
                       );
                     } else {
@@ -216,7 +258,7 @@ class _MainWindowState extends State<MainWindow> {
     return Card(
       child: Container(
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(4)),
           color: Color.fromRGBO(98, 163, 191, 0.5),
           boxShadow: [
@@ -234,7 +276,7 @@ class _MainWindowState extends State<MainWindow> {
               width: 50,
               child: loadCover(book.has_cover, book.path),
             ),
-            SizedBox(
+            const SizedBox(
               width: 16,
             ),
             Expanded(
@@ -245,7 +287,6 @@ class _MainWindowState extends State<MainWindow> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       book.name ?? '',
-                      style: Theme.of(context).textTheme.titleMedium,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -253,7 +294,6 @@ class _MainWindowState extends State<MainWindow> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       book.title ?? '',
-                      style: Theme.of(context).textTheme.titleSmall,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -267,10 +307,10 @@ class _MainWindowState extends State<MainWindow> {
   }
 
   //GridView tab
-  FutureBuilder gridView() {
+  FutureBuilder gridView(BookListProvider books) {
     int size = MediaQuery.of(context).size.width.round();
     return FutureBuilder(
-        future: _bookList,
+        future: books.currentBooks2,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return GridView.builder(
@@ -295,7 +335,7 @@ class _MainWindowState extends State<MainWindow> {
                           formats: formats);
                       Navigator.pushNamed(
                         context,
-                        '/BookDetailsPage',
+                        '/bookdetailspage',
                         arguments: selectedBook,
                       );
                     },
@@ -306,7 +346,8 @@ class _MainWindowState extends State<MainWindow> {
                           borderRadius: BorderRadius.circular(15),
                           image: DecorationImage(
                             image: FileImage(
-                              File(coverPath(_path! +
+                              // ignore: prefer_interpolation_to_compose_strings
+                              File(coverPath(prefs.getString('path')! +
                                   '/' +
                                   snapshot.data[index].path +
                                   '/cover.jpg')),
@@ -328,10 +369,10 @@ class _MainWindowState extends State<MainWindow> {
   }
 
   //DataTable tab
-  Widget dataTable() {
+  Widget dataTable(BookListProvider books) {
     _selectedBooks = [];
     return FutureBuilder(
-        future: _bookList,
+        future: books.currentBooks2,
         builder:
             (BuildContext context, AsyncSnapshot<List<BookListItem>> snapshot) {
           if (snapshot.hasData) {
@@ -346,12 +387,23 @@ class _MainWindowState extends State<MainWindow> {
                   columns: getColumns(_columns),
                   rows: snapshot.data!.map((book) {
                     return DataRow(
+                      // ignore: iterable_contains_unrelated_type
                       selected: _selectedBooks.contains(book),
                       onSelectChanged: (value) async {
+                        List<Data>? formats =
+                            await _bookService.readBookFormats(book.id);
+                        Book selectedBook = Book(
+                            id: book.id,
+                            title: book.title,
+                            author_sort: book.author_sort,
+                            path: book.path,
+                            has_cover: book.has_cover,
+                            series_index: book.series_index,
+                            formats: formats);
                         Navigator.pushNamed(
                           context,
-                          '/BookDetailsPage',
-                          arguments: book,
+                          '/bookdetailspage',
+                          arguments: selectedBook,
                         );
                       },
                       cells: [
@@ -427,8 +479,6 @@ class _MainWindowState extends State<MainWindow> {
                   });
                   _titleController = TextEditingController();
                   _authorController = TextEditingController();
-
-                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
                 },
                 style: ButtonStyle(
@@ -471,20 +521,10 @@ class _MainWindowState extends State<MainWindow> {
         });
   }
 
-  //Database path
-  void getPath() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _path = await prefs.getString('path');
-
-    setState(() {
-      _path;
-    });
-  }
-
   Widget bookDetailsItem({Book? book}) {
     List<String> formats = [];
     if (book == null) {
-      return Center(child: Text('Nincs könyv kiválasztva'));
+      return const Center(child: Text('Nincs könyv kiválasztva'));
     } else {
       for (var item in book.formats!) {
         formats.add(item.format.toLowerCase());
@@ -513,8 +553,8 @@ class _MainWindowState extends State<MainWindow> {
                               detailType: 'Author:',
                               detailContent: book.author_sort),
                           Text(
-                              'Formats: ${formats.toString().replaceAll('[', '').replaceAll(']', '')}',
-                              style: Theme.of(context).textTheme.bodyLarge),
+                            'Formats: ${formats.toString().replaceAll('[', '').replaceAll(']', '')}',
+                          ),
                           const SizedBox(
                             height: 10,
                           ),
@@ -534,9 +574,8 @@ class _MainWindowState extends State<MainWindow> {
                                     const EdgeInsets.symmetric(vertical: 15),
                                 backgroundColor: Colors.cyan,
                               ),
-                              child: Text(
+                              child: const Text(
                                 'Back',
-                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                             ),
                           ),
@@ -546,19 +585,10 @@ class _MainWindowState extends State<MainWindow> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () async {
-                                String bookPath = await _path! +
-                                    '/' +
-                                    book.path +
-                                    '/' +
-                                    book.formats![0].name +
-                                    '.' +
-                                    book.formats![0].format.toLowerCase();
-                                print(bookPath);
-                                //bookPath.replaceAll('&', '\&');
-                                print(bookPath);
+                                String bookPath =
+                                    '${prefs.getString('path')}/${book.path}/${book.formats![0].name}.${book.formats![0].format.toLowerCase()}';
                                 if (Platform.isWindows) {
-                                  OpenFilex.open(
-                                      bookPath.replaceAll('/', '\\'));
+                                  (bookPath.replaceAll('/', '\\'));
                                 } else {
                                   OpenFilex.open(bookPath);
                                 }
@@ -568,9 +598,8 @@ class _MainWindowState extends State<MainWindow> {
                                     const EdgeInsets.symmetric(vertical: 15),
                                 backgroundColor: Colors.cyan,
                               ),
-                              child: Text(
+                              child: const Text(
                                 'Open',
-                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                             ),
                           ),
@@ -580,15 +609,16 @@ class _MainWindowState extends State<MainWindow> {
                   ],
                 ),
               ),
-              SizedBox(height: 60)
+              const SizedBox(height: 60)
             ],
           ));
     }
   }
 
-  Image loadCover(int has_cover, String path) {
-    return has_cover == 1
-        ? Image.file(File(coverPath(_path! + '/' + path + '/cover.jpg')))
+  Image loadCover(int hasCover, String path) {
+    return hasCover == 1
+        ? Image.file(
+            File(coverPath('${prefs.getString('path')}/$path/cover.jpg')))
         : Image.asset('images/cover.png');
   }
 
@@ -597,14 +627,10 @@ class _MainWindowState extends State<MainWindow> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Text(detailType,
-            style: Theme.of(context).textTheme.displayMedium,
-            overflow: TextOverflow.ellipsis),
+        Text(detailType, overflow: TextOverflow.ellipsis),
         const VerticalDivider(),
         Flexible(
-          child: Text(detailContent,
-              style: Theme.of(context).textTheme.bodyLarge,
-              overflow: TextOverflow.ellipsis),
+          child: Text(detailContent, overflow: TextOverflow.ellipsis),
         ),
       ],
     );

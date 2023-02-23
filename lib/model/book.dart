@@ -1,11 +1,11 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'data.dart';
 
 class Book {
   int id;
-  // ignore: non_constant_identifier_names
   String author_sort;
   String title;
-  // ignore: non_constant_identifier_names
   double series_index;
   int has_cover;
   String path;

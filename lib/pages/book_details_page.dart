@@ -1,8 +1,9 @@
-import 'package:flutibre/model/book.dart';
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
+import '../main.dart';
+import '../model/book.dart';
 import '../utils/ebook_service.dart';
 
 class BookDetailsPage extends StatelessWidget {
@@ -21,7 +22,7 @@ class BookDetailsPage extends StatelessWidget {
 }
 
 class BookDetailsContent extends StatefulWidget {
-  BookDetailsContent({Key? key, this.book}) : super(key: key);
+  const BookDetailsContent({Key? key, this.book}) : super(key: key);
   final Book? book;
 
   @override
@@ -29,7 +30,7 @@ class BookDetailsContent extends StatefulWidget {
 }
 
 class _BookDetailsContentState extends State<BookDetailsContent> {
-  EbookService _bookService = EbookService();
+  final EbookService _bookService = EbookService();
   String formats = "";
   String? _path;
   @override
@@ -48,7 +49,6 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
         appBar: AppBar(
           title: Text(
             widget.book!.title,
-            style: Theme.of(context).textTheme.displayLarge,
           ),
           actions: [
             IconButton(
@@ -84,8 +84,8 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                                 detailType: 'Author:',
                                 detailContent: widget.book!.author_sort),
                             Text(
-                                'Formats: ${formats.toString().replaceAll('[', '').replaceAll(']', '')}',
-                                style: Theme.of(context).textTheme.bodyLarge),
+                              'Formats: ${formats.toString().replaceAll('[', '').replaceAll(']', '')}',
+                            ),
                             const SizedBox(
                               height: 10,
                             ),
@@ -105,10 +105,8 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                                       const EdgeInsets.symmetric(vertical: 15),
                                   backgroundColor: Colors.cyan,
                                 ),
-                                child: Text(
+                                child: const Text(
                                   'Back',
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall,
                                 ),
                               ),
                             ),
@@ -118,22 +116,10 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  String bookPath = widget.book!.path
-                                      .replaceAll(
-                                          'cover.jpg',
-                                          widget.book!.formats![0].name +
-                                              '.' +
-                                              widget.book!.formats![0].format
-                                                  .toLowerCase())
-                                      .replaceAll(
-                                          'cover.png',
-                                          widget.book!.formats![0].name +
-                                              '.' +
-                                              widget.book!.formats![0].format
-                                                  .toLowerCase());
+                                  String bookPath =
+                                      '${prefs.getString('path')}/${widget.book!.path}/${widget.book!.formats![0].name}.${widget.book!.formats![0].format.toLowerCase()}';
                                   if (Platform.isWindows) {
-                                    OpenFilex.open(
-                                        bookPath.replaceAll('/', '\\'));
+                                    (bookPath.replaceAll('/', '\\'));
                                   } else {
                                     OpenFilex.open(bookPath);
                                   }
@@ -143,10 +129,8 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                                       const EdgeInsets.symmetric(vertical: 15),
                                   backgroundColor: Colors.cyan,
                                 ),
-                                child: Text(
+                                child: const Text(
                                   'Open',
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall,
                                 ),
                               ),
                             ),
@@ -162,7 +146,7 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
 
   void getPath() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _path = await prefs.getString('path');
+    _path = prefs.getString('path');
 
     setState(() {
       _path;
@@ -170,9 +154,11 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
   }
 
   Image loadCover() {
+    int hasCover = widget.book!.has_cover;
     String path = widget.book!.path;
-    return path != 'cover.jpg'
-        ? Image.file(File(_path! + '/' + path + '/cover.jpg'))
+    String bookPath = '${prefs.getString('path')}/$path/cover.jpg';
+    return hasCover == 1
+        ? Image.file(File(bookPath))
         : Image.asset('images/cover.png');
   }
 
@@ -180,16 +166,16 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Want to delete'),
+        title: const Text('Want to delete'),
         actions: [
           TextButton(
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           TextButton(
-            child: Text('Ok'),
+            child: const Text('Ok'),
             onPressed: () {
               Navigator.pop(context);
               _bookService.deleteBook(widget.book!.id);
@@ -206,14 +192,10 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Text(detailType,
-            style: Theme.of(context).textTheme.displayMedium,
-            overflow: TextOverflow.ellipsis),
+        Text(detailType, overflow: TextOverflow.ellipsis),
         const VerticalDivider(),
         Flexible(
-          child: Text(detailContent,
-              style: Theme.of(context).textTheme.bodyLarge,
-              overflow: TextOverflow.ellipsis),
+          child: Text(detailContent, overflow: TextOverflow.ellipsis),
         ),
       ],
     );
