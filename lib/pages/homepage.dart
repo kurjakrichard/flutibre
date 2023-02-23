@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                   }
                 }),
                 gridView(books),
-                dataTable(books),
+                //dataTable(books),
               ],
             ),
           ),
@@ -345,13 +345,14 @@ class _HomePageState extends State<HomePage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           image: DecorationImage(
-                            image: FileImage(
-                              // ignore: prefer_interpolation_to_compose_strings
-                              File(coverPath(prefs.getString('path')! +
-                                  '/' +
-                                  snapshot.data[index].path +
-                                  '/cover.jpg')),
-                            ),
+                            image: snapshot.data[index].has_cover == 1
+                                ? FileImage(
+                                    File(prefs.getString('path')! +
+                                        '/' +
+                                        snapshot.data[index].path +
+                                        '/cover.jpg'),
+                                  )
+                                : Image.asset('images/cover.png').image,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -456,10 +457,6 @@ class _HomePageState extends State<HomePage> {
 
   int compareString(bool ascending, String value1, String value2) =>
       ascending ? value1.compareTo(value2) : value2.compareTo(value1);
-
-  String coverPath(String path) {
-    return File(path).existsSync() ? path : 'images/cover.png';
-  }
 
   // ignore: unused_element
   Future _showFormDialog(BuildContext context) {
@@ -572,7 +569,6 @@ class _HomePageState extends State<HomePage> {
                               style: TextButton.styleFrom(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 15),
-                                backgroundColor: Colors.cyan,
                               ),
                               child: const Text(
                                 'Back',
@@ -596,7 +592,6 @@ class _HomePageState extends State<HomePage> {
                               style: TextButton.styleFrom(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 15),
-                                backgroundColor: Colors.cyan,
                               ),
                               child: const Text(
                                 'Open',
@@ -617,8 +612,7 @@ class _HomePageState extends State<HomePage> {
 
   Image loadCover(int hasCover, String path) {
     return hasCover == 1
-        ? Image.file(
-            File(coverPath('${prefs.getString('path')}/$path/cover.jpg')))
+        ? Image.file(File('${prefs.getString('path')}/$path/cover.jpg'))
         : Image.asset('images/cover.png');
   }
 

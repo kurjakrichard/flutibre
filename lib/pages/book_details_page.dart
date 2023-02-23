@@ -103,7 +103,6 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                                 style: TextButton.styleFrom(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 15),
-                                  backgroundColor: Colors.cyan,
                                 ),
                                 child: const Text(
                                   'Back',
@@ -127,7 +126,6 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                                 style: TextButton.styleFrom(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 15),
-                                  backgroundColor: Colors.cyan,
                                 ),
                                 child: const Text(
                                   'Open',

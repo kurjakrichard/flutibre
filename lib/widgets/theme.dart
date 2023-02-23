@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-ThemeData darkTheme = ThemeData.dark();
-ThemeData darkTheme2 = ThemeData(brightness: Brightness.dark);
+ThemeData darkTheme =
+    ThemeData(brightness: Brightness.dark, fontFamily: 'Raleway');
+ThemeData darkTheme2 = ThemeData.dark();
 ThemeData darkTheme3 = ThemeData(
   textTheme: textTheme().copyWith(
     displayMedium: const TextStyle(
@@ -32,28 +33,6 @@ ThemeData baseTheme = ThemeData(
       foregroundColor: Colors.white,
       backgroundColor: Colors.cyan,
     ),
-  ),
-  textTheme: const TextTheme(
-    //appbar text
-    displayLarge: TextStyle(
-        fontWeight: FontWeight.normal, color: Colors.white, fontSize: 20),
-    //belső fejléc szövegek
-    titleMedium: TextStyle(
-        fontWeight: FontWeight.normal, color: Colors.black, fontSize: 16),
-    titleSmall: TextStyle(
-        fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
-    //gombszövegek
-    displaySmall: TextStyle(
-        fontWeight: FontWeight.normal, color: Colors.white, fontSize: 15),
-    //nagyobb lista szövegek
-    bodyLarge: TextStyle(
-        fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
-    //kisebb lista szövegek
-    bodyMedium: TextStyle(
-        fontWeight: FontWeight.normal, color: Colors.black, fontSize: 12),
-    //vastag belső szövegek
-    displayMedium: TextStyle(
-        fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
   ),
 );
 ThemeData lightTheme = ThemeData.light();
