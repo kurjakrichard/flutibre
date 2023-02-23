@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 ThemeData darkTheme =
-    ThemeData(brightness: Brightness.dark, fontFamily: 'Raleway');
+    ThemeData(brightness: Brightness.dark, fontFamily: 'Roboto');
 ThemeData darkTheme2 = ThemeData.dark();
 ThemeData darkTheme3 = ThemeData(
   textTheme: textTheme().copyWith(

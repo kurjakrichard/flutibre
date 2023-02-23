@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
   FutureBuilder listView(bool isWide, BookListProvider books) {
     Book? selectedBook;
     return FutureBuilder(
-        future: books.currentBooks2,
+        future: books.currentBooks,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
@@ -310,7 +310,7 @@ class _HomePageState extends State<HomePage> {
   FutureBuilder gridView(BookListProvider books) {
     int size = MediaQuery.of(context).size.width.round();
     return FutureBuilder(
-        future: books.currentBooks2,
+        future: books.currentBooks,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return GridView.builder(
@@ -373,7 +373,7 @@ class _HomePageState extends State<HomePage> {
   Widget dataTable(BookListProvider books) {
     _selectedBooks = [];
     return FutureBuilder(
-        future: books.currentBooks2,
+        future: books.currentBooks,
         builder:
             (BuildContext context, AsyncSnapshot<List<BookListItem>> snapshot) {
           if (snapshot.hasData) {
