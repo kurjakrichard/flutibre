@@ -37,7 +37,6 @@ dependencies:
   equatable: ^2.0.5
   intl: ^0.17.0
   sqflite: ^2.0.3
-  sqflite_common_ffi: ^2.1.0+2
   flutter_localizations:
     sdk: flutter
 
@@ -46,6 +45,8 @@ dev_dependencies:
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
+  msix: ^3.8.2
+  sqflite_common_ffi: ^2.1.0+2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -84,3 +85,11 @@ flutter:
           weight: 700
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+msix_config:
+  display_name: Flutibre
+  publisher_display_name: Richard Kurjak
+  identity_name: siretech.flutter.flutibre
+  msix_version: 1.0.0.0
+  logo_path: C:\Users\balza\VSCode\flutibre\images\bookshelf-icon2.png
+  capabilities: "internetClient,location,microphone,webcam"

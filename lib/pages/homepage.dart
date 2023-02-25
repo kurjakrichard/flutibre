@@ -583,11 +583,7 @@ class _HomePageState extends State<HomePage> {
                               onPressed: () async {
                                 String bookPath =
                                     '${prefs.getString('path')}/${book.path}/${book.formats![0].name}.${book.formats![0].format.toLowerCase()}';
-                                if (Platform.isWindows) {
-                                  (bookPath.replaceAll('/', '\\'));
-                                } else {
-                                  OpenFilex.open(bookPath);
-                                }
+                                OpenFilex.open(bookPath);
                               },
                               style: TextButton.styleFrom(
                                 padding:

@@ -117,11 +117,7 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                                 onPressed: () {
                                   String bookPath =
                                       '${prefs.getString('path')}/${widget.book!.path}/${widget.book!.formats![0].name}.${widget.book!.formats![0].format.toLowerCase()}';
-                                  if (Platform.isWindows) {
-                                    (bookPath.replaceAll('/', '\\'));
-                                  } else {
-                                    OpenFilex.open(bookPath);
-                                  }
+                                  OpenFilex.open(bookPath);
                                 },
                                 style: TextButton.styleFrom(
                                   padding:
