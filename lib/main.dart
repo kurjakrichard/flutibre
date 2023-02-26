@@ -10,6 +10,7 @@ import 'providers/booklist_provider.dart';
 import 'providers/locale_provider.dart';
 import 'utils/custom_scroll_behavior.dart';
 import 'widgets/theme.dart';
+import 'dart:io' as io;
 
 late SharedPreferences prefs;
 
@@ -17,17 +18,24 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Provider.debugCheckInvalidValueType = null;
   prefs = await SharedPreferences.getInstance();
-  bool isPath = prefs.containsKey("path");
+
+//True if metadata.db exist and looks correct
+  bool isMetadataDb = prefs.containsKey("path") &&
+      io.File(prefs.getString('path')! + '/metadata.db').existsSync() &&
+      io.File(prefs.getString('path')! + '/metadata.db') != 0;
+  if (!isMetadataDb) {
+    prefs.remove('path');
+  }
 
   runApp(
-    FlutibrePro(isPath),
+    FlutibrePro(isMetadataDb),
   );
 }
 
 class FlutibrePro extends StatelessWidget {
-  const FlutibrePro(this.isPath, {Key? key}) : super(key: key);
+  const FlutibrePro(this.isMetadataDb, {Key? key}) : super(key: key);
 
-  final bool isPath;
+  final bool isMetadataDb;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +58,7 @@ class FlutibrePro extends StatelessWidget {
                   initialRoute: '/',
                   routes: {
                     '/': (context) =>
-                        isPath ? const HomePage() : const SettingsPage(),
+                        isMetadataDb ? const HomePage() : const SettingsPage(),
                     '/homepage': (context) => const HomePage(),
                     '/bookdetailspage': (context) => const BookDetailsPage(),
                     '/settings': (context) => const SettingsPage(),

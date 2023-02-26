@@ -17,7 +17,7 @@ class BookListProvider with ChangeNotifier {
 
   DatabaseHandler? databaseHandler;
 
-  void getBookItemList() async {
+  Future<void> getBookItemList() async {
     _allBooks = databaseHandler!.getBookList();
     _currentBooks = _allBooks;
     notifyListeners();

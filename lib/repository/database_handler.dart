@@ -1,10 +1,9 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
-// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import '../main.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
 import '../model/data.dart';
@@ -20,18 +19,14 @@ class DatabaseHandler {
     return _database!;
   }
 
-  void restartDatabase() async {
-    _database = await initialDatabase();
-  }
-
   factory DatabaseHandler() {
     _databaseHelper ??= DatabaseHandler._createInstance();
     return _databaseHelper!;
   }
 
   Future<Database> initialDatabase() async {
-    String? path = await getPath();
-
+    String? path = prefs.getString('path');
+    print(path);
     if (path == null) {
       return await databaseFactoryFfi.openDatabase(inMemoryDatabasePath);
     }
@@ -42,17 +37,11 @@ class DatabaseHandler {
     }
   }
 
-  Future<String?> getPath() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? path = prefs.getString('path');
-    return path;
-  }
-
   Future<Database> desktopDatabase(String? path) async {
     sqfliteFfiInit();
     DatabaseFactory databaseFactory = databaseFactoryFfi;
     String dbpath = '$path/metadata.db';
-    Database database = await databaseFactory.openDatabase(dbpath);
+    _database = await databaseFactory.openDatabase(dbpath);
 
     return database;
   }
@@ -165,12 +154,5 @@ class DatabaseHandler {
         await _database!.rawQuery('SELECT COUNT (*) FROM books');
     int result = Sqflite.firstIntValue(records) ?? 0;
     return result;
-  }
-
-  Future<String> getCoverPath(String dbPath) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? path = prefs.getString('path');
-    String coverPath = '${path!}/$dbPath/cover.jpg';
-    return await File(coverPath).exists() ? coverPath : 'images/cover.jpg';
   }
 }

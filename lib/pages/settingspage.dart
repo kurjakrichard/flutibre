@@ -10,6 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../main.dart';
 import '../providers/booklist_provider.dart';
 import '../repository/database_handler.dart';
 
@@ -102,14 +103,15 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: Text(AppLocalizations.of(context)!.ok),
                       onPressed: () async {
                         if (_tempPath != null) {
-                          _savePath(_tempPath!);
+                          await _savePath(_tempPath!);
                           if (_tempPath != null && _newFolder) {
                             copyPath('assets/Ebooks', _tempPath!);
                             _newFolder = false;
                           }
 
                           await value.databaseHandler!.initialDatabase();
-                          value.getBookItemList();
+
+                          await value.getBookItemList();
                           // ignore: use_build_context_synchronously
                           Navigator.pushNamed(context, '/homepage');
                         } else {
@@ -181,16 +183,12 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   _savePath(String dbpath) async {
-    final prefs = await SharedPreferences.getInstance();
     if (dbpath != '') {
       await prefs.setString('path', dbpath);
-      DatabaseHandler? databaseHandler = DatabaseHandler();
-      databaseHandler.restartDatabase();
     }
   }
 
   Future<bool> isPath() async {
-    final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('path')) {
       return true;
     } else {
