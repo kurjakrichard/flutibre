@@ -26,27 +26,29 @@ class DatabaseHandler {
 
   Future<Database> initialDatabase() async {
     String? path = prefs.getString('path');
-    print(path);
+
     if (path == null) {
       return await databaseFactoryFfi.openDatabase(inMemoryDatabasePath);
     }
     if (Platform.isWindows || Platform.isLinux) {
-      return await desktopDatabase(path);
+      return await desktopDatabase();
     } else {
-      return await mobileDatabase(path);
+      return await mobileDatabase();
     }
   }
 
-  Future<Database> desktopDatabase(String? path) async {
+  Future<Database> desktopDatabase() async {
     sqfliteFfiInit();
     DatabaseFactory databaseFactory = databaseFactoryFfi;
+    String? path = prefs.getString('path');
     String dbpath = '$path/metadata.db';
     _database = await databaseFactory.openDatabase(dbpath);
 
     return database;
   }
 
-  Future<Future<Database>> mobileDatabase(String? path) async {
+  Future<Future<Database>> mobileDatabase() async {
+    String? path = prefs.getString('path');
     return openDatabase(
       p.join(path!, '/metadata.db'),
       onCreate: (database, version) async {

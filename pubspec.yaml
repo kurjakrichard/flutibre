@@ -1,5 +1,5 @@
-name: flutibre_pro
-description: A new Flutter project.
+name: flutibre
+description: Ebook library management with Calibre database
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -29,23 +29,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.0.2
   shared_preferences: ^2.0.15
-  file_picker: ^5.0.1
-  io: ^1.0.3
-  open_filex: ^4.3.2
-  equatable: ^2.0.5
-  intl: ^0.17.0
   sqflite: ^2.0.3
+  flutter_riverpod: ^2.2.0
   flutter_localizations:
     sdk: flutter
+
 
 
 dev_dependencies:
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
-  msix: ^3.8.2
   sqflite_common_ffi: ^2.1.0+2
 
 # For information on the generic Dart part of this file, see the

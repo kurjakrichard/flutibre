@@ -1,9 +1,11 @@
-import 'package:flutibre_pro/model/booklist_item.dart';
+import 'dart:async';
+
+import 'package:flutibre/model/booklist_item.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
 import '../repository/database_handler.dart';
 
-class BookListProvider with ChangeNotifier {
+class BookListProvider extends ChangeNotifier {
   BookListProvider() {
     databaseHandler = DatabaseHandler();
     if (prefs.containsKey("path")) {
@@ -35,7 +37,14 @@ class BookListProvider with ChangeNotifier {
   }
 
   void toggleAllBooks() {
-    _currentBooks = _allBooks;
+    String? path = prefs.getString('path');
+    if (path == "/home/sire/Letöltések/Ebooks") {
+      prefs.setString('path', "/mnt/Data/Menteni/Ebooks");
+    } else {
+      prefs.setString('path', "/home/sire/Letöltések/Ebooks");
+    }
+    databaseHandler!.initialDatabase();
+    getBookItemList();
     notifyListeners();
   }
 }

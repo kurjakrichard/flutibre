@@ -1,22 +1,21 @@
-import 'package:flutibre_pro/pages/book_details_page.dart';
+import 'package:flutibre/model/booklist_item.dart';
+import 'package:flutibre/providers/booklist_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutibre_pro/providers/theme_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/l10n.dart';
 import 'pages/homepage.dart';
-import 'pages/settingspage.dart';
-import 'providers/booklist_provider.dart';
-import 'providers/locale_provider.dart';
 import 'utils/custom_scroll_behavior.dart';
 import 'widgets/theme.dart';
 import 'dart:io' as io;
 
 late SharedPreferences prefs;
+final bookListProvider = ChangeNotifierProvider((ref) => BookListProvider());
+final booklistProvider = FutureProvider<List<BookListItem>>(
+    (ref) => BookListProvider().currentBooks!);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Provider.debugCheckInvalidValueType = null;
   prefs = await SharedPreferences.getInstance();
 
 //True if metadata.db exist and looks correct
@@ -28,45 +27,32 @@ void main() async {
   }
 
   runApp(
-    FlutibrePro(isMetadataDb),
+    ProviderScope(child: Flutibre(isMetadataDb)),
   );
 }
 
-class FlutibrePro extends StatelessWidget {
-  const FlutibrePro(this.isMetadataDb, {Key? key}) : super(key: key);
+class Flutibre extends StatelessWidget {
+  const Flutibre(this.isMetadataDb, {Key? key}) : super(key: key);
 
   final bool isMetadataDb;
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => ThemeProvider()),
-        ChangeNotifierProvider(create: (context) => LocaleProvider()),
-        ChangeNotifierProvider(create: (context) => BookListProvider()),
-      ],
-      child: Consumer<LocaleProvider>(
-        builder: (context, locale, child) => Consumer<ThemeProvider>(
-            builder: ((context, value, child) => MaterialApp(
-                  localizationsDelegates: L10n.delegates,
-                  locale: locale.currentLocale,
-                  supportedLocales: L10n.locales,
-                  theme: baseTheme,
-                  darkTheme: darkTheme,
-                  themeMode: value.darkTheme ? ThemeMode.dark : ThemeMode.light,
-                  scrollBehavior: CustomScrollBehavior(),
-                  initialRoute: '/',
-                  routes: {
-                    '/': (context) =>
-                        isMetadataDb ? const HomePage() : const SettingsPage(),
-                    '/homepage': (context) => const HomePage(),
-                    '/bookdetailspage': (context) => const BookDetailsPage(),
-                    '/settings': (context) => const SettingsPage(),
-                  },
-                  debugShowCheckedModeBanner: false,
-                  title: 'Flutibre',
-                ))),
-      ),
+    return MaterialApp(
+      localizationsDelegates: L10n.delegates,
+      locale: Locale('hu'),
+      supportedLocales: L10n.locales,
+      theme: baseTheme,
+      darkTheme: darkTheme,
+      themeMode: ThemeMode.light,
+      scrollBehavior: CustomScrollBehavior(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomePage(),
+        '/homepage': (context) => const HomePage(),
+      },
+      debugShowCheckedModeBanner: false,
+      title: 'Flutibre',
     );
   }
 }
