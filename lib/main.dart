@@ -1,16 +1,21 @@
 import 'package:flutibre/model/booklist_item.dart';
 import 'package:flutibre/providers/booklist_provider.dart';
+import 'package:flutibre/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/l10n.dart';
 import 'pages/homepage.dart';
+import 'pages/settingspage.dart';
+import 'providers/locale_provider.dart';
 import 'utils/custom_scroll_behavior.dart';
 import 'widgets/theme.dart';
 import 'dart:io' as io;
 
 late SharedPreferences prefs;
 final bookListProvider = ChangeNotifierProvider((ref) => BookListProvider());
+final themeProvider = ChangeNotifierProvider((ref) => ThemeProvider());
+final localeProvider = ChangeNotifierProvider((ref) => LocaleProvider());
 final booklistProvider = FutureProvider<List<BookListItem>>(
     (ref) => BookListProvider().currentBooks!);
 
@@ -39,21 +44,26 @@ class Flutibre extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: L10n.delegates,
-      locale: const Locale('hu'),
-      supportedLocales: L10n.locales,
-      theme: baseTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.light,
-      scrollBehavior: CustomScrollBehavior(),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomePage(),
-        '/homepage': (context) => const HomePage(),
-      },
-      debugShowCheckedModeBanner: false,
-      title: 'Flutibre',
+    return Consumer(
+      builder: (context, ref, child) => MaterialApp(
+        localizationsDelegates: L10n.delegates,
+        locale: ref.watch(localeProvider).currentLocale,
+        supportedLocales: L10n.locales,
+        theme: baseTheme,
+        darkTheme: darkTheme,
+        themeMode: ref.watch(themeProvider).darkTheme
+            ? ThemeMode.dark
+            : ThemeMode.light,
+        scrollBehavior: CustomScrollBehavior(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const HomePage(),
+          '/homepage': (context) => const HomePage(),
+          '/settings': (context) => const SettingsPage(),
+        },
+        debugShowCheckedModeBanner: false,
+        title: 'Flutibre',
+      ),
     );
   }
 }

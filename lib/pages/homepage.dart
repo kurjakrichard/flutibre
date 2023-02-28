@@ -26,8 +26,9 @@ class _HomePageState extends State<HomePage>
     super.build(context);
     return Scaffold(
       appBar: AppBar(title: const Text("Flutibre")),
+      drawer: drawerNavigation(context),
       floatingActionButton: Consumer(
-        builder: (context, ref, child) {
+        builder: (_, ref, child) {
           return FloatingActionButton(
             onPressed: () async {
               await ref.read(bookListProvider).toggleAllBooks();
@@ -86,4 +87,47 @@ class _HomePageState extends State<HomePage>
 
   @override
   bool get wantKeepAlive => true;
+
+  //DrawerNavigation widget
+  Widget drawerNavigation(context) {
+    return Material(
+      child: Drawer(
+        child: ListView(children: [
+          DrawerHeader(
+              child: Row(
+            children: [
+              Image.asset('images/bookshelf-icon2.png'),
+              const Padding(
+                padding: EdgeInsets.only(left: 12.0),
+                child: Text(
+                  'Flutibre',
+                  style: TextStyle(fontSize: 24),
+                ),
+              ),
+            ],
+          )),
+          ListTile(
+            leading: const Icon(Icons.home),
+            title: Text(AppLocalizations.of(context)!.homepage),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(
+                context,
+                '/homepage',
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: Text(AppLocalizations.of(context)!.settingspage),
+            onTap: () {
+              ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/settings');
+            },
+          )
+        ]),
+      ),
+    );
+  }
 }
