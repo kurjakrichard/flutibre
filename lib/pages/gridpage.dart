@@ -14,28 +14,26 @@ class GridPage extends ConsumerWidget {
     return itemValue.when(
       data: (item) => GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: (size / 200).round(),
+          crossAxisCount: (size / 150).round(),
           crossAxisSpacing: 10,
+          childAspectRatio: 2 / 3,
           mainAxisSpacing: 10,
         ),
         itemBuilder: (context, index) {
           return Center(
             child: RawMaterialButton(
               onPressed: () async {},
-              child: Hero(
-                tag: 'logo$index',
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    image: DecorationImage(
-                      image: item[index].has_cover == 1
-                          ? FileImage(
-                              File(
-                                  '${prefs.getString('path')!}/${item[index].path}/cover.jpg'),
-                            )
-                          : Image.asset('images/cover.png').image,
-                      fit: BoxFit.cover,
-                    ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  image: DecorationImage(
+                    image: item[index].has_cover == 1
+                        ? FileImage(
+                            File(
+                                '${prefs.getString('path')!}/${item[index].path}/cover.jpg'),
+                          )
+                        : Image.asset('images/cover.png').image,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),

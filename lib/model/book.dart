@@ -20,27 +20,6 @@ class Book {
       this.path = '',
       this.formats});
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Book &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          author_sort == other.author_sort &&
-          title == other.title &&
-          has_cover == other.has_cover &&
-          series_index == other.series_index &&
-          path == other.path;
-
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      author_sort.hashCode ^
-      title.hashCode ^
-      has_cover.hashCode ^
-      series_index.hashCode ^
-      path.hashCode;
-
   Book.fromMap(Map<String, dynamic> res)
       : id = res["id"],
         author_sort = res["author_sort"],

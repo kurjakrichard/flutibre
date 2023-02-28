@@ -97,7 +97,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Text(AppLocalizations.of(context)!.ok),
                     onPressed: () async {
                       if (_tempPath != null) {
-                        await _savePath(_tempPath!);
+                        await prefs.setString('path', _tempPath!);
                         if (_tempPath != null && _newFolder) {
                           copyPath('assets/Ebooks', _tempPath!);
                           _newFolder = false;
@@ -108,7 +108,9 @@ class _SettingsPageState extends State<SettingsPage> {
                             .databaseHandler!
                             .initialDatabase();
 
-                        await ref.watch(bookListProvider).getBookItemList();
+                        await ref.read(bookListProvider).getBookItemList();
+                        // ignore: unused_result
+                        ref.refresh(booklistProvider);
                         // ignore: use_build_context_synchronously
                         Navigator.pushNamed(context, '/homepage');
                       } else {
@@ -165,7 +167,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<String?> _loadPath() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     _tempPath = prefs.getString('path');
     _isPath = await File('$_tempPath/metadata.db').exists();
     _tempPath = null;
@@ -178,20 +180,6 @@ class _SettingsPageState extends State<SettingsPage> {
       return path;
     } else {
       return null;
-    }
-  }
-
-  _savePath(String dbpath) async {
-    if (dbpath != '') {
-      await prefs.setString('path', dbpath);
-    }
-  }
-
-  Future<bool> isPath() async {
-    if (prefs.containsKey('path')) {
-      return true;
-    } else {
-      return false;
     }
   }
 
