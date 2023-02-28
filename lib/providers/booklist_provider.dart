@@ -36,14 +36,15 @@ class BookListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleAllBooks() {
+  Future<void> toggleAllBooks() async {
     String? path = prefs.getString('path');
     if (path == "/home/sire/Letöltések/Ebooks") {
-      prefs.setString('path', "/mnt/Data/Menteni/Ebooks");
+      prefs.setString('path', "/home/sire/Letöltések/Ebooks2");
     } else {
       prefs.setString('path', "/home/sire/Letöltések/Ebooks");
     }
     databaseHandler!.initialDatabase();
+
     getBookItemList();
     notifyListeners();
   }

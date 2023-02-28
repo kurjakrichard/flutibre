@@ -20,8 +20,9 @@ void main() async {
 
 //True if metadata.db exist and looks correct
   bool isMetadataDb = prefs.containsKey("path") &&
-      io.File(prefs.getString('path')! + '/metadata.db').existsSync() &&
-      io.File(prefs.getString('path')! + '/metadata.db') != 0;
+      io.File('${prefs.getString('path')!}/metadata.db').existsSync() &&
+      // ignore: unrelated_type_equality_checks
+      io.File('${prefs.getString('path')!}/metadata.db') != 0;
   if (!isMetadataDb) {
     prefs.remove('path');
   }
@@ -40,7 +41,7 @@ class Flutibre extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       localizationsDelegates: L10n.delegates,
-      locale: Locale('hu'),
+      locale: const Locale('hu'),
       supportedLocales: L10n.locales,
       theme: baseTheme,
       darkTheme: darkTheme,
@@ -48,7 +49,7 @@ class Flutibre extends StatelessWidget {
       scrollBehavior: CustomScrollBehavior(),
       initialRoute: '/',
       routes: {
-        '/': (context) => HomePage(),
+        '/': (context) => const HomePage(),
         '/homepage': (context) => const HomePage(),
       },
       debugShowCheckedModeBanner: false,
