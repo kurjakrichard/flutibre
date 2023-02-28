@@ -57,7 +57,8 @@ class Flutibre extends StatelessWidget {
         scrollBehavior: CustomScrollBehavior(),
         initialRoute: '/',
         routes: {
-          '/': (context) => const HomePage(),
+          '/': (context) =>
+              isMetadataDb ? const HomePage() : const SettingsPage(),
           '/homepage': (context) => const HomePage(),
           '/settings': (context) => const SettingsPage(),
         },
