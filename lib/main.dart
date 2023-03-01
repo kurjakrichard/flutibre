@@ -22,12 +22,13 @@ final booklistProvider = FutureProvider<List<BookListItem>>(
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
+  int bytes = await io.File('${prefs.getString('path')!}/metadata.db').length();
 
 //True if metadata.db exist and looks correct
   bool isMetadataDb = prefs.containsKey("path") &&
       io.File('${prefs.getString('path')!}/metadata.db').existsSync() &&
       // ignore: unrelated_type_equality_checks
-      io.File('${prefs.getString('path')!}/metadata.db') != 0;
+      bytes != 0;
   if (!isMetadataDb) {
     prefs.remove('path');
   }
