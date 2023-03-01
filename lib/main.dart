@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/l10n.dart';
 import 'pages/homepage.dart';
 import 'pages/settingspage.dart';
+import 'pages/splashpage.dart';
 import 'providers/locale_provider.dart';
 import 'utils/custom_scroll_behavior.dart';
 import 'widgets/theme.dart';
@@ -64,9 +65,9 @@ class Flutibre extends StatelessWidget {
         scrollBehavior: CustomScrollBehavior(),
         initialRoute: '/',
         routes: {
-          '/': (context) =>
+          '/': (context) => const SplashPage(),
+          '/homepage': (context) =>
               isMetadataDb ? const HomePage() : const SettingsPage(),
-          '/homepage': (context) => const HomePage(),
           '/settings': (context) => const SettingsPage(),
         },
         debugShowCheckedModeBanner: false,

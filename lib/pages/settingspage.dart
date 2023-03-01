@@ -208,12 +208,10 @@ class _SettingsPageState extends State<SettingsPage> {
         if (bytes == 0) {
           _tempPath = null;
         }
-        print(bytes);
       } on Exception catch (e) {
         bytes = 0;
         _tempPath = null;
       }
-      print('selectfolder: $bytes $_tempPath');
 
       if (_tempPath != null && await File('$_tempPath/metadata.db').exists() ||
           await io.File('$_tempPath/Ebooks/metadata.db').exists()) {

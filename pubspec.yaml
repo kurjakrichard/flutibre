@@ -36,6 +36,7 @@ dependencies:
   open_filex: ^4.3.2
   flutter_riverpod: ^2.2.0
   intl: ^0.17.0
+  easy_splash_screen: ^1.0.4
   flutter_localizations:
     sdk: flutter
 
