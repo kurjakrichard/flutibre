@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
 import 'dart:async';
+import 'dart:io' as io;
 import 'dart:io';
 // ignore: unnecessary_import
 import 'package:flutter/services.dart' show rootBundle;
@@ -173,7 +174,16 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<String?> _loadPath() async {
     prefs = await SharedPreferences.getInstance();
     _tempPath = prefs.getString('path');
-    _isPath = await File('$_tempPath/metadata.db').exists();
+    _isPath = await io.File('$_tempPath/metadata.db').exists();
+    int? bytes;
+
+    try {
+      bytes = await io.File('${prefs.getString('path')}/metadata.db').length();
+    } on Exception catch (e) {
+      bytes = 0;
+    }
+    _isPath = bytes != 0;
+
     _tempPath = null;
     String? path = _isPath! ? prefs.getString('path') : null;
 
@@ -183,7 +193,7 @@ class _SettingsPageState extends State<SettingsPage> {
       });
       return path;
     } else {
-      return null;
+      return _dbpath = null;
     }
   }
 
@@ -191,17 +201,27 @@ class _SettingsPageState extends State<SettingsPage> {
     _resetState();
     try {
       _tempPath = await FilePicker.platform.getDirectoryPath();
-      if (await File('$_tempPath/Ebooks/metadata.db').exists()) {
-        _tempPath = '${_tempPath!}/Ebooks';
+      int bytes = 0;
+
+      try {
+        bytes = await io.File('$_tempPath/metadata.db').length();
+        if (bytes == 0) {
+          _tempPath = null;
+        }
+        print(bytes);
+      } on Exception catch (e) {
+        bytes = 0;
+        _tempPath = null;
       }
+      print('selectfolder: $bytes $_tempPath');
 
       if (_tempPath != null && await File('$_tempPath/metadata.db').exists() ||
-          await File('$_tempPath/Ebooks/metadata.db').exists()) {
+          await io.File('$_tempPath/Ebooks/metadata.db').exists()) {
         setState(() {
           _dbpath = _tempPath;
           _userAborted = _tempPath == null;
         });
-      } else {
+      } else if (bytes != 0) {
         setState(() {
           _newFolder = true;
           _tempPath = '${_tempPath!}/Ebooks';
