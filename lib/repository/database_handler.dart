@@ -75,6 +75,14 @@ class DatabaseHandler {
         : [];
     List<BookListItem> bookListItems = <BookListItem>[];
 
+    if (bookMapList.isNotEmpty) {
+      for (var item in bookMapList) {
+        BookListItem bookListItem = BookListItem.fromMap(item);
+
+        bookListItems.add(bookListItem);
+      }
+      return bookListItems;
+    }
     for (var item in bookMapList) {
       BookListItem bookListItem = BookListItem.fromMap(item);
 
