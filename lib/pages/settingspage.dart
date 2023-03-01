@@ -1,7 +1,8 @@
 // ignore_for_file: unused_field
+import 'dart:async';
 import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:io/io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -99,7 +100,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       if (_tempPath != null) {
                         await prefs.setString('path', _tempPath!);
                         if (_tempPath != null && _newFolder) {
-                          copyPath('assets/Ebooks', _tempPath!);
+                          await copyDatabase(_tempPath!, 'metadata.db');
+                          await copyDatabase(
+                              _tempPath!, 'metadata_db_prefs_backup.json');
                           _newFolder = false;
                         }
 
@@ -232,6 +235,21 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _isLoading = true;
       _userAborted = false;
+    });
+  }
+
+  Future<void> copyDatabase(String databasePath, String filename) async {
+    var bytes = await rootBundle.load('assets/books/$filename');
+    String dir = databasePath;
+    writeToFile(bytes, '$dir/$filename');
+//write to app path
+  }
+
+  Future<void> writeToFile(ByteData data, String path) async {
+    final buffer = data.buffer;
+    File(path).create(recursive: true).then((File file) {
+      return File(path).writeAsBytes(
+          buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
     });
   }
 }

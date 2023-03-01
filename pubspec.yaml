@@ -62,6 +62,7 @@ flutter:
     - images/bookshelf-icon2.png
     - images/bookmark-icon.png
     - images/cover.png
+    - assets/books/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see
