@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/l10n.dart';
 import 'pages/homepage.dart';
+import 'pages/loadingpage.dart';
 import 'pages/settingspage.dart';
 import 'providers/locale_provider.dart';
 import 'utils/custom_scroll_behavior.dart';
@@ -72,59 +73,7 @@ class Flutibre extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'Flutibre',
             )
-          : const LoadingScreen(),
-    );
-  }
-}
-
-class LoadingScreen extends ConsumerStatefulWidget {
-  const LoadingScreen({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<LoadingScreen> createState() => _LoadingScreenState();
-}
-
-class _LoadingScreenState extends ConsumerState<LoadingScreen> {
-  @override
-  initState() {
-    wait();
-    super.initState();
-  }
-
-  void wait() async {
-    await Future.delayed(const Duration(seconds: 5));
-    ref.read(themeProvider).doneLoading = true;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Flutibre',
-              style: TextStyle(fontSize: 28),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: SizedBox(
-                  height: 175,
-                  child: Image.asset(
-                    'images/bookshelf-icon2.png',
-                    fit: BoxFit.fitWidth,
-                  )),
-            ),
-            const Text(
-              'Loading...',
-              style: TextStyle(fontSize: 20),
-            )
-          ],
-        )),
-      ),
+          : const LoadingPage(),
     );
   }
 }
