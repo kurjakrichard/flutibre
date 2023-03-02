@@ -8,8 +8,15 @@ class ThemeProvider with ChangeNotifier {
 
   bool _darkTheme = false;
 
+  bool _doneLoading = false;
+
   // ignore: unnecessary_getters_setters
   bool get darkTheme => _darkTheme;
+  bool get doneLoading => _doneLoading;
+  set doneLoading(bool value) {
+    _doneLoading = value;
+    notifyListeners();
+  }
 
   void _loadSettings() async {
     _darkTheme = prefs.getBool('darkTheme') ?? false;

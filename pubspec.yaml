@@ -36,7 +36,6 @@ dependencies:
   open_filex: ^4.3.2
   flutter_riverpod: ^2.2.0
   intl: ^0.17.0
-  easy_splash_screen: ^1.0.4
   flutter_localizations:
     sdk: flutter
 
@@ -64,6 +63,7 @@ flutter:
     - images/bookmark-icon.png
     - images/cover.png
     - assets/books/
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

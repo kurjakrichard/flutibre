@@ -12,35 +12,38 @@ class GridPage extends ConsumerWidget {
     int size = MediaQuery.of(context).size.width.round();
     AsyncValue<List<BookListItem>> itemValue = ref.watch(booklistProvider);
     return itemValue.when(
-      data: (item) => GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: (size / 150).round(),
-          crossAxisSpacing: 10,
-          childAspectRatio: 2 / 3,
-          mainAxisSpacing: 10,
-        ),
-        itemBuilder: (context, index) {
-          return Center(
-            child: RawMaterialButton(
-              onPressed: () async {},
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  image: DecorationImage(
-                    image: item[index].has_cover == 1
-                        ? FileImage(
-                            File(
-                                '${prefs.getString('path')!}/${item[index].path}/cover.jpg'),
-                          )
-                        : Image.asset('images/cover.png').image,
-                    fit: BoxFit.cover,
+      data: (item) => Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: (size / 150).round(),
+            crossAxisSpacing: 10,
+            childAspectRatio: 2 / 3,
+            mainAxisSpacing: 10,
+          ),
+          itemBuilder: (context, index) {
+            return Center(
+              child: RawMaterialButton(
+                onPressed: () async {},
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    image: DecorationImage(
+                      image: item[index].has_cover == 1
+                          ? FileImage(
+                              File(
+                                  '${prefs.getString('path')!}/${item[index].path}/cover.jpg'),
+                            )
+                          : Image.asset('images/cover.png').image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
-        itemCount: item.length,
+            );
+          },
+          itemCount: item.length,
+        ),
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, st) => Center(child: Text(e.toString())),
