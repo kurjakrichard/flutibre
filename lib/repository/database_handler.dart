@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:path_provider/path_provider.dart';
 import '../main.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
@@ -27,7 +28,7 @@ class DatabaseHandler {
 
   Future<Database> initialDatabase() async {
     String? path = prefs.getString('path');
-
+    print(path);
     if (path == null || await Directory(path).list().isEmpty) {
       return await databaseFactoryFfi.openDatabase(inMemoryDatabasePath);
     }
@@ -41,15 +42,15 @@ class DatabaseHandler {
   Future<Database> desktopDatabase() async {
     sqfliteFfiInit();
     DatabaseFactory databaseFactory = databaseFactoryFfi;
-    String? path = prefs.getString('path');
-    String dbpath = '$path/metadata.db';
-    _database = await databaseFactory.openDatabase(dbpath);
+    _database = await databaseFactory
+        .openDatabase(p.join(prefs.getString('path')!, '/metadata.db'));
 
     return database;
   }
 
   Future<Future<Database>> mobileDatabase() async {
     String? path = prefs.getString('path');
+    print(path);
     return openDatabase(
       p.join(path!, '/metadata.db'),
       onCreate: (database, version) async {

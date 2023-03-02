@@ -216,6 +216,7 @@ class _SettingsPageState extends State<SettingsPage> {
     try {
       int bytes = 0;
       _tempPath = await FilePicker.platform.getDirectoryPath();
+      print(_tempPath);
       var b = await Directory(_tempPath!).list().isEmpty;
       if (!b) {
         try {
