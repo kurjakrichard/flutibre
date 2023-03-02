@@ -13,7 +13,7 @@ class LocaleProvider with ChangeNotifier {
   Locale get currentLocale => _currentLocale;
 
   void _loadSettings() async {
-    _currentLocale = Locale(prefs.getString('locale') ?? 'hu');
+    _currentLocale = Locale(prefs.getString('locale') ?? 'en');
     notifyListeners();
   }
 

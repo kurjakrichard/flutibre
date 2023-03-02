@@ -28,7 +28,7 @@ class DatabaseHandler {
   Future<Database> initialDatabase() async {
     String? path = prefs.getString('path');
 
-    if (path == null) {
+    if (path == null || await Directory(path).list().isEmpty) {
       return await databaseFactoryFfi.openDatabase(inMemoryDatabasePath);
     }
     if (Platform.isWindows || Platform.isLinux) {

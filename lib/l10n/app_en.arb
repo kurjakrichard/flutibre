@@ -20,17 +20,29 @@
   "@darktheme": {
     "description": "Dark theme"
   },
-    "librarypath": "Library path",
-  "@librarypath": {
-    "description": "Ebook library path"
-  },
-   "chosepath": "Please select Calibre library.",
+  "nolibraryselected": "No library selected",
   "@librarypath": {
     "description": "Calibre library selection"
   },
-    "emptylibrary": "Pick empty folder to create new library.",
+  "librarypath": "Library path",
+  "@librarypath": {
+    "description": "Ebook library path"
+  },
+  "chosepath": "Please select Calibre library.",
+  "@librarypath": {
+    "description": "Calibre library selection"
+  },
+  "chosepath": "Please select Calibre library.",
+  "@librarypath": {
+    "description": "Calibre library selection"
+  },
+  "createlibrary": "Pick empty folder to create new library.",
   "@librarypath": {
     "description": "Calibre library creation"
+  },
+  "emptylibrary": "Empty library",
+  "@librarypath": {
+    "description": "Empty library"
   },
   "ok": "OK",
   "@ok": {

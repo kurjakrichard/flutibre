@@ -73,7 +73,7 @@ class _SettingsPageState extends State<SettingsPage> {
           title: Wrap(
             children: [
               Text(
-                _dbpath ?? 'Nincs könyvtár kiválasztva',
+                _dbpath ?? AppLocalizations.of(context)!.nolibraryselected,
               ),
             ],
           ),
@@ -81,9 +81,12 @@ class _SettingsPageState extends State<SettingsPage> {
         Row(
           children: [
             Expanded(
-              child: ElevatedButton(
-                onPressed: () => _selectFolder(),
-                child: Text(AppLocalizations.of(context)!.pickfolder),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () => _selectFolder(),
+                  child: Text(AppLocalizations.of(context)!.pickfolder),
+                ),
               ),
             ),
           ],
@@ -96,7 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Wrap(children: [
               Text(
-                AppLocalizations.of(context)!.emptylibrary,
+                AppLocalizations.of(context)!.createlibrary,
               ),
             ]),
           ),
@@ -211,21 +214,24 @@ class _SettingsPageState extends State<SettingsPage> {
   void _selectFolder() async {
     _resetState();
     try {
-      _tempPath = await FilePicker.platform.getDirectoryPath();
       int bytes = 0;
-
-      try {
-        bytes = await io.File('$_tempPath/metadata.db').length();
-        if (bytes == 0) {
+      _tempPath = await FilePicker.platform.getDirectoryPath();
+      var b = await Directory(_tempPath!).list().isEmpty;
+      if (!b) {
+        try {
+          bytes = await io.File('$_tempPath/metadata.db').length();
+          if (bytes == 0) {
+            _tempPath = null;
+          }
+        } on Exception {
+          bytes = 0;
           _tempPath = null;
         }
-      } on Exception {
-        bytes = 0;
-        _tempPath = null;
+      } else {
+        bytes = 1;
       }
 
-      if (_tempPath != null && await File('$_tempPath/metadata.db').exists() ||
-          await io.File('$_tempPath/Ebooks/metadata.db').exists()) {
+      if (_tempPath != null && await File('$_tempPath/metadata.db').exists()) {
         setState(() {
           _dbpath = _tempPath;
           _userAborted = _tempPath == null;
@@ -233,9 +239,9 @@ class _SettingsPageState extends State<SettingsPage> {
       } else if (bytes != 0) {
         setState(() {
           _newFolder = true;
-          _tempPath = '${_tempPath!}/Ebooks';
           _dbpath = _tempPath;
           _userAborted = _tempPath == null;
+          bytes = 0;
         });
       }
     } on PlatformException catch (e) {

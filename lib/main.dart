@@ -66,7 +66,6 @@ class Flutibre extends StatelessWidget {
               routes: {
                 '/': (context) =>
                     isMetadataDb ? const HomePage() : const SettingsPage(),
-                // isMetadataDb ? const HomePage() : const SettingsPage(),
                 '/homepage': (context) => const HomePage(),
                 '/settings': (context) => const SettingsPage(),
               },

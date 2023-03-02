@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../main.dart';
 import '../model/booklist_item.dart';
 
@@ -11,11 +12,15 @@ class ListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     AsyncValue<List<BookListItem>> itemValue = ref.watch(booklistProvider);
     return itemValue.when(
-      data: (item) => ListView.builder(
-        itemCount: item.length,
-        itemExtent: 90,
-        itemBuilder: (context, index) => bookItem(item[index]),
-      ),
+      data: (item) => item.isNotEmpty
+          ? ListView.builder(
+              itemCount: item.length,
+              itemExtent: 90,
+              itemBuilder: (context, index) => bookItem(item[index]),
+            )
+          : Center(
+              child: Text(AppLocalizations.of(context)!.emptylibrary,
+                  style: const TextStyle(fontSize: 20, color: Colors.grey))),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, st) => Center(child: Text(e.toString())),
     );
