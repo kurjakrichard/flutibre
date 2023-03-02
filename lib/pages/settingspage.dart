@@ -179,7 +179,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     try {
       bytes = await io.File('${prefs.getString('path')}/metadata.db').length();
-    } on Exception catch (e) {
+    } on Exception {
       bytes = 0;
     }
     _isPath = bytes != 0;
@@ -208,7 +208,7 @@ class _SettingsPageState extends State<SettingsPage> {
         if (bytes == 0) {
           _tempPath = null;
         }
-      } on Exception catch (e) {
+      } on Exception {
         bytes = 0;
         _tempPath = null;
       }
