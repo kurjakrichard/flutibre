@@ -24,6 +24,14 @@
   "@librarypath": {
     "description": "Ebook library path"
   },
+   "chosepath": "Please select Calibre library.",
+  "@librarypath": {
+    "description": "Calibre library selection"
+  },
+    "emptylibrary": "Pick empty folder to create new library.",
+  "@librarypath": {
+    "description": "Calibre library creation"
+  },
   "ok": "OK",
   "@ok": {
     "description": "OK button"

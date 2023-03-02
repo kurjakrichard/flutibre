@@ -72,23 +72,34 @@ class _SettingsPageState extends State<SettingsPage> {
         ListTile(
           title: Wrap(
             children: [
-              Text(_dbpath ?? 'Nincs könyvtár kiválasztva',
-                  style: Theme.of(context).textTheme.bodyLarge),
+              Text(
+                _dbpath ?? 'Nincs könyvtár kiválasztva',
+              ),
             ],
           ),
         ),
         Row(
           children: [
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: ElevatedButton(
-                  onPressed: () => _selectFolder(),
-                  child: Text(AppLocalizations.of(context)!.pickfolder),
-                ),
+              child: ElevatedButton(
+                onPressed: () => _selectFolder(),
+                child: Text(AppLocalizations.of(context)!.pickfolder),
               ),
             ),
           ],
+        ),
+        ListTile(
+          title: Wrap(children: [
+            Text(AppLocalizations.of(context)!.chosepath),
+          ]),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Wrap(children: [
+              Text(
+                AppLocalizations.of(context)!.emptylibrary,
+              ),
+            ]),
+          ),
         ),
         Row(children: [
           Expanded(

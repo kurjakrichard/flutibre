@@ -19,7 +19,7 @@ class _LoadingScreenState extends ConsumerState<LoadingPage> {
   }
 
   void wait() async {
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 6));
 
     ref.read(themeProvider).doneLoading = true;
   }
@@ -50,9 +50,9 @@ class _LoadingScreenState extends ConsumerState<LoadingPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   delayedDisplay(0, 'Loading'),
-                  delayedDisplay(1, '.'),
                   delayedDisplay(2, '.'),
                   delayedDisplay(3, '.'),
+                  delayedDisplay(4, '.'),
                 ],
               ),
             ),

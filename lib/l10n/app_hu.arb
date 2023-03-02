@@ -6,6 +6,8 @@
     "theme": "Téma",
     "darktheme": "Sötét mód",
     "librarypath": "Könyvtár útvonal",
+    "chosepath": "Válasszd ki a Calibre könyvtárat!",
+    "emptylibrary": "Üres mappa esetén új Calibre könyvtár jön létre.",
     "ok": "OK",
     "cancel": "Mégse",
     "list": "Lista nézet",

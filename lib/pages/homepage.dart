@@ -16,7 +16,8 @@ class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   final PageController controller = PageController();
 
-  /// initializing controller for PageView
+  @override
+  bool get wantKeepAlive => true;
 
   int currentIndex = 0;
   final tabPages = [const ListPage(), const GridPage()];
@@ -46,8 +47,6 @@ class _HomePageState extends State<HomePage>
         onPageChanged: (index) {
           setState(() {
             currentIndex = index;
-
-            /// Switching bottom tabs
           });
         },
       ),
@@ -84,9 +83,6 @@ class _HomePageState extends State<HomePage>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 
   //DrawerNavigation widget
   Widget drawerNavigation(context) {
