@@ -43,27 +43,71 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.settingspage)),
-      body: Wrap(alignment: WrapAlignment.center, children: [
-        Card(
-          child: ListTile(
-            title: Text(AppLocalizations.of(context)!.theme),
-          ),
+      body: ListView(
+        children: [
+          Wrap(
+              alignment: WrapAlignment.center,
+              children: [themeSwitcher(), languageSelector(), manageLibrary()]),
+        ],
+      ),
+    );
+  }
+
+  Widget themeSwitcher() {
+    return Column(children: [
+      Card(
+        child: ListTile(
+          title: Text(AppLocalizations.of(context)!.theme),
         ),
-        Consumer(
-          builder: (context, ref, child) => SwitchListTile(
-            title: Text(AppLocalizations.of(context)!.darktheme),
-            value: ref.watch(themeProvider).darkTheme,
-            onChanged: (newValue) {
-              ref.read(themeProvider).toggleTheme();
-            },
-          ),
+      ),
+      Consumer(
+        builder: (context, ref, child) => SwitchListTile(
+          title: Text(AppLocalizations.of(context)!.darktheme),
+          value: ref.watch(themeProvider).darkTheme,
+          onChanged: (newValue) {
+            ref.read(themeProvider).toggleTheme();
+          },
         ),
+      )
+    ]);
+  }
+
+  Widget languageSelector() {
+    return Column(
+      children: [
         Card(
           child: ListTile(
             title: Text(AppLocalizations.of(context)!.language),
           ),
         ),
         dropDownButton(),
+      ],
+    );
+  }
+
+  Widget dropDownButton() {
+    return Consumer(
+      builder: (context, ref, child) => DropdownButton<String>(
+          icon: const Icon(Icons.arrow_downward),
+          isExpanded: true,
+          underline: Container(),
+          value:
+              _localeList[ref.watch(localeProvider).currentLocale.languageCode],
+          items: _localeList.values.map((String value) {
+            return DropdownMenuItem(
+                value: value, child: Center(child: Text(value)));
+          }).toList(),
+          onChanged: (newValueSelected) {
+            ref
+                .read(localeProvider)
+                .setLocale(Locale(_reverseLocaleList[newValueSelected]!));
+          }),
+    );
+  }
+
+  Widget manageLibrary() {
+    return Column(
+      children: [
         Card(
           child: ListTile(
             title: Text(AppLocalizations.of(context)!.librarypath),
@@ -78,31 +122,29 @@ class _SettingsPageState extends State<SettingsPage> {
             ],
           ),
         ),
-        Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () => _selectFolder(),
-                  child: Text(AppLocalizations.of(context)!.pickfolder),
-                ),
-              ),
-            ),
-          ],
+        ElevatedButton(
+          onPressed: () => _selectFolder(),
+          child: Text(AppLocalizations.of(context)!.pickfolder),
         ),
-        ListTile(
-          title: Wrap(children: [
-            Text(AppLocalizations.of(context)!.chosepath),
-          ]),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Wrap(children: [
-              Text(
-                AppLocalizations.of(context)!.createlibrary,
-              ),
-            ]),
-          ),
+        const SizedBox(
+          height: 6,
+        ),
+        Wrap(alignment: WrapAlignment.center, children: [
+          Text(AppLocalizations.of(context)!.chosepath),
+        ]),
+        const Divider(),
+        ElevatedButton(
+          onPressed: () => _createLibrary(),
+          child: Text(AppLocalizations.of(context)!.newlibrary),
+        ),
+        const SizedBox(
+          height: 6,
+        ),
+        Wrap(alignment: WrapAlignment.center, children: [
+          Text(AppLocalizations.of(context)!.createlibrary),
+        ]),
+        const SizedBox(
+          height: 12,
         ),
         Row(children: [
           Expanded(
@@ -161,27 +203,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
         ]),
-      ]),
-    );
-  }
-
-  Widget dropDownButton() {
-    return Consumer(
-      builder: (context, ref, child) => DropdownButton<String>(
-          icon: const Icon(Icons.arrow_downward),
-          isExpanded: true,
-          underline: Container(),
-          value:
-              _localeList[ref.watch(localeProvider).currentLocale.languageCode],
-          items: _localeList.values.map((String value) {
-            return DropdownMenuItem(
-                value: value, child: Center(child: Text(value)));
-          }).toList(),
-          onChanged: (newValueSelected) {
-            ref
-                .read(localeProvider)
-                .setLocale(Locale(_reverseLocaleList[newValueSelected]!));
-          }),
+      ],
     );
   }
 
@@ -254,6 +276,8 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  void _createLibrary() {}
+
   void _logException(String message) {
     // ignore: avoid_print
     print(message);
@@ -279,7 +303,6 @@ class _SettingsPageState extends State<SettingsPage> {
     var bytes = await rootBundle.load('assets/books/$filename');
     String dir = databasePath;
     writeToFile(bytes, '$dir/$filename');
-//write to app path
   }
 
   Future<void> writeToFile(ByteData data, String path) async {

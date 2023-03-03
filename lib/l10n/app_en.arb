@@ -36,7 +36,11 @@
   "@librarypath": {
     "description": "Calibre library selection"
   },
-  "createlibrary": "Pick empty folder to create new library.",
+  "newlibrary": "New library",
+  "@librarypath": {
+    "description": "New library"
+  },
+  "createlibrary": "Create new library.",
   "@librarypath": {
     "description": "Calibre library creation"
   },
