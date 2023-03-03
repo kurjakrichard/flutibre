@@ -28,7 +28,6 @@ class DatabaseHandler {
 
   Future<Database> initialDatabase() async {
     String? path = prefs.getString('path');
-    print(path);
     if (path == null || await Directory(path).list().isEmpty) {
       return await databaseFactoryFfi.openDatabase(inMemoryDatabasePath);
     }
@@ -43,16 +42,16 @@ class DatabaseHandler {
     sqfliteFfiInit();
     DatabaseFactory databaseFactory = databaseFactoryFfi;
     _database = await databaseFactory
-        .openDatabase(p.join(prefs.getString('path')!, '/metadata.db'));
+        .openDatabase('${prefs.getString('path')!}/metadata.db');
 
     return database;
   }
 
   Future<Future<Database>> mobileDatabase() async {
-    String? path = prefs.getString('path');
-    print(path);
+    var path = await getDatabasesPath();
+
     return openDatabase(
-      p.join(path!, '/metadata.db'),
+      ('${prefs.getString('path')!}/metadata.db'),
       onCreate: (database, version) async {
         //never run
         await database.execute(
