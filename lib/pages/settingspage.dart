@@ -9,7 +9,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 import '../main.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -27,8 +30,11 @@ class _SettingsPageState extends State<SettingsPage> {
     'English': 'en',
     'magyar': 'hu'
   };
+  //true path is exist in SharedPreferences
   bool? _isPath;
-  String? _dbpath;
+  //Saved path from SharedPreferences
+  String? _path;
+  //Database path before ok
   String? _tempPath;
   bool _newFolder = false;
   bool _isLoading = false;
@@ -36,7 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    _loadPath();
+    applyPath();
   }
 
   @override
@@ -45,15 +51,17 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.settingspage)),
       body: ListView(
         children: [
-          Wrap(
-              alignment: WrapAlignment.center,
-              children: [themeSwitcher(), languageSelector(), manageLibrary()]),
+          Wrap(alignment: WrapAlignment.center, children: [
+            themeSwitcher(context),
+            languageSelector(context),
+            manageLibrary(context)
+          ]),
         ],
       ),
     );
   }
 
-  Widget themeSwitcher() {
+  Widget themeSwitcher(BuildContext context) {
     return Column(children: [
       Card(
         child: ListTile(
@@ -72,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
     ]);
   }
 
-  Widget languageSelector() {
+  Widget languageSelector(BuildContext context) {
     return Column(
       children: [
         Card(
@@ -85,27 +93,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget dropDownButton() {
-    return Consumer(
-      builder: (context, ref, child) => DropdownButton<String>(
-          icon: const Icon(Icons.arrow_downward),
-          isExpanded: true,
-          underline: Container(),
-          value:
-              _localeList[ref.watch(localeProvider).currentLocale.languageCode],
-          items: _localeList.values.map((String value) {
-            return DropdownMenuItem(
-                value: value, child: Center(child: Text(value)));
-          }).toList(),
-          onChanged: (newValueSelected) {
-            ref
-                .read(localeProvider)
-                .setLocale(Locale(_reverseLocaleList[newValueSelected]!));
-          }),
-    );
-  }
-
-  Widget manageLibrary() {
+  Widget manageLibrary(BuildContext context) {
     return Column(
       children: [
         Card(
@@ -117,28 +105,46 @@ class _SettingsPageState extends State<SettingsPage> {
           title: Wrap(
             children: [
               Text(
-                _dbpath ?? AppLocalizations.of(context)!.nolibraryselected,
+                _path ?? AppLocalizations.of(context)!.nolibraryselected,
               ),
             ],
           ),
         ),
-        ElevatedButton(
-          onPressed: () => _selectFolder(),
-          child: Text(AppLocalizations.of(context)!.pickfolder),
+        Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 600.0),
+                child: ElevatedButton(
+                  onPressed: () => _selectFolder(),
+                  child: Text(AppLocalizations.of(context)!.pickfolder),
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(
-          height: 6,
+          height: 12,
         ),
         Wrap(alignment: WrapAlignment.center, children: [
           Text(AppLocalizations.of(context)!.chosepath),
         ]),
         const Divider(),
-        ElevatedButton(
-          onPressed: () => _createLibrary(),
-          child: Text(AppLocalizations.of(context)!.newlibrary),
+        Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 600.0),
+                child: ElevatedButton(
+                  onPressed: () => _createLibrary(),
+                  child: Text(AppLocalizations.of(context)!.newlibrary),
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(
-          height: 6,
+          height: 12,
         ),
         Wrap(alignment: WrapAlignment.center, children: [
           Text(AppLocalizations.of(context)!.createlibrary),
@@ -175,7 +181,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         // ignore: use_build_context_synchronously
                         Navigator.pushNamed(context, '/homepage');
                       } else {
-                        String? checkPath = await _loadPath();
+                        String? checkPath = _path;
                         if (checkPath != null) {
                           // ignore: use_build_context_synchronously
                           Navigator.pop(context);
@@ -187,85 +193,100 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                child: Text(
-                  AppLocalizations.of(context)!.cancel,
-                ),
-                onPressed: () {
-                  if (_isPath != null && _isPath!) {
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-            ),
-          ),
+          button(AppLocalizations.of(context)!.cancel, context, () => cancel),
         ]),
       ],
     );
   }
 
-  Future<String?> _loadPath() async {
-    prefs = await SharedPreferences.getInstance();
-    _tempPath = prefs.getString('path');
-    _isPath = await io.File('$_tempPath/metadata.db').exists();
-    int? bytes;
+  Widget dropDownButton() {
+    return Consumer(
+      builder: (context, ref, child) => DropdownButton<String>(
+          icon: const Icon(Icons.arrow_downward),
+          isExpanded: true,
+          underline: Container(),
+          value:
+              _localeList[ref.watch(localeProvider).currentLocale.languageCode],
+          items: _localeList.values.map((String value) {
+            return DropdownMenuItem(
+                value: value, child: Center(child: Text(value)));
+          }).toList(),
+          onChanged: (newValueSelected) {
+            ref
+                .read(localeProvider)
+                .setLocale(Locale(_reverseLocaleList[newValueSelected]!));
+          }),
+    );
+  }
 
-    try {
-      bytes = await io.File('${prefs.getString('path')}/metadata.db').length();
-    } on Exception {
-      bytes = 0;
+  //Handle all elevated button
+  Widget button(String title, BuildContext context, Function action) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Builder(builder: (context) {
+          return ElevatedButton(
+            onPressed: () {
+              action(context);
+            },
+            child: Text(title),
+          );
+        }),
+      ),
+    );
+  }
+
+  //pop the Settingspage
+  VoidCallback cancel(BuildContext context) {
+    Navigator.pop(context);
+    throw '';
+  }
+
+  void applyPath() async {
+    if (prefs.containsKey('path')) {
+      String? path = await _loadPath(prefs.getString('path')!);
+      if (path != null) {
+        setState(() {
+          _path = path;
+        });
+      } else {
+        _path = null;
+      }
     }
-    _isPath = bytes != 0;
+  }
 
-    _tempPath = null;
-    String? path = _isPath! ? prefs.getString('path') : null;
-
-    if (path != null) {
-      setState(() {
-        _dbpath = path;
-      });
-      return path;
-    } else {
-      return _dbpath = null;
+  //load library path at start
+  Future<String?> _loadPath(String path) async {
+    if (Platform.isLinux || Platform.isWindows) {
+      //check path in SharedPreferences
+      if (path != '') {
+        try {
+          await io.File('$path/metadata.db').length();
+          return path;
+        } on Exception {
+          return null;
+        }
+      } else {
+        return path;
+      }
+    } else if (Platform.isAndroid) {
+      //TODO
+      Directory documentsDirectory = await getApplicationDocumentsDirectory();
+      _tempPath = await getDatabasesPath();
+      return null;
+      //Check metadata.db exists
     }
+    return null;
   }
 
   void _selectFolder() async {
     _resetState();
+
     try {
-      int bytes = 0;
-      _tempPath = await FilePicker.platform.getDirectoryPath();
-
-      var b = await Directory(_tempPath!).list().isEmpty;
-      if (!b) {
-        try {
-          bytes = await io.File('$_tempPath/metadata.db').length();
-          if (bytes == 0) {
-            _tempPath = null;
-          }
-        } on Exception {
-          bytes = 0;
-          _tempPath = null;
-        }
-      } else {
-        bytes = 1;
-      }
-
-      if (_tempPath != null && await File('$_tempPath/metadata.db').exists()) {
-        setState(() {
-          _dbpath = _tempPath;
-          _userAborted = _tempPath == null;
-        });
-      } else if (bytes != 0) {
-        setState(() {
-          _newFolder = true;
-          _dbpath = _tempPath;
-          _userAborted = _tempPath == null;
-          bytes = 0;
-        });
+      String? tempPath = await FilePicker.platform.getDirectoryPath();
+      if (tempPath != null) {
+        _tempPath = await _loadPath(tempPath);
+        _path = _tempPath;
       }
     } on PlatformException catch (e) {
       _logException('Unsupported operation$e');
