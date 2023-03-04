@@ -112,15 +112,8 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         Row(
           children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 600.0),
-                child: ElevatedButton(
-                  onPressed: () => _selectFolder(),
-                  child: Text(AppLocalizations.of(context)!.pickfolder),
-                ),
-              ),
-            ),
+            button(AppLocalizations.of(context)!.pickfolder, context,
+                () => _selectFolder)
           ],
         ),
         const SizedBox(
@@ -132,15 +125,8 @@ class _SettingsPageState extends State<SettingsPage> {
         const Divider(),
         Row(
           children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 600.0),
-                child: ElevatedButton(
-                  onPressed: () => _createLibrary(),
-                  child: Text(AppLocalizations.of(context)!.newlibrary),
-                ),
-              ),
-            ),
+            button(AppLocalizations.of(context)!.newlibrary, context,
+                _createLibrary)
           ],
         ),
         const SizedBox(
@@ -193,7 +179,7 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
-          button(AppLocalizations.of(context)!.cancel, context, () => cancel),
+          button(AppLocalizations.of(context)!.cancel, context, cancel),
         ]),
       ],
     );
@@ -226,8 +212,18 @@ class _SettingsPageState extends State<SettingsPage> {
         padding: const EdgeInsets.all(8.0),
         child: Builder(builder: (context) {
           return ElevatedButton(
-            onPressed: () {
-              action(context);
+            onPressed: () async {
+              try {
+                print('hiba0'); //nem fut le
+                action(context);
+              } on NoSuchMethodError {
+                print('hiba1');
+                () => action; //nem fut le
+                print('hiba2');
+                action; //nem fut le
+                print('hiba3');
+                _createLibrary(); //lefut
+              }
             },
             child: Text(title),
           );
@@ -237,9 +233,8 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   //pop the Settingspage
-  VoidCallback cancel(BuildContext context) {
+  void cancel(BuildContext context) {
     Navigator.pop(context);
-    throw '';
   }
 
   void applyPath() async {
@@ -297,7 +292,9 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  void _createLibrary() {}
+  void _createLibrary() {
+    print('Create library');
+  }
 
   void _logException(String message) {
     // ignore: avoid_print
