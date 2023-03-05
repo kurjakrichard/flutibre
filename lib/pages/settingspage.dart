@@ -216,7 +216,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> okButton(WidgetRef ref, BuildContext context) async {
-    if (_tempPath != null) {
+    if (_tempPath != null && _tempPath != _path) {
       await prefs.setString('path', _tempPath!);
       if (_tempPath != null && _newFolder) {
         await copyDatabase(_tempPath!, 'metadata.db');
@@ -231,8 +231,7 @@ class _SettingsPageState extends State<SettingsPage> {
       // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, '/homepage');
     } else {
-      String? checkPath = _path;
-      if (checkPath != null) {
+      if (_path != null) {
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
       }
