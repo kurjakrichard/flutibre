@@ -195,6 +195,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 print('hiba2');
                 action; //nem fut le
                 print('hiba3');
+                _createLibrary(context);
               }
             },
             child: Text(title),
@@ -202,6 +203,16 @@ class _SettingsPageState extends State<SettingsPage> {
         }),
       ),
     );
+  }
+
+  //OnPressed method of loadLibrary button
+  void _loadLibrary(BuildContext? context) {
+    _selectFolder(newLibrary: false, context: context);
+  }
+
+  //OnPressed method of createLibrary button
+  void _createLibrary(BuildContext? context) {
+    _selectFolder(newLibrary: true, context: context);
   }
 
   Future<void> okButton(WidgetRef ref, BuildContext context) async {
@@ -229,45 +240,10 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   //pop the Settingspage if path exists
-  void cancel(BuildContext? context) {
+  void cancel(BuildContext context) {
     if (_path != null) {
-      Navigator.pop(context!);
+      Navigator.pop(context);
     }
-  }
-
-  //Set path at start
-  void setPath({BuildContext? context}) async {
-    if (prefs.containsKey('path')) {
-      String? path =
-          await _loadPath(prefs.getString('path')!, false, context: context);
-      if (path != null) {
-        setState(() {
-          _path = path;
-          _tempPath = _path;
-        });
-      }
-    }
-  }
-
-  //Return library path if the path correct else null
-  Future<String?> _loadPath(String? path, bool newLibrary,
-      {BuildContext? context}) async {
-    if (Platform.isLinux || Platform.isWindows && path != null) {
-      //check path in SharedPreferences
-      if (!newLibrary) {
-        try {
-          await io.File('$path/metadata.db').length();
-          return path;
-        } on Exception {
-          return null;
-        }
-      } else {
-        return await Directory(path!).list().isEmpty ? path : null;
-      }
-    } else if (Platform.isAndroid) {
-      //TODO
-    }
-    return null;
   }
 
   //Handle file picker dialog and set _tempPath and _newFolder variable
@@ -294,14 +270,53 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  //OnPressed method of loadLibrary button
-  void _loadLibrary(BuildContext? context) {
-    _selectFolder(newLibrary: false, context: context);
+  //Return library path if the path correct else null
+  Future<String?> _loadPath(String? path, bool newLibrary,
+      {BuildContext? context}) async {
+    if (Platform.isLinux || Platform.isWindows && path != null) {
+      //check path in SharedPreferences
+      if (!newLibrary) {
+        try {
+          await io.File('$path/metadata.db').length();
+          return path;
+        } on Exception {
+          return null;
+        }
+      } else {
+        return await Directory(path!).list().isEmpty ? path : null;
+      }
+    } else if (Platform.isAndroid) {
+      //TODO
+    }
+    return null;
   }
 
-  //OnPressed method of createLibrary button
-  void _createLibrary(BuildContext? context) {
-    _selectFolder(newLibrary: true, context: context);
+  //Set path at start
+  void setPath({BuildContext? context}) async {
+    if (prefs.containsKey('path')) {
+      String? path =
+          await _loadPath(prefs.getString('path')!, false, context: context);
+      if (path != null) {
+        setState(() {
+          _path = path;
+          _tempPath = _path;
+        });
+      }
+    }
+  }
+
+  Future<void> copyDatabase(String databasePath, String filename) async {
+    var bytes = await rootBundle.load('assets/books/$filename');
+    String dir = databasePath;
+    writeToFile(bytes, '$dir/$filename');
+  }
+
+  Future<void> writeToFile(ByteData data, String path) async {
+    final buffer = data.buffer;
+    File(path).create(recursive: true).then((File file) {
+      return File(path).writeAsBytes(
+          buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+    });
   }
 
   void _logException(String message) {
@@ -322,20 +337,6 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _isLoading = true;
       _userAborted = false;
-    });
-  }
-
-  Future<void> copyDatabase(String databasePath, String filename) async {
-    var bytes = await rootBundle.load('assets/books/$filename');
-    String dir = databasePath;
-    writeToFile(bytes, '$dir/$filename');
-  }
-
-  Future<void> writeToFile(ByteData data, String path) async {
-    final buffer = data.buffer;
-    File(path).create(recursive: true).then((File file) {
-      return File(path).writeAsBytes(
-          buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
     });
   }
 }
