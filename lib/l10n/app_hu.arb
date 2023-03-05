@@ -7,7 +7,7 @@
     "darktheme": "Sötét mód",
     "librarypath": "Könyvtár útvonal",
     "nolibraryselected": "Nincs könyvtár kiválasztva",
-    "chosepath": "Válasszd ki a Calibre könyvtárat!",
+    "loadlibrary": "Válasszd ki a Calibre könyvtárat!",
     "newlibrary": "Új könyvtár",
     "createlibrary": "Új könyvtár létrehozása",
     "emptylibrary": "Üres könyvtár",

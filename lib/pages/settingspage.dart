@@ -11,7 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import '../main.dart';
 
@@ -36,13 +35,14 @@ class _SettingsPageState extends State<SettingsPage> {
   String? _path;
   //Database path before ok
   String? _tempPath;
+  //true if new library created
   bool _newFolder = false;
   bool _isLoading = false;
   bool _userAborted = false;
   @override
   void initState() {
     super.initState();
-    applyPath();
+    setPath();
   }
 
   @override
@@ -105,28 +105,26 @@ class _SettingsPageState extends State<SettingsPage> {
           title: Wrap(
             children: [
               Text(
-                _path ?? AppLocalizations.of(context)!.nolibraryselected,
+                _tempPath ?? AppLocalizations.of(context)!.nolibraryselected,
               ),
             ],
           ),
         ),
         Row(
           children: [
-            button(AppLocalizations.of(context)!.pickfolder, context,
-                () => _selectFolder)
+            button(AppLocalizations.of(context)!.pickfolder, _loadLibrary)
           ],
         ),
         const SizedBox(
           height: 12,
         ),
         Wrap(alignment: WrapAlignment.center, children: [
-          Text(AppLocalizations.of(context)!.chosepath),
+          Text(AppLocalizations.of(context)!.loadlibrary),
         ]),
         const Divider(),
         Row(
           children: [
-            button(AppLocalizations.of(context)!.newlibrary, context,
-                _createLibrary)
+            button(AppLocalizations.of(context)!.newlibrary, _createLibrary)
           ],
         ),
         const SizedBox(
@@ -147,39 +145,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: ElevatedButton(
                     child: Text(AppLocalizations.of(context)!.ok),
                     onPressed: () async {
-                      if (_tempPath != null) {
-                        await prefs.setString('path', _tempPath!);
-                        if (_tempPath != null && _newFolder) {
-                          await copyDatabase(_tempPath!, 'metadata.db');
-                          await copyDatabase(
-                              _tempPath!, 'metadata_db_prefs_backup.json');
-                          _newFolder = false;
-                        }
-
-                        await ref
-                            .read(bookListProvider)
-                            .databaseHandler!
-                            .initialDatabase();
-
-                        await ref.read(bookListProvider).getBookItemList();
-                        // ignore: unused_result
-                        ref.refresh(booklistProvider);
-                        // ignore: use_build_context_synchronously
-                        Navigator.pushNamed(context, '/homepage');
-                      } else {
-                        String? checkPath = _path;
-                        if (checkPath != null) {
-                          // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
-                        }
-                      }
+                      await okButton(ref, context);
                     },
                   ),
                 );
               },
             ),
           ),
-          button(AppLocalizations.of(context)!.cancel, context, cancel),
+          button(AppLocalizations.of(context)!.cancel, cancel),
         ]),
       ],
     );
@@ -206,7 +179,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   //Handle all elevated button
-  Widget button(String title, BuildContext context, Function action) {
+  Widget button(String title, Function action) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -214,7 +187,7 @@ class _SettingsPageState extends State<SettingsPage> {
           return ElevatedButton(
             onPressed: () async {
               try {
-                print('hiba0'); //nem fut le
+                print('hiba0'); //nem fut l
                 action(context);
               } on NoSuchMethodError {
                 print('hiba1');
@@ -222,7 +195,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 print('hiba2');
                 action; //nem fut le
                 print('hiba3');
-                _createLibrary(); //lefut
               }
             },
             child: Text(title),
@@ -232,29 +204,57 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  //pop the Settingspage
-  void cancel(BuildContext context) {
-    Navigator.pop(context);
-  }
+  Future<void> okButton(WidgetRef ref, BuildContext context) async {
+    if (_tempPath != null) {
+      await prefs.setString('path', _tempPath!);
+      if (_tempPath != null && _newFolder) {
+        await copyDatabase(_tempPath!, 'metadata.db');
+        await copyDatabase(_tempPath!, 'metadata_db_prefs_backup.json');
+        _newFolder = false;
+      }
 
-  void applyPath() async {
-    if (prefs.containsKey('path')) {
-      String? path = await _loadPath(prefs.getString('path')!);
-      if (path != null) {
-        setState(() {
-          _path = path;
-        });
-      } else {
-        _path = null;
+      await ref.read(bookListProvider).databaseHandler!.initialDatabase();
+      await ref.read(bookListProvider).getBookItemList();
+      // ignore: unused_result
+      ref.refresh(booklistProvider);
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(context, '/homepage');
+    } else {
+      String? checkPath = _path;
+      if (checkPath != null) {
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
       }
     }
   }
 
-  //load library path at start
-  Future<String?> _loadPath(String path) async {
-    if (Platform.isLinux || Platform.isWindows) {
+  //pop the Settingspage if path exists
+  void cancel(BuildContext? context) {
+    if (_path != null) {
+      Navigator.pop(context!);
+    }
+  }
+
+  //Set path at start
+  void setPath({BuildContext? context}) async {
+    if (prefs.containsKey('path')) {
+      String? path =
+          await _loadPath(prefs.getString('path')!, false, context: context);
+      if (path != null) {
+        setState(() {
+          _path = path;
+          _tempPath = _path;
+        });
+      }
+    }
+  }
+
+  //Return library path if the path correct else null
+  Future<String?> _loadPath(String? path, bool newLibrary,
+      {BuildContext? context}) async {
+    if (Platform.isLinux || Platform.isWindows && path != null) {
       //check path in SharedPreferences
-      if (path != '') {
+      if (!newLibrary) {
         try {
           await io.File('$path/metadata.db').length();
           return path;
@@ -262,26 +262,28 @@ class _SettingsPageState extends State<SettingsPage> {
           return null;
         }
       } else {
-        return path;
+        return await Directory(path!).list().isEmpty ? path : null;
       }
     } else if (Platform.isAndroid) {
       //TODO
-      Directory documentsDirectory = await getApplicationDocumentsDirectory();
-      _tempPath = await getDatabasesPath();
-      return null;
-      //Check metadata.db exists
     }
     return null;
   }
 
-  void _selectFolder() async {
+  //Handle file picker dialog and set _tempPath and _newFolder variable
+  void _selectFolder({bool newLibrary = false, BuildContext? context}) async {
     _resetState();
 
     try {
-      String? tempPath = await FilePicker.platform.getDirectoryPath();
-      if (tempPath != null) {
-        _tempPath = await _loadPath(tempPath);
-        _path = _tempPath;
+      String? tempPath = await _loadPath(
+          await FilePicker.platform.getDirectoryPath(), newLibrary,
+          context: context);
+      if (tempPath != null && !newLibrary) {
+        _tempPath = tempPath;
+        _newFolder = false;
+      } else if (tempPath != null && newLibrary) {
+        _tempPath = tempPath;
+        _newFolder = true;
       }
     } on PlatformException catch (e) {
       _logException('Unsupported operation$e');
@@ -292,8 +294,14 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  void _createLibrary() {
-    print('Create library');
+  //OnPressed method of loadLibrary button
+  void _loadLibrary(BuildContext? context) {
+    _selectFolder(newLibrary: false, context: context);
+  }
+
+  //OnPressed method of createLibrary button
+  void _createLibrary(BuildContext? context) {
+    _selectFolder(newLibrary: true, context: context);
   }
 
   void _logException(String message) {
