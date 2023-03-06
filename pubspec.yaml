@@ -37,6 +37,7 @@ dependencies:
   delayed_display: ^2.0.0
   path_provider: ^2.0.13
   flutter_riverpod: ^2.2.0
+  permission_handler: ^10.2.0
   intl: ^0.17.0
   flutter_localizations:
     sdk: flutter

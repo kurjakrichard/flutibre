@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite/sqflite.dart';
 import '../main.dart';
 
@@ -242,6 +242,42 @@ class _SettingsPageState extends State<SettingsPage> {
         await copyDatabase(_tempPath!, 'metadata_db_prefs_backup.json');
         _newFolder = false;
       }
+      if (Platform.isAndroid) {
+        print('itt vagyok');
+        String databasePath = await getDatabasesPath();
+        File file1 = File('$_tempPath/metadata.db');
+        File file2 = File('$_tempPath/metadata_db_prefs_backup.json');
+
+//ask for permission
+        await Permission.manageExternalStorage.request();
+        var status = await Permission.manageExternalStorage.status;
+        if (status.isDenied) {
+          // We didn't ask for permission yet or the permission has been denied   before but not permanently.
+          return;
+        }
+
+// You can can also directly ask the permission about its status.
+        if (await Permission.storage.isRestricted) {
+          // The OS restricts access, for example because of parental controls.
+          return;
+        }
+        if (status.isGranted) {
+          print('granted');
+//here you add the code to store the file
+          File file1 = File('$_tempPath/metadata.db');
+          File file2 = File('$_tempPath/metadata_db_prefs_backup.json');
+          File newFile1 = await file1.copy('$databasePath/metadata.db');
+          File newFile2 =
+              await file2.copy('$databasePath/metadata_db_prefs_backup.json');
+        }
+
+        // Uint8List bytes = await file1.readAsBytes();
+        //ByteData blob = ByteData.sublistView(bytes);
+        //Uint8List bytes2 = await file2.readAsBytes();
+        //ByteData blob2 = ByteData.sublistView(bytes2);
+        //writeToFile(blob, '$databasePath/metadata.db');
+        //writeToFile(blob2, '$databasePath/metadata_db_prefs_backup.json');
+      }
 
       await ref.read(bookListProvider).databaseHandler!.initialDatabase();
       await ref.read(bookListProvider).getBookItemList();
@@ -272,7 +308,6 @@ class _SettingsPageState extends State<SettingsPage> {
       String? tempPath = await _loadPath(
           await FilePicker.platform.getDirectoryPath(), newFolder,
           context: context);
-      print(tempPath);
       if (tempPath != null && !newFolder) {
         _tempPath = tempPath;
         _newFolder = false;
@@ -330,12 +365,23 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> copyDatabase(String databasePath, String filename) async {
     var bytes = await rootBundle.load('assets/books/$filename');
-    String dir = databasePath;
-    writeToFile(bytes, '$dir/$filename');
+    if (Platform.isAndroid) {
+      var path = await getApplicationDocumentsDirectory();
+      writeToFile(bytes, '$path/$filename');
+    } else {
+      writeToFile(bytes, '$databasePath/$filename');
+    }
   }
 
   Future<void> writeToFile(ByteData data, String path) async {
+    try {
+      File file = File(path);
+      await file.delete();
+    } catch (e) {
+      debugPrint('file no exists');
+    }
     final buffer = data.buffer;
+    print('Itt $path');
     File(path).create(recursive: true).then((File file) {
       return File(path).writeAsBytes(
           buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));

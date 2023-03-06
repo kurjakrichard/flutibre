@@ -48,11 +48,10 @@ class DatabaseHandler {
   }
 
   Future<Future<Database>> mobileDatabase() async {
-    var path1 = await getDatabasesPath();
-    var path2 = prefs.getString('path');
-    print(path2);
+    var path = await getDatabasesPath();
+
     return openDatabase(
-      ('${path2!}/metadata.db'),
+      ('$path/metadata.db'),
       onCreate: (database, version) async {
         //never run
         await database.execute(
