@@ -27,8 +27,8 @@ class DatabaseHandler {
   }
 
   Future<Database> initialDatabase() async {
-    String? path = prefs.getString('path');
-    if (path == null || await Directory(path).list().isEmpty) {
+    if (prefs.getString('path') == null ||
+        await Directory(prefs.getString('path')!).list().isEmpty) {
       return await databaseFactoryFfi.openDatabase(inMemoryDatabasePath);
     }
     if (Platform.isWindows || Platform.isLinux) {
@@ -48,10 +48,11 @@ class DatabaseHandler {
   }
 
   Future<Future<Database>> mobileDatabase() async {
-    var path = await getDatabasesPath();
-
+    var path1 = await getDatabasesPath();
+    var path2 = prefs.getString('path');
+    print(path2);
     return openDatabase(
-      ('${prefs.getString('path')!}/metadata.db'),
+      ('${path2!}/metadata.db'),
       onCreate: (database, version) async {
         //never run
         await database.execute(

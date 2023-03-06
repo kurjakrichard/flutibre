@@ -94,68 +94,76 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget manageLibrary(BuildContext context) {
-    return Column(
-      children: [
-        Card(
-          child: ListTile(
-            title: Text(AppLocalizations.of(context)!.librarypath),
-          ),
-        ),
-        ListTile(
-          title: Wrap(
+    return Platform.isAndroid && _path != null
+        ? Column(
             children: [
-              Text(
-                _tempPath ?? AppLocalizations.of(context)!.nolibraryselected,
-              ),
+              Row(children: [button('Delete library', _deleteLibrary)])
             ],
-          ),
-        ),
-        Row(
-          children: [
-            button(AppLocalizations.of(context)!.pickfolder, _loadLibrary)
-          ],
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        Wrap(alignment: WrapAlignment.center, children: [
-          Text(AppLocalizations.of(context)!.loadlibrary),
-        ]),
-        const Divider(),
-        Row(
-          children: [
-            button(AppLocalizations.of(context)!.newlibrary, _createLibrary)
-          ],
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        Wrap(alignment: WrapAlignment.center, children: [
-          Text(AppLocalizations.of(context)!.createlibrary),
-        ]),
-        const SizedBox(
-          height: 12,
-        ),
-        Row(children: [
-          Expanded(
-            child: Consumer(
-              builder: (BuildContext context, ref, Widget? child) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    child: Text(AppLocalizations.of(context)!.ok),
-                    onPressed: () async {
-                      await okButton(ref, context);
+          )
+        : Column(
+            children: [
+              Card(
+                child: ListTile(
+                  title: Text(AppLocalizations.of(context)!.librarypath),
+                ),
+              ),
+              ListTile(
+                title: Wrap(
+                  children: [
+                    Text(
+                      _tempPath ??
+                          AppLocalizations.of(context)!.nolibraryselected,
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  button(AppLocalizations.of(context)!.pickfolder, _loadLibrary)
+                ],
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Wrap(alignment: WrapAlignment.center, children: [
+                Text(AppLocalizations.of(context)!.loadlibrary),
+              ]),
+              const Divider(),
+              Row(
+                children: [
+                  button(
+                      AppLocalizations.of(context)!.newlibrary, _createLibrary)
+                ],
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Wrap(alignment: WrapAlignment.center, children: [
+                Text(AppLocalizations.of(context)!.createlibrary),
+              ]),
+              const SizedBox(
+                height: 12,
+              ),
+              Row(children: [
+                Expanded(
+                  child: Consumer(
+                    builder: (BuildContext context, ref, Widget? child) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          child: Text(AppLocalizations.of(context)!.ok),
+                          onPressed: () async {
+                            await okButton(ref, context);
+                          },
+                        ),
+                      );
                     },
                   ),
-                );
-              },
-            ),
-          ),
-          button(AppLocalizations.of(context)!.cancel, cancel),
-        ]),
-      ],
-    );
+                ),
+                button(AppLocalizations.of(context)!.cancel, cancel),
+              ]),
+            ],
+          );
   }
 
   Widget dropDownButton() {
@@ -207,12 +215,23 @@ class _SettingsPageState extends State<SettingsPage> {
 
   //OnPressed method of loadLibrary button
   void _loadLibrary(BuildContext? context) {
-    _selectFolder(newLibrary: false, context: context);
+    _selectFolder(newFolder: false, context: context);
   }
 
   //OnPressed method of createLibrary button
   void _createLibrary(BuildContext? context) {
-    _selectFolder(newLibrary: true, context: context);
+    _selectFolder(newFolder: true, context: context);
+  }
+
+  void _deleteLibrary(BuildContext? context) {
+    //TODO
+    print('test');
+    setState(() {
+      prefs.remove('path');
+      _path = null;
+      _tempPath = null;
+    });
+    prefs.remove('path');
   }
 
   Future<void> okButton(WidgetRef ref, BuildContext context) async {
@@ -246,17 +265,18 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   //Handle file picker dialog and set _tempPath and _newFolder variable
-  void _selectFolder({bool newLibrary = false, BuildContext? context}) async {
+  void _selectFolder({bool newFolder = false, BuildContext? context}) async {
     _resetState();
 
     try {
       String? tempPath = await _loadPath(
-          await FilePicker.platform.getDirectoryPath(), newLibrary,
+          await FilePicker.platform.getDirectoryPath(), newFolder,
           context: context);
-      if (tempPath != null && !newLibrary) {
+      print(tempPath);
+      if (tempPath != null && !newFolder) {
         _tempPath = tempPath;
         _newFolder = false;
-      } else if (tempPath != null && newLibrary) {
+      } else if (tempPath != null && newFolder) {
         _tempPath = tempPath;
         _newFolder = true;
       }
@@ -285,7 +305,11 @@ class _SettingsPageState extends State<SettingsPage> {
         return await Directory(path!).list().isEmpty ? path : null;
       }
     } else if (Platform.isAndroid) {
-      //TODO
+      if (!newLibrary) {
+        return await Directory(path!).list().isEmpty ? null : path;
+      } else {
+        return path;
+      }
     }
     return null;
   }
