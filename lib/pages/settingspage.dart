@@ -244,9 +244,6 @@ class _SettingsPageState extends State<SettingsPage> {
       }
       if (Platform.isAndroid) {
         print('itt vagyok');
-        String databasePath = await getDatabasesPath();
-        File file1 = File('$_tempPath/metadata.db');
-        File file2 = File('$_tempPath/metadata_db_prefs_backup.json');
 
 //ask for permission
         await Permission.manageExternalStorage.request();
@@ -264,27 +261,28 @@ class _SettingsPageState extends State<SettingsPage> {
         if (status.isGranted) {
           print('granted');
 //here you add the code to store the file
+          String databasePath = await getDatabasesPath();
           File file1 = File('$_tempPath/metadata.db');
           File file2 = File('$_tempPath/metadata_db_prefs_backup.json');
           File newFile1 = await file1.copy('$databasePath/metadata.db');
           File newFile2 =
               await file2.copy('$databasePath/metadata_db_prefs_backup.json');
+
+          // Uint8List bytes = await file1.readAsBytes();
+          //ByteData blob = ByteData.sublistView(bytes);
+          //Uint8List bytes2 = await file2.readAsBytes();
+          //ByteData blob2 = ByteData.sublistView(bytes2);
+          //writeToFile(blob, '$databasePath/metadata.db');
+          //writeToFile(blob2, '$databasePath/metadata_db_prefs_backup.json');
+
+          await ref.read(bookListProvider).databaseHandler!.initialDatabase();
+          await ref.read(bookListProvider).getBookItemList();
+          // ignore: unused_result
+          ref.refresh(booklistProvider);
+          // ignore: use_build_context_synchronously
+          Navigator.pushNamed(context, '/homepage');
         }
-
-        // Uint8List bytes = await file1.readAsBytes();
-        //ByteData blob = ByteData.sublistView(bytes);
-        //Uint8List bytes2 = await file2.readAsBytes();
-        //ByteData blob2 = ByteData.sublistView(bytes2);
-        //writeToFile(blob, '$databasePath/metadata.db');
-        //writeToFile(blob2, '$databasePath/metadata_db_prefs_backup.json');
       }
-
-      await ref.read(bookListProvider).databaseHandler!.initialDatabase();
-      await ref.read(bookListProvider).getBookItemList();
-      // ignore: unused_result
-      ref.refresh(booklistProvider);
-      // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, '/homepage');
     } else {
       if (_path != null) {
         // ignore: use_build_context_synchronously
@@ -304,23 +302,57 @@ class _SettingsPageState extends State<SettingsPage> {
   void _selectFolder({bool newFolder = false, BuildContext? context}) async {
     _resetState();
 
-    try {
-      String? tempPath = await _loadPath(
-          await FilePicker.platform.getDirectoryPath(), newFolder,
-          context: context);
-      if (tempPath != null && !newFolder) {
-        _tempPath = tempPath;
-        _newFolder = false;
-      } else if (tempPath != null && newFolder) {
-        _tempPath = tempPath;
-        _newFolder = true;
+    await Permission.manageExternalStorage.request();
+    var status = await Permission.manageExternalStorage.status;
+    if (status.isDenied) {
+      // We didn't ask for permission yet or the permission has been denied   before but not permanently.
+      return;
+    }
+
+// You can can also directly ask the permission about its status.
+    if (await Permission.storage.isRestricted) {
+      // The OS restricts access, for example because of parental controls.
+      return;
+    }
+    if (status.isGranted) {
+      print('granted');
+      try {
+        String? tempPath = await _loadPath(
+            await FilePicker.platform.getDirectoryPath(), newFolder,
+            context: context);
+        if (tempPath != null && !newFolder) {
+          _tempPath = tempPath;
+          _newFolder = false;
+        } else if (tempPath != null && newFolder) {
+          _tempPath = tempPath;
+          _newFolder = true;
+        }
+      } on PlatformException catch (e) {
+        _logException('Unsupported operation$e');
+      } catch (e) {
+        _logException(e.toString());
+      } finally {
+        setState(() => _isLoading = false);
       }
-    } on PlatformException catch (e) {
-      _logException('Unsupported operation$e');
-    } catch (e) {
-      _logException(e.toString());
-    } finally {
-      setState(() => _isLoading = false);
+    } else {
+      try {
+        String? tempPath = await _loadPath(
+            await FilePicker.platform.getDirectoryPath(), newFolder,
+            context: context);
+        if (tempPath != null && !newFolder) {
+          _tempPath = tempPath;
+          _newFolder = false;
+        } else if (tempPath != null && newFolder) {
+          _tempPath = tempPath;
+          _newFolder = true;
+        }
+      } on PlatformException catch (e) {
+        _logException('Unsupported operation$e');
+      } catch (e) {
+        _logException(e.toString());
+      } finally {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
