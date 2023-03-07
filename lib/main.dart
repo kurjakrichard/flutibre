@@ -24,17 +24,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   prefs = await SharedPreferences.getInstance();
-  int? bytes;
+  bool isMetadataDb = false;
 
   try {
-    bytes = await io.File('${prefs.getString('path')}/metadata.db').length();
+    await io.File('${prefs.getString('path')}/metadata.db').length();
+    isMetadataDb = true;
   } on Exception {
-    bytes = 0;
-  }
-
-//True if metadata.db exist and looks correct
-  bool isMetadataDb = prefs.containsKey("path") && bytes != 0;
-  if (!isMetadataDb) {
     prefs.remove('path');
   }
 
