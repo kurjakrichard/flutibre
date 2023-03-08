@@ -16,11 +16,11 @@ class Data {
   });
 
   Data.fromMap(Map<String, dynamic> res)
-      : id = res["id"],
-        book = res["book"],
-        format = res["format"],
-        uncompressed_size = res["uncompressed_size"],
-        name = res["name"];
+      : id = res['id'],
+        book = res['book'],
+        format = res['format'],
+        uncompressed_size = res['uncompressed_size'],
+        name = res['name'];
 
   Map<String, Object?> toMap() {
     return {

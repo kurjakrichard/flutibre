@@ -2,9 +2,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
-import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:path_provider/path_provider.dart';
 import '../main.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
@@ -48,10 +46,8 @@ class DatabaseHandler {
   }
 
   Future<Future<Database>> mobileDatabase() async {
-    var path = await getDatabasesPath();
-
     return openDatabase(
-      ('$path/metadata.db'),
+      ('${prefs.getString('path')!}/metadata.db'),
       onCreate: (database, version) async {
         //never run
         await database.execute(

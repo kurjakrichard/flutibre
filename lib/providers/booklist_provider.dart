@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutibre/model/booklist_item.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
@@ -22,12 +21,14 @@ class BookListProvider extends ChangeNotifier {
   Future<void> getBookItemList() async {
     _allBooks = databaseHandler!.getBookList();
     _currentBooks = _allBooks;
+    await _allBooks;
+
     notifyListeners();
   }
 
   Future<void> filteredBookList(String? searchItem) async {
     if (searchItem == null) {
-      getBookItemList();
+      toggleAllBooks();
     } else {
       Future<List<BookListItem>> filteredBookList =
           databaseHandler!.getResultBookList(searchItem);
@@ -37,15 +38,7 @@ class BookListProvider extends ChangeNotifier {
   }
 
   Future<void> toggleAllBooks() async {
-    String? path = prefs.getString('path');
-    if (path == "/home/sire/Letöltések/Ebooks") {
-      prefs.setString('path', "/home/sire/Letöltések/Ebooks2");
-    } else {
-      prefs.setString('path', "/home/sire/Letöltések/Ebooks");
-    }
-    databaseHandler!.initialDatabase();
-
-    getBookItemList();
+    _currentBooks = _allBooks;
     notifyListeners();
   }
 }

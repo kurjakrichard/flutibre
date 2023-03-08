@@ -28,10 +28,6 @@
   "@librarypath": {
     "description": "Ebook library path"
   },
-  "loadlibrary": "Please select Calibre library.",
-  "@loadlibrary": {
-    "description": "Calibre library selection"
-  },
   "chosepath": "Please select Calibre library.",
   "@librarypath": {
     "description": "Calibre library selection"
