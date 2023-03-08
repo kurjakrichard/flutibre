@@ -119,6 +119,8 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         Wrap(alignment: WrapAlignment.center, children: [
           Text(AppLocalizations.of(context)!.chosepath),
+          const Text(' '),
+          Text(AppLocalizations.of(context)!.newlibrary),
         ]),
         const SizedBox(
           height: 12,
@@ -299,12 +301,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> writeToFile(ByteData data, String path) async {
-    try {
-      File file = File(path);
-      await file.delete();
-    } catch (e) {
-      debugPrint('file no exists');
-    }
     final buffer = data.buffer;
     print('Itt $path');
     File(path).create(recursive: true).then((File file) {

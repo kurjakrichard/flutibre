@@ -32,13 +32,9 @@
   "@librarypath": {
     "description": "Calibre library selection"
   },
-  "newlibrary": "New library",
+  "newlibrary": "Pick an empty folder to create a new library",
   "@librarypath": {
     "description": "New library"
-  },
-  "createlibrary": "Create new library.",
-  "@librarypath": {
-    "description": "Calibre library creation"
   },
   "emptylibrary": "Empty library",
   "@librarypath": {
