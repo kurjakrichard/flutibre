@@ -22,7 +22,6 @@ class BookListProvider extends ChangeNotifier {
     _allBooks = databaseHandler!.getBookList();
     _currentBooks = _allBooks;
     await _allBooks;
-
     notifyListeners();
   }
 

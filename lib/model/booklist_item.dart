@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import '../main.dart';
+
 class BookListItem {
   int id;
   String name;
@@ -9,6 +11,7 @@ class BookListItem {
   int has_cover;
   double series_index;
   String path;
+  String? fullPath = prefs.getString('path');
 
   BookListItem({
     this.id = 0,

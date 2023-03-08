@@ -48,7 +48,7 @@ class ListPage extends ConsumerWidget {
               width: 50,
               child: bookListItem.has_cover == 1
                   ? Image.file(File(
-                      '${prefs.getString('path')}/${bookListItem.path}/cover.jpg'))
+                      '${bookListItem.fullPath}/${bookListItem.path}/cover.jpg'))
                   : Image.asset('images/cover.png'),
             ),
             const SizedBox(
