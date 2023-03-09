@@ -1,5 +1,4 @@
-// ignore_for_file: unused_field, avoid_print, unused_local_variable
-
+// ignore_for_file: unused_field
 import 'dart:async';
 import 'dart:io' as io;
 import 'dart:io';
@@ -29,7 +28,6 @@ class _SettingsPageState extends State<SettingsPage> {
     'magyar': 'hu'
   };
   //true path is exist in SharedPreferences
-  bool? _isPath;
   //Saved path from SharedPreferences
   String? _path;
   //Database path before ok
@@ -229,7 +227,6 @@ class _SettingsPageState extends State<SettingsPage> {
       }
 
       if (status.isGranted) {
-        print('granted');
         try {
           String? tempPath =
               await _loadPath(await FilePicker.platform.getDirectoryPath());
@@ -300,7 +297,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> writeToFile(ByteData data, String path) async {
     final buffer = data.buffer;
-    print('Itt $path');
     File(path).create(recursive: true).then((File file) {
       return File(path).writeAsBytes(
           buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
@@ -308,7 +304,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _logException(String message) {
-    print(message);
     _scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
     _scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(

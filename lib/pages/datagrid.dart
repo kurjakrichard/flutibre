@@ -29,54 +29,65 @@ class DataGridPageState extends ConsumerState<DataGridPage>
 
   @override
   Widget build(BuildContext context) {
+    _bookList = ref.watch(booklistProvider).value!;
     super.build(context);
     return SafeArea(
-      child: Consumer(
-        builder: (context, ref, child) => SfDataGrid(
-          allowSorting: true,
-          allowColumnsResizing: true,
-          selectionMode: SelectionMode.multiple,
-          source: _bookListDataSource,
-          columns: [
-            GridColumn(
-                columnName: 'id',
-                label: Container(
+      child: SfDataGrid(
+        allowSorting: true,
+        allowColumnsResizing: false,
+        columnWidthMode: ColumnWidthMode.fill,
+        selectionMode: SelectionMode.single,
+        source: _bookListDataSource,
+        columns: [
+          GridColumn(
+              columnName: 'title',
+              label: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                alignment: Alignment.centerLeft,
+                child: const Text(
+                  'Title',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
+          GridColumn(
+              columnName: 'name',
+              label: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  alignment: Alignment.centerRight,
+                  alignment: Alignment.centerLeft,
                   child: const Text(
-                    'ID',
+                    'Author',
                     overflow: TextOverflow.ellipsis,
-                  ),
-                )),
-            GridColumn(
-                columnName: 'name',
-                label: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    alignment: Alignment.centerLeft,
-                    child: const Text(
-                      'Name',
-                      overflow: TextOverflow.ellipsis,
-                    ))),
-            GridColumn(
-                columnName: 'path',
-                label: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    alignment: Alignment.centerLeft,
-                    child: const Text(
-                      'Path',
-                      overflow: TextOverflow.ellipsis,
-                    ))),
-            GridColumn(
-                columnName: 'sort',
-                label: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    alignment: Alignment.centerRight,
-                    child: const Text(
-                      'Sort',
-                      overflow: TextOverflow.ellipsis,
-                    ))),
-          ],
-        ),
+                  ))),
+          GridColumn(
+              columnName: 'path',
+              label: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    'Path',
+                    overflow: TextOverflow.ellipsis,
+                  ))),
+          GridColumn(
+              visible: false,
+              columnName: 'sort',
+              label: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    'Sort',
+                    overflow: TextOverflow.ellipsis,
+                  ))),
+          GridColumn(
+              visible: false,
+              columnName: 'author_sort',
+              label: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    'Author sort',
+                    overflow: TextOverflow.ellipsis,
+                  ))),
+        ],
       ),
     );
   }
@@ -86,10 +97,13 @@ class BookListDataSource extends DataGridSource {
   BookListDataSource(List<BookListItem> bookList) {
     dataGridRows = bookList
         .map<DataGridRow>((dataGridRow) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'id', value: dataGridRow.id),
+              DataGridCell<String>(
+                  columnName: 'title', value: dataGridRow.title),
               DataGridCell<String>(columnName: 'name', value: dataGridRow.name),
               DataGridCell<String>(columnName: 'path', value: dataGridRow.path),
               DataGridCell<String>(columnName: 'sort', value: dataGridRow.sort),
+              DataGridCell<String>(
+                  columnName: 'author_sort', value: dataGridRow.author_sort),
             ]))
         .toList();
   }
@@ -102,14 +116,45 @@ class BookListDataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((dataGridCell) {
       return Container(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          alignment: (dataGridCell.columnName == 'id' ||
-                  dataGridCell.columnName == 'salary')
-              ? Alignment.centerRight
-              : Alignment.centerLeft,
+          alignment:
+              (dataGridCell.columnName == '' || dataGridCell.columnName == '')
+                  ? Alignment.centerRight
+                  : Alignment.centerLeft,
           child: Text(
             dataGridCell.value.toString(),
             overflow: TextOverflow.ellipsis,
           ));
     }).toList());
+  }
+
+  @override
+  int compare(DataGridRow? a, DataGridRow? b, SortColumnDetails sortColumn) {
+    final String? value1 = a
+        ?.getCells()
+        .firstWhere((element) => element.columnName == sortColumn.name)
+        .value;
+    final String? value2 = b
+        ?.getCells()
+        .firstWhere((element) => element.columnName == sortColumn.name)
+        .value;
+
+    int? aLength = value1?.length;
+    int? bLength = value2?.length;
+
+    if (aLength == null || bLength == null) {
+      return 0;
+    }
+
+    if (aLength.compareTo(bLength) > 0) {
+      return sortColumn.sortDirection == DataGridSortDirection.ascending
+          ? 1
+          : -1;
+    } else if (aLength.compareTo(bLength) == -1) {
+      return sortColumn.sortDirection == DataGridSortDirection.ascending
+          ? -1
+          : 1;
+    } else {
+      return 0;
+    }
   }
 }
