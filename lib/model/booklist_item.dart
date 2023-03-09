@@ -7,6 +7,7 @@ class BookListItem {
   String author_sort;
   String title;
   String sort;
+  String timestamp;
   int has_cover;
   double series_index;
   String path;
@@ -18,6 +19,7 @@ class BookListItem {
     this.author_sort = '',
     this.title = '',
     this.sort = '',
+    this.timestamp = '',
     this.has_cover = 0,
     this.series_index = 1.0,
     this.path = '',
@@ -29,6 +31,7 @@ class BookListItem {
         author_sort = res['author_sort'],
         title = res['title'],
         sort = res['sort'],
+        timestamp = res['timestamp'].toString().substring(0, 10),
         has_cover = res['has_cover'],
         series_index = res['series_index'],
         path = res['path'];

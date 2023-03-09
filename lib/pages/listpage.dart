@@ -23,16 +23,42 @@ class _ListPageState extends ConsumerState<ListPage>
     AsyncValue<List<BookListItem>> itemValue = ref.watch(booklistProvider);
     return itemValue.when(
       data: (item) => item.isNotEmpty
-          ? ListView.builder(
-              itemCount: item.length,
-              itemExtent: 90,
-              itemBuilder: (context, index) => bookItem(item[index]),
-            )
+          ? LayoutBuilder(builder: (context, constraints) {
+              var isWideLayout = constraints.maxWidth > 900;
+              if (!isWideLayout) {
+                return listView(item);
+              } else {
+                return Row(
+                  children: [
+                    Expanded(child: listView(item)),
+                    const VerticalDivider(
+                      color: Colors.cyan,
+                      thickness: 3,
+                      width: 3,
+                    ),
+                    const SizedBox(
+                      width: 500,
+                      child: Center(
+                        child: Text('szöveg'),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            })
           : Center(
               child: Text(AppLocalizations.of(context)!.emptylibrary,
                   style: const TextStyle(fontSize: 20, color: Colors.grey))),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, st) => Center(child: Text(e.toString())),
+    );
+  }
+
+  Widget listView(List<BookListItem> item) {
+    return ListView.builder(
+      itemCount: item.length,
+      itemExtent: 90,
+      itemBuilder: (context, index) => bookItem(item[index]),
     );
   }
 

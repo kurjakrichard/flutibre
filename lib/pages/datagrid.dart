@@ -31,6 +31,32 @@ class DataGridPageState extends ConsumerState<DataGridPage>
   Widget build(BuildContext context) {
     _bookList = ref.watch(booklistProvider).value!;
     super.build(context);
+    return LayoutBuilder(builder: (context, constraints) {
+      var isWideLayout = constraints.maxWidth > 900;
+      if (!isWideLayout) {
+        return dataGrid();
+      } else {
+        return Row(
+          children: [
+            Expanded(child: dataGrid()),
+            const VerticalDivider(
+              color: Colors.cyan,
+              thickness: 3,
+              width: 3,
+            ),
+            const SizedBox(
+              width: 500,
+              child: Center(
+                child: Text('szöveg'),
+              ),
+            ),
+          ],
+        );
+      }
+    });
+  }
+
+  Widget dataGrid() {
     return SafeArea(
       child: SfDataGrid(
         allowSorting: true,
@@ -59,12 +85,12 @@ class DataGridPageState extends ConsumerState<DataGridPage>
                     overflow: TextOverflow.ellipsis,
                   ))),
           GridColumn(
-              columnName: 'path',
+              columnName: 'timestamp',
               label: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   alignment: Alignment.centerLeft,
                   child: const Text(
-                    'Path',
+                    'Date',
                     overflow: TextOverflow.ellipsis,
                   ))),
           GridColumn(
@@ -100,7 +126,8 @@ class BookListDataSource extends DataGridSource {
               DataGridCell<String>(
                   columnName: 'title', value: dataGridRow.title),
               DataGridCell<String>(columnName: 'name', value: dataGridRow.name),
-              DataGridCell<String>(columnName: 'path', value: dataGridRow.path),
+              DataGridCell<String>(
+                  columnName: 'timestamp', value: dataGridRow.timestamp),
               DataGridCell<String>(columnName: 'sort', value: dataGridRow.sort),
               DataGridCell<String>(
                   columnName: 'author_sort', value: dataGridRow.author_sort),
@@ -125,36 +152,5 @@ class BookListDataSource extends DataGridSource {
             overflow: TextOverflow.ellipsis,
           ));
     }).toList());
-  }
-
-  @override
-  int compare(DataGridRow? a, DataGridRow? b, SortColumnDetails sortColumn) {
-    final String? value1 = a
-        ?.getCells()
-        .firstWhere((element) => element.columnName == sortColumn.name)
-        .value;
-    final String? value2 = b
-        ?.getCells()
-        .firstWhere((element) => element.columnName == sortColumn.name)
-        .value;
-
-    int? aLength = value1?.length;
-    int? bLength = value2?.length;
-
-    if (aLength == null || bLength == null) {
-      return 0;
-    }
-
-    if (aLength.compareTo(bLength) > 0) {
-      return sortColumn.sortDirection == DataGridSortDirection.ascending
-          ? 1
-          : -1;
-    } else if (aLength.compareTo(bLength) == -1) {
-      return sortColumn.sortDirection == DataGridSortDirection.ascending
-          ? -1
-          : 1;
-    } else {
-      return 0;
-    }
   }
 }
