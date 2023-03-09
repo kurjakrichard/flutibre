@@ -1,15 +1,25 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../main.dart';
 import '../model/booklist_item.dart';
 
-class ListPage extends ConsumerWidget {
+class ListPage extends ConsumerStatefulWidget {
   const ListPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ListPage> createState() => _ListPageState();
+}
+
+class _ListPageState extends ConsumerState<ListPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     AsyncValue<List<BookListItem>> itemValue = ref.watch(booklistProvider);
     return itemValue.when(
       data: (item) => item.isNotEmpty

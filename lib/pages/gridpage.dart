@@ -5,11 +5,20 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../main.dart';
 import '../model/booklist_item.dart';
 
-class GridPage extends ConsumerWidget {
+class GridPage extends ConsumerStatefulWidget {
   const GridPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GridPage> createState() => _GridPageState();
+}
+
+class _GridPageState extends ConsumerState<GridPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     int size = MediaQuery.of(context).size.width.round();
     AsyncValue<List<BookListItem>> itemValue = ref.watch(booklistProvider);
     return itemValue.when(
@@ -34,7 +43,7 @@ class GridPage extends ConsumerWidget {
                             image: item[index].has_cover == 1
                                 ? FileImage(
                                     File(
-                                        '${prefs.getString('path')!}/${item[index].path}/cover.jpg'),
+                                        '${item[index].fullPath}/${item[index].path}/cover.jpg'),
                                   )
                                 : Image.asset('images/cover.png').image,
                             fit: BoxFit.cover,

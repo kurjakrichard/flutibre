@@ -1,8 +1,9 @@
-import 'package:flutibre/pages/gridpage.dart';
-import 'package:flutibre/pages/listpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutibre/pages/gridpage.dart';
+import 'package:flutibre/pages/listpage.dart';
+import 'datagrid.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage>
   bool get wantKeepAlive => true;
 
   int currentIndex = 0;
-  final tabPages = [const ListPage(), const GridPage()];
+  final tabPages = [const ListPage(), const GridPage(), const DataGridPage()];
 
   @override
   Widget build(BuildContext context) {
