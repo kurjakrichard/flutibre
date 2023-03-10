@@ -1,4 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'package:flutibre/model/author.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
@@ -6,6 +7,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../main.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
+import '../model/comment.dart';
 import '../model/data.dart';
 
 class DatabaseHandler {
@@ -59,7 +61,7 @@ class DatabaseHandler {
   }
 
   // Get Booklist from database
-  Future<List<BookListItem>> getBookList() async {
+  Future<List<BookListItem>> getBookItemList() async {
     _database = await initialDatabase();
 
     int? count = Sqflite.firstIntValue(
@@ -79,11 +81,7 @@ class DatabaseHandler {
       }
       return bookListItems;
     }
-    for (var item in bookMapList) {
-      BookListItem bookListItem = BookListItem.fromMap(item);
 
-      bookListItems.add(bookListItem);
-    }
     return bookListItems;
   }
 
@@ -103,18 +101,38 @@ class DatabaseHandler {
     return bookListItems;
   }
 
-  // Get Booklist from database
-  Future<List<Book>> getAllBooks() async {
-    List<Map<String, dynamic>> bookMapList =
-        await _database!.query('books', orderBy: 'title');
-    List<Book> bookList = <Book>[];
+  // Get book by id
+  Future<Book> getBookById(int id) async {
+    List<Map<String, dynamic>> bookMapById =
+        await _database!.query('books', where: 'id = ?', whereArgs: [id]);
 
-    for (var item in bookMapList) {
-      Book book = Book.fromMap(item);
-      book.formats = await getFormatsById(book.id);
-      bookList.add(book);
+    Book bookById = Book.fromMap(bookMapById[0]);
+    return bookById;
+  }
+
+  // Get book by id
+  Future<Comment> getCommentById(int id) async {
+    List<Map<String, dynamic>> dataMapList =
+        await _database!.query('comments', where: 'id = ?', whereArgs: [id]);
+
+    Comment comment =
+        dataMapList.isEmpty ? const Comment() : Comment.fromMap(dataMapList[0]);
+
+    return comment;
+  }
+
+  // Get authors by bookid
+  Future<List<Author>> getAuthorsByBookId(int bookId) async {
+    List<Map<String, dynamic>> dataMapList = await _database!.rawQuery(
+        'SELECT authors.id, authors.name, authors.sort, authors.link from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE books_authors_link.book = ? ',
+        [bookId]);
+    List<Author> dataList = <Author>[];
+
+    for (var item in dataMapList) {
+      Author author = Author.fromMap(item);
+      dataList.add(author);
     }
-    return bookList;
+    return dataList;
   }
 
   // Get book formats from database
@@ -128,6 +146,19 @@ class DatabaseHandler {
       dataList.add(data);
     }
     return dataList;
+  }
+
+  //Get book by id
+  Future<Book> selectedBook(int id) async {
+    Book? selectedBook = await getBookById(id);
+    List<Data>? formats = await getFormatsById(id);
+    selectedBook.formats = formats;
+    List<Author> authors = await getAuthorsByBookId(id);
+    selectedBook.authors = authors;
+    Comment comment = await getCommentById(id);
+    selectedBook.comment = comment;
+
+    return selectedBook;
   }
 
   // Insert Operation: Insert new record to database

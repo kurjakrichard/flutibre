@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 import 'package:equatable/equatable.dart';
+import 'author.dart';
+import 'comment.dart';
 import 'data.dart';
 
 // ignore: must_be_immutable
@@ -16,7 +18,10 @@ class Book extends Equatable {
   final String path;
   final int has_cover;
   final String last_modified;
+  //Related classes
   List<Data>? formats;
+  List<Author>? authors;
+  Comment? comment;
 
   Book(
       {this.id = 0,
@@ -31,7 +36,9 @@ class Book extends Equatable {
       this.path = '',
       this.has_cover = 0,
       this.last_modified = '',
-      this.formats});
+      this.formats,
+      this.authors,
+      this.comment});
 
   Book.fromMap(Map<String, dynamic> res)
       : id = res['id'],

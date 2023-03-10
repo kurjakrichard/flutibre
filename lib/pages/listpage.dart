@@ -1,8 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:flutibre/pages/book_details_page.dart';
+import 'package:flutibre/repository/database_handler.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../main.dart';
+import '../model/book.dart';
 import '../model/booklist_item.dart';
 
 class ListPage extends ConsumerStatefulWidget {
@@ -16,6 +21,9 @@ class _ListPageState extends ConsumerState<ListPage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+  final DatabaseHandler _databaseHandler = DatabaseHandler();
+  Book? selectedBook;
+  BookDetailsPage? bookDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -24,23 +32,23 @@ class _ListPageState extends ConsumerState<ListPage>
     return itemValue.when(
       data: (item) => item.isNotEmpty
           ? LayoutBuilder(builder: (context, constraints) {
-              var isWideLayout = constraints.maxWidth > 900;
-              if (!isWideLayout) {
-                return listView(item);
+              var isWide = constraints.maxWidth > 900;
+              if (!isWide) {
+                return listView(item, isWide);
               } else {
                 return Row(
                   children: [
-                    Expanded(child: listView(item)),
+                    Expanded(child: listView(item, isWide)),
                     const VerticalDivider(
                       color: Colors.cyan,
                       thickness: 3,
                       width: 3,
                     ),
-                    const SizedBox(
-                      width: 500,
-                      child: Center(
-                        child: Text('szöveg'),
-                      ),
+                    SizedBox(
+                      width: 450,
+                      child: selectedBook == null
+                          ? const Center(child: Text('Nincs könyv kiválasztva'))
+                          : bookDetails,
                     ),
                   ],
                 );
@@ -54,11 +62,29 @@ class _ListPageState extends ConsumerState<ListPage>
     );
   }
 
-  Widget listView(List<BookListItem> item) {
+  Widget listView(List<BookListItem> item, bool isWide) {
     return ListView.builder(
       itemCount: item.length,
       itemExtent: 90,
-      itemBuilder: (context, index) => bookItem(item[index]),
+      itemBuilder: (context, index) => GestureDetector(
+          onTap: () async {
+            selectedBook = await _databaseHandler.selectedBook(item[index].id);
+            print(selectedBook!.title);
+            if (!isWide) {
+              Navigator.pushNamed(
+                context,
+                '/bookdetailspage',
+                arguments: selectedBook,
+              );
+            } else {
+              setState(() {
+                bookDetails = BookDetailsPage(
+                  book: selectedBook,
+                );
+              });
+            }
+          },
+          child: bookItem(item[index])),
     );
   }
 

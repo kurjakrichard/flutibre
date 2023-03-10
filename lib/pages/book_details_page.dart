@@ -5,12 +5,16 @@ import '../main.dart';
 import '../model/book.dart';
 
 class BookDetailsPage extends StatelessWidget {
-  const BookDetailsPage({Key? key}) : super(key: key);
-
+  BookDetailsPage({Key? key, this.book}) : super(key: key);
+  Book? book;
   @override
   Widget build(BuildContext context) {
     var routeSettings = ModalRoute.of(context)!.settings;
-    var book = routeSettings.arguments as Book;
+
+    if (routeSettings.arguments != null) {
+      book = routeSettings.arguments as Book;
+    }
+
     {
       return BookDetailsContent(
         book: book,

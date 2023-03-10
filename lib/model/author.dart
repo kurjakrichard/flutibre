@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 
-class Authors extends Equatable {
+class Author extends Equatable {
   final int id;
   final String name;
   final String sort;
   final String link;
 
-  const Authors({this.id = 0, this.name = '', this.sort = '', this.link = ''});
+  const Author({this.id = 0, this.name = '', this.sort = '', this.link = ''});
 
-  Authors.fromMap(Map<String, dynamic> res)
+  Author.fromMap(Map<String, dynamic> res)
       : id = res['id'],
         name = res['name'],
         sort = res['sort'],

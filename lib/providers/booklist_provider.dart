@@ -19,7 +19,7 @@ class BookListProvider extends ChangeNotifier {
   DatabaseHandler? databaseHandler;
 
   Future<void> getBookItemList() async {
-    _allBooks = databaseHandler!.getBookList();
+    _allBooks = databaseHandler!.getBookItemList();
     _currentBooks = _allBooks;
     await _allBooks;
     notifyListeners();
