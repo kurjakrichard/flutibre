@@ -89,15 +89,19 @@ class DatabaseHandler {
   Future<List<BookListItem>> getResultBookList(String searchItem) async {
     _database = await initialDatabase();
     List<Map<String, dynamic>> bookMapList = await _database!.rawQuery(
-        'SELECT DISTINCT books.id, (SELECT group_concat(name, " & ") from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE book = books.id) as name, author_sort, title, books.sort, series_index, has_cover, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id WHERE title LIKE ? OR name LIKE ? ORDER BY books.sort',
+        'SELECT DISTINCT books.id, (SELECT group_concat(name, " & ") from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE book = books.id) as name, author_sort, title, books.sort, series_index, timestamp, has_cover, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id WHERE title LIKE ? OR name LIKE ? ORDER BY books.sort',
         ['%${searchItem.toLowerCase()}%', '%${searchItem.toLowerCase()}%']);
     List<BookListItem> bookListItems = <BookListItem>[];
 
-    for (var item in bookMapList) {
-      BookListItem bookListItem = BookListItem.fromMap(item);
+    if (bookMapList.isNotEmpty) {
+      for (var item in bookMapList) {
+        BookListItem bookListItem = BookListItem.fromMap(item);
 
-      bookListItems.add(bookListItem);
+        bookListItems.add(bookListItem);
+      }
+      return bookListItems;
     }
+
     return bookListItems;
   }
 
