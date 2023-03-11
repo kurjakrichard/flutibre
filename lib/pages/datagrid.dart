@@ -1,9 +1,9 @@
-import 'package:flutibre/main.dart';
-import 'package:flutibre/model/booklist_item.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../main.dart';
 import '../model/book.dart';
+import '../model/booklist_item.dart';
 import '../repository/database_handler.dart';
 import 'book_details_page.dart';
 
@@ -11,185 +11,124 @@ class DataGridPage extends ConsumerStatefulWidget {
   const DataGridPage({Key? key}) : super(key: key);
 
   @override
-  DataGridPageState createState() => DataGridPageState();
+  ConsumerState<DataGridPage> createState() => _DataGridPageState();
 }
 
-class DataGridPageState extends ConsumerState<DataGridPage>
+class _DataGridPageState extends ConsumerState<DataGridPage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
-  late List<BookListItem> _bookList;
-  late BookListDataSource _bookListDataSource;
-  final DataGridController _dataGridController = DataGridController();
   Book? selectedBook;
   BookDetailsPage? bookDetails;
+  late List<BookListItem>? _bookList;
+
+  late List<PlutoRow> rows;
+  final DatabaseHandler _databaseHandler = DatabaseHandler();
+  late BookListDataSource bookListDataSource;
+
+  /// [PlutoGridStateManager] has many methods and properties to dynamically manipulate the grid.
+  /// You can manipulate the grid dynamically at runtime by passing this through the [onLoaded] callback.
+  late final PlutoGridStateManager stateManager;
 
   @override
   void initState() {
     super.initState();
     var provider = ref.read(booklistProvider);
     _bookList = provider.value!;
-    _bookListDataSource = BookListDataSource(_bookList);
+
+    bookListDataSource = BookListDataSource(_bookList!);
+    rows = bookListDataSource.dataGridRows!;
   }
 
   @override
   Widget build(BuildContext context) {
-    _bookList = ref.watch(booklistProvider).value!;
     super.build(context);
-    return LayoutBuilder(builder: (context, constraints) {
-      var isWideLayout = constraints.maxWidth > 900;
-      if (!isWideLayout) {
-        return dataGrid();
-      } else {
-        return Row(
-          children: [
-            Expanded(child: dataGrid()),
-            const VerticalDivider(
-              color: Colors.cyan,
-              thickness: 3,
-              width: 3,
-            ),
-            SizedBox(
-              width: 500,
-              child: selectedBook == null
-                  ? const Center(child: Text('Nincs könyv kiválasztva'))
-                  : bookDetails,
-            ),
-          ],
-        );
-      }
-    });
+    _bookList = ref.watch(booklistProvider).value!;
+    return plutoGrid();
   }
 
-  Widget dataGrid() {
-    return SafeArea(
-      child: SfDataGrid(
-        allowSorting: true,
-        allowColumnsResizing: false,
-        columnWidthMode: ColumnWidthMode.fill,
-        selectionMode: SelectionMode.single,
-        controller: _dataGridController,
-        source: _bookListDataSource,
-        columns: [
-          GridColumn(
-              visible: false,
-              columnName: 'id',
-              label: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                alignment: Alignment.centerLeft,
-                child: const Text(
-                  'id',
-                  overflow: TextOverflow.ellipsis,
-                ),
-              )),
-          GridColumn(
-              columnName: 'title',
-              label: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                alignment: Alignment.centerLeft,
-                child: const Text(
-                  'Title',
-                  overflow: TextOverflow.ellipsis,
-                ),
-              )),
-          GridColumn(
-              columnName: 'name',
-              label: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'Author',
-                    overflow: TextOverflow.ellipsis,
-                  ))),
-          GridColumn(
-              columnName: 'timestamp',
-              label: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'Date',
-                    overflow: TextOverflow.ellipsis,
-                  ))),
-          GridColumn(
-              visible: false,
-              columnName: 'sort',
-              label: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'Sort',
-                    overflow: TextOverflow.ellipsis,
-                  ))),
-          GridColumn(
-              visible: false,
-              columnName: 'author_sort',
-              label: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'Author sort',
-                    overflow: TextOverflow.ellipsis,
-                  ))),
-        ],
-      ),
+  Widget plutoGrid() {
+    return PlutoGrid(
+      mode: PlutoGridMode.selectWithOneTap,
+      columns: columns,
+      rows: rows,
+      onLoaded: (PlutoGridOnLoadedEvent event) {
+        stateManager = event.stateManager;
+        stateManager.setShowColumnFilter(true);
+      },
+      onSelected: (event) async {
+        int index = stateManager.currentRow!.cells.values.first.value;
+
+        selectedBook = await _databaseHandler.selectedBook(index);
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(
+          context,
+          '/bookdetailspage',
+          arguments: selectedBook,
+        );
+      },
+      onChanged: (PlutoGridOnChangedEvent event) {
+        // ignore: avoid_print
+        print(event);
+      },
+      configuration: const PlutoGridConfiguration(),
     );
   }
+
+  final List<PlutoColumn> columns = <PlutoColumn>[
+    PlutoColumn(
+      title: 'Id',
+      field: 'id',
+      hide: true,
+      type: PlutoColumnType.number(),
+    ),
+    PlutoColumn(
+      title: 'Name',
+      field: 'name',
+      type: PlutoColumnType.text(),
+    ),
+    PlutoColumn(
+      title: 'Author sort',
+      field: 'author_sort',
+      hide: true,
+      type: PlutoColumnType.text(),
+    ),
+    PlutoColumn(
+      title: 'Title',
+      field: 'title',
+      type: PlutoColumnType.text(),
+    ),
+    PlutoColumn(
+      title: 'Date',
+      field: 'timestamp',
+      type: PlutoColumnType.date(),
+    ),
+  ];
 }
 
-class BookListDataSource extends DataGridSource {
-  Book? selectedBook;
-
-  final DatabaseHandler _databaseHandler = DatabaseHandler();
-  final DataGridController _dataGridController = DataGridController();
-
-  BookListDataSource(List<BookListItem> bookList) {
-    dataGridRows = bookList
-        .map<DataGridRow>((dataGridRow) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'id', value: dataGridRow.id),
-              DataGridCell<String>(
-                  columnName: 'title', value: dataGridRow.title),
-              DataGridCell<String>(columnName: 'name', value: dataGridRow.name),
-              DataGridCell<String>(
-                  columnName: 'timestamp', value: dataGridRow.timestamp),
-              DataGridCell<String>(columnName: 'sort', value: dataGridRow.sort),
-              DataGridCell<String>(
-                  columnName: 'author_sort', value: dataGridRow.author_sort),
-            ]))
-        .toList();
+class BookListDataSource {
+  List<PlutoRow>? dataGridRows;
+  BookListDataSource([List<BookListItem>? bookList]) {
+    dataGridRows = plutoRows(bookList!);
   }
 
-  late List<DataGridRow> dataGridRows;
-  @override
-  List<DataGridRow> get rows => dataGridRows;
-  @override
-  DataGridRowAdapter? buildRow(DataGridRow row) {
-    return DataGridRowAdapter(
-        cells: row.getCells().map<Widget>((dataGridCell) {
-      return Builder(builder: (context) {
-        return GestureDetector(
-          onTap: () async {
-            int index = row.getCells()[0].value;
+  List<PlutoRow> plutoRows(List<BookListItem> bookList) {
+    List<PlutoRow> rows = [];
+    for (var item in bookList) {
+      PlutoRow row = PlutoRow(
+        cells: {
+          'id': PlutoCell(value: item.id),
+          'name': PlutoCell(value: item.name),
+          'author_sort': PlutoCell(value: item.author_sort),
+          'title': PlutoCell(value: item.title),
+          'sort': PlutoCell(value: item.sort),
+          'timestamp': PlutoCell(value: item.timestamp),
+        },
+      );
 
-            selectedBook = await _databaseHandler.selectedBook(index);
-            Navigator.pushNamed(
-              context,
-              '/bookdetailspage',
-              arguments: selectedBook,
-            );
-          },
-          child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              alignment: (dataGridCell.columnName == '' ||
-                      dataGridCell.columnName == '')
-                  ? Alignment.centerRight
-                  : Alignment.centerLeft,
-              child: Text(
-                dataGridCell.value.toString(),
-                overflow: TextOverflow.ellipsis,
-              )),
-        );
-      });
-    }).toList());
+      rows.add(row);
+    }
+    return rows;
   }
 }

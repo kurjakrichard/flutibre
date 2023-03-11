@@ -44,10 +44,8 @@ class _HomePageState extends State<HomePage>
                             : await ref
                                 .read(bookListProvider)
                                 .filteredBookList(value);
-                        ref.refresh(booklistProvider);
+
                         await ref.read(booklistProvider.future);
-                        ref.refresh(booklistProvider);
-                        await ref.read(booklistProvider);
                       },
                       textInputAction: TextInputAction.go,
                       decoration: const InputDecoration(

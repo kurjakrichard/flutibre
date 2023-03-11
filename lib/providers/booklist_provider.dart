@@ -32,7 +32,7 @@ class BookListProvider extends ChangeNotifier {
       Future<List<BookListItem>> filteredBookList =
           databaseHandler!.getResultBookList(searchItem);
       _currentBooks = filteredBookList;
-      print(await _currentBooks!.then((value) => value.length));
+      //print(await _currentBooks!.then((value) => value.length));
     }
     notifyListeners();
   }

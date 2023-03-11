@@ -42,6 +42,7 @@ class _GridPageState extends ConsumerState<GridPage>
                       onPressed: () async {
                         selectedBook =
                             await _databaseHandler.selectedBook(item[index].id);
+                        // ignore: use_build_context_synchronously
                         Navigator.pushNamed(
                           context,
                           '/bookdetailspage',

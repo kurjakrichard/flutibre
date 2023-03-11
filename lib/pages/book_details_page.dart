@@ -4,6 +4,7 @@ import 'dart:io';
 import '../main.dart';
 import '../model/book.dart';
 
+// ignore: must_be_immutable
 class BookDetailsPage extends StatelessWidget {
   BookDetailsPage({Key? key, this.book}) : super(key: key);
   Book? book;

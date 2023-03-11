@@ -69,7 +69,6 @@ class _ListPageState extends ConsumerState<ListPage>
       itemBuilder: (context, index) => GestureDetector(
           onTap: () async {
             selectedBook = await _databaseHandler.selectedBook(item[index].id);
-            print(selectedBook!.title);
             if (!isWide) {
               Navigator.pushNamed(
                 context,

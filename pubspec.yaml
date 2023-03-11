@@ -19,9 +19,10 @@ dependencies:
   path_provider: ^2.0.13
   flutter_riverpod: ^2.2.0
   permission_handler: ^10.2.0
+  pluto_grid: ^6.0.4
   syncfusion_flutter_datagrid: ^20.4.53
   equatable: ^2.0.5
-  intl: ^0.17.0
+  intl: ^0.18.0
   flutter_localizations:
     sdk: flutter
 
