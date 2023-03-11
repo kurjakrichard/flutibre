@@ -3,9 +3,9 @@ import 'package:flutibre/model/booklist_item.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../model/book.dart';
 import '../repository/database_handler.dart';
+import 'book_details_page.dart';
 
 class DataGridPage extends ConsumerStatefulWidget {
   const DataGridPage({Key? key}) : super(key: key);
@@ -22,6 +22,8 @@ class DataGridPageState extends ConsumerState<DataGridPage>
   late List<BookListItem> _bookList;
   late BookListDataSource _bookListDataSource;
   final DataGridController _dataGridController = DataGridController();
+  Book? selectedBook;
+  BookDetailsPage? bookDetails;
 
   @override
   void initState() {
@@ -48,11 +50,11 @@ class DataGridPageState extends ConsumerState<DataGridPage>
               thickness: 3,
               width: 3,
             ),
-            const SizedBox(
+            SizedBox(
               width: 500,
-              child: Center(
-                child: Text('szöveg'),
-              ),
+              child: selectedBook == null
+                  ? const Center(child: Text('Nincs könyv kiválasztva'))
+                  : bookDetails,
             ),
           ],
         );
