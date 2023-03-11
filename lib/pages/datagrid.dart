@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../model/book.dart';
+import '../repository/database_handler.dart';
+
 class DataGridPage extends ConsumerStatefulWidget {
   const DataGridPage({Key? key}) : super(key: key);
 
@@ -18,6 +21,7 @@ class DataGridPageState extends ConsumerState<DataGridPage>
 
   late List<BookListItem> _bookList;
   late BookListDataSource _bookListDataSource;
+  final DataGridController _dataGridController = DataGridController();
 
   @override
   void initState() {
@@ -63,8 +67,20 @@ class DataGridPageState extends ConsumerState<DataGridPage>
         allowColumnsResizing: false,
         columnWidthMode: ColumnWidthMode.fill,
         selectionMode: SelectionMode.single,
+        controller: _dataGridController,
         source: _bookListDataSource,
         columns: [
+          GridColumn(
+              visible: false,
+              columnName: 'id',
+              label: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                alignment: Alignment.centerLeft,
+                child: const Text(
+                  'id',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
           GridColumn(
               columnName: 'title',
               label: Container(
@@ -120,9 +136,15 @@ class DataGridPageState extends ConsumerState<DataGridPage>
 }
 
 class BookListDataSource extends DataGridSource {
+  Book? selectedBook;
+
+  final DatabaseHandler _databaseHandler = DatabaseHandler();
+  final DataGridController _dataGridController = DataGridController();
+
   BookListDataSource(List<BookListItem> bookList) {
     dataGridRows = bookList
         .map<DataGridRow>((dataGridRow) => DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'id', value: dataGridRow.id),
               DataGridCell<String>(
                   columnName: 'title', value: dataGridRow.title),
               DataGridCell<String>(columnName: 'name', value: dataGridRow.name),
@@ -134,6 +156,7 @@ class BookListDataSource extends DataGridSource {
             ]))
         .toList();
   }
+
   late List<DataGridRow> dataGridRows;
   @override
   List<DataGridRow> get rows => dataGridRows;
@@ -141,16 +164,30 @@ class BookListDataSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
-      return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          alignment:
-              (dataGridCell.columnName == '' || dataGridCell.columnName == '')
+      return Builder(builder: (context) {
+        return GestureDetector(
+          onTap: () async {
+            int index = row.getCells()[0].value;
+
+            selectedBook = await _databaseHandler.selectedBook(index);
+            Navigator.pushNamed(
+              context,
+              '/bookdetailspage',
+              arguments: selectedBook,
+            );
+          },
+          child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              alignment: (dataGridCell.columnName == '' ||
+                      dataGridCell.columnName == '')
                   ? Alignment.centerRight
                   : Alignment.centerLeft,
-          child: Text(
-            dataGridCell.value.toString(),
-            overflow: TextOverflow.ellipsis,
-          ));
+              child: Text(
+                dataGridCell.value.toString(),
+                overflow: TextOverflow.ellipsis,
+              )),
+        );
+      });
     }).toList());
   }
 }

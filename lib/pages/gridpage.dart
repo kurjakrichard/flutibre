@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../main.dart';
 import '../model/booklist_item.dart';
+import '../model/book.dart';
+import '../repository/database_handler.dart';
 
 class GridPage extends ConsumerStatefulWidget {
   const GridPage({Key? key}) : super(key: key);
@@ -14,6 +16,8 @@ class GridPage extends ConsumerStatefulWidget {
 
 class _GridPageState extends ConsumerState<GridPage>
     with AutomaticKeepAliveClientMixin {
+  Book? selectedBook;
+  final DatabaseHandler _databaseHandler = DatabaseHandler();
   @override
   bool get wantKeepAlive => true;
   @override
@@ -35,7 +39,15 @@ class _GridPageState extends ConsumerState<GridPage>
                 itemBuilder: (context, index) {
                   return Center(
                     child: RawMaterialButton(
-                      onPressed: () async {},
+                      onPressed: () async {
+                        selectedBook =
+                            await _databaseHandler.selectedBook(item[index].id);
+                        Navigator.pushNamed(
+                          context,
+                          '/bookdetailspage',
+                          arguments: selectedBook,
+                        );
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
