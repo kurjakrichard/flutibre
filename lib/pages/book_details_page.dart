@@ -56,80 +56,80 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
         ),
         body: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: loadCover(),
-                ),
-                SizedBox(
-                  height: 160,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            bookDetailElement(
-                                detailType: 'Title:',
-                                detailContent: widget.book!.title),
-                            bookDetailElement(
-                                detailType: 'Author:',
-                                detailContent: widget.book!.author_sort),
-                            const Text(
-                              'Formats: ',
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  loadCover(),
+                  SizedBox(
+                    height: 160,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              bookDetailElement(
+                                  detailType: 'Title:',
+                                  detailContent: widget.book!.title),
+                              bookDetailElement(
+                                  detailType: 'Author:',
+                                  detailContent: widget.book!.author_sort),
+                              const Text(
+                                'Formats: ',
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                style: TextButton.styleFrom(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 15),
-                                ),
-                                child: const Text(
-                                  'Back',
+                        Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.canPop(context);
+                                  },
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15),
+                                  ),
+                                  child: const Text(
+                                    'Back',
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  String bookPath =
-                                      '${prefs.getString('path')}/${widget.book!.path}/${widget.book!.formats![0].name}.${widget.book!.formats![0].format.toLowerCase()}';
-                                  OpenFilex.open(bookPath);
-                                },
-                                style: TextButton.styleFrom(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 15),
-                                ),
-                                child: const Text(
-                                  'Open',
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    String bookPath =
+                                        '${prefs.getString('path')}/${widget.book!.path}/${widget.book!.formats![0].name}.${widget.book!.formats![0].format.toLowerCase()}';
+                                    OpenFilex.open(bookPath);
+                                  },
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15),
+                                  ),
+                                  child: const Text(
+                                    'Open',
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )));
   }
 
@@ -137,9 +137,13 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
     int hasCover = widget.book!.has_cover;
     String path = widget.book!.path;
     String bookPath = '${prefs.getString('path')}/$path/cover.jpg';
+
     return hasCover == 1
-        ? Image.file(File(bookPath))
-        : Image.asset('images/cover.png');
+        ? Image.file(
+            File(bookPath),
+            height: 600,
+          )
+        : Image.asset('images/cover.png', fit: BoxFit.contain);
   }
 
   Future<dynamic> deleteDialog(BuildContext context) {
