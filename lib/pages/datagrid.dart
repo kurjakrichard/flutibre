@@ -27,10 +27,6 @@ class _DataGridPageState extends ConsumerState<DataGridPage>
   final DatabaseHandler _databaseHandler = DatabaseHandler();
   late BookListDataSource bookListDataSource;
 
-  /// [PlutoGridStateManager] has many methods and properties to dynamically manipulate the grid.
-  /// You can manipulate the grid dynamically at runtime by passing this through the [onLoaded] callback.
-  late final PlutoGridStateManager stateManager;
-
   @override
   void initState() {
     super.initState();
@@ -45,34 +41,70 @@ class _DataGridPageState extends ConsumerState<DataGridPage>
   Widget build(BuildContext context) {
     super.build(context);
     _bookList = ref.watch(booklistProvider).value!;
-    return plutoGrid();
+
+    return LayoutBuilder(builder: (context, constraints) {
+      var isWide = constraints.maxWidth > 900;
+      if (!isWide) {
+        return plutoGrid(isWide);
+      } else {
+        return Row(
+          children: [
+            Expanded(child: plutoGrid(isWide)),
+            const VerticalDivider(
+              color: Colors.cyan,
+              thickness: 3,
+              width: 3,
+            ),
+            SizedBox(
+              width: 450,
+              child: selectedBook == null
+                  ? const Center(child: Text('Nincs könyv kiválasztva'))
+                  : bookDetails,
+            ),
+          ],
+        );
+      }
+    });
   }
 
-  Widget plutoGrid() {
+  Widget plutoGrid(bool isWide) {
+    /// [PlutoGridStateManager] has many methods and properties to dynamically manipulate the grid.
+    /// You can manipulate the grid dynamically at runtime by passing this through the [onLoaded] callback.
+    late final PlutoGridStateManager stateManager;
     return PlutoGrid(
       mode: PlutoGridMode.selectWithOneTap,
       columns: columns,
       rows: rows,
       onLoaded: (PlutoGridOnLoadedEvent event) {
         stateManager = event.stateManager;
-        stateManager.setShowColumnFilter(true);
+        stateManager.setShowColumnFilter(false);
       },
       onSelected: (event) async {
         int index = stateManager.currentRow!.cells.values.first.value;
 
         selectedBook = await _databaseHandler.selectedBook(index);
-        // ignore: use_build_context_synchronously
-        Navigator.pushNamed(
-          context,
-          '/bookdetailspage',
-          arguments: selectedBook,
-        );
+        if (!isWide) {
+          // ignore: use_build_context_synchronously
+          Navigator.pushNamed(
+            context,
+            '/bookdetailspage',
+            arguments: selectedBook,
+          );
+        } else {
+          setState(() {
+            bookDetails = BookDetailsPage(
+              book: selectedBook,
+            );
+          });
+        }
       },
       onChanged: (PlutoGridOnChangedEvent event) {
         // ignore: avoid_print
         print(event);
       },
-      configuration: const PlutoGridConfiguration(),
+      configuration: const PlutoGridConfiguration(
+          columnSize:
+              PlutoGridColumnSizeConfig(autoSizeMode: PlutoAutoSizeMode.scale)),
     );
   }
 
@@ -84,6 +116,7 @@ class _DataGridPageState extends ConsumerState<DataGridPage>
       type: PlutoColumnType.number(),
     ),
     PlutoColumn(
+      frozen: PlutoColumnFrozen.start,
       title: 'Name',
       field: 'name',
       type: PlutoColumnType.text(),
