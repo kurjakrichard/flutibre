@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image_size_getter/file_input.dart';
+import 'package:image_size_getter/image_size_getter.dart';
 import 'package:open_filex/open_filex.dart';
 import 'dart:io';
 import '../main.dart';
@@ -15,18 +17,31 @@ class BookDetailsPage extends StatelessWidget {
     if (routeSettings.arguments != null) {
       book = routeSettings.arguments as Book;
     }
-
+    String bookPath = book!.has_cover == 1
+        ? '${prefs.getString('path')}/${book!.path}/cover.jpg'
+        : 'images/cover.png';
+    Size size;
+    try {
+      size = ImageSizeGetter.getSize(FileInput(File(bookPath)));
+    } on UnsupportedError {
+      size = const Size(200, 500);
+    }
+    var height = size.height.toDouble();
     {
       return BookDetailsContent(
         book: book,
+        height: height,
       );
     }
   }
 }
 
+// ignore: must_be_immutable
 class BookDetailsContent extends StatefulWidget {
-  const BookDetailsContent({Key? key, this.book}) : super(key: key);
+  BookDetailsContent({Key? key, this.book, required this.height})
+      : super(key: key);
   final Book? book;
+  double height;
 
   @override
   State<BookDetailsContent> createState() => _BookDetailsContentState();
@@ -59,7 +74,9 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  loadCover(),
+                  SizedBox(
+                      height: widget.height > 500 ? 500 : widget.height,
+                      child: loadCover()),
                   SizedBox(
                     height: 160,
                     child: Column(
