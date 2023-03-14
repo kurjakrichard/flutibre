@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/l10n.dart';
 import 'pages/book_details_page.dart';
+import 'pages/book_details_page.dart';
 import 'pages/homepage.dart';
 import 'pages/loadingpage.dart';
 import 'pages/settingspage.dart';

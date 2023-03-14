@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:html/parser.dart';
 import 'dart:io';
 import '../main.dart';
 import '../model/book.dart';
+import '../model/data.dart';
 
 // ignore: must_be_immutable
 class BookDetailsPage extends StatelessWidget {
@@ -70,84 +72,56 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
           ],
         ),
         body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                      height: widget.height > 500 ? 500 : widget.height,
-                      child: loadCover()),
-                  SizedBox(
-                    height: 160,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              bookDetailElement(
-                                  detailType: 'Title:',
-                                  detailContent: widget.book!.title),
-                              bookDetailElement(
-                                  detailType: 'Author:',
-                                  detailContent: widget.book!.author_sort),
-                              const Text(
-                                'Formats: ',
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
+          padding: const EdgeInsets.all(24.0),
+          child: ListView(
+            children: [
+              SizedBox(
+                  height: widget.height > 500 ? 500 : widget.height,
+                  child: loadCover()),
+              const SizedBox(
+                height: 16,
+              ),
+              bookDetailElement(
+                  detailType: 'Title: ', detailContent: widget.book!.title),
+              bookDetailElement(
+                  detailType: 'Author: ',
+                  detailContent: widget.book!.authors![0].name),
+              const SizedBox(
+                height: 8,
+              ),
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Wrap(children: [
+                    const Text(
+                      'Open formats: ',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    for (Data item in widget.book!.formats!)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            String bookPath =
+                                '${prefs.getString('path')}/${widget.book!.path}/${widget.book!.formats![0].name}.${item.format.toLowerCase()}';
+
+                            OpenFilex.open(bookPath);
+                          },
+                          child: Text(
+                            item.format.toLowerCase(),
+                            style: const TextStyle(fontSize: 20),
                           ),
                         ),
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.canPop(context);
-                                  },
-                                  style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 15),
-                                  ),
-                                  child: const Text(
-                                    'Back',
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    String bookPath =
-                                        '${prefs.getString('path')}/${widget.book!.path}/${widget.book!.formats![0].name}.${widget.book!.formats![0].format.toLowerCase()}';
-                                    OpenFilex.open(bookPath);
-                                  },
-                                  style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 15),
-                                  ),
-                                  child: const Text(
-                                    'Open',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )));
+                      ),
+                  ])),
+              bookDetailElement(
+                  detailType: 'Comment: ',
+                  detailContent:
+                      parse(widget.book!.comment!.text).documentElement?.text ??
+                          ''),
+            ],
+          ),
+        ));
   }
 
   Image loadCover() {
@@ -191,13 +165,19 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
 
   Widget bookDetailElement(
       {required String detailType, required String detailContent}) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.start,
       children: <Widget>[
-        Text(detailType, overflow: TextOverflow.ellipsis),
-        const VerticalDivider(),
-        Flexible(
-          child: Text(detailContent, overflow: TextOverflow.ellipsis),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Text(
+            detailType,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Text(detailContent, style: const TextStyle(fontSize: 16)),
         ),
       ],
     );
