@@ -1,30 +1,19 @@
-import 'package:flutibre/l10n/l10n.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../l10n/l10n.dart';
+import 'shared_utility_provider.dart';
 
-class LocaleProvider with ChangeNotifier {
-  LocaleProvider() {
-    _loadSettings();
+class LocaleProvider extends StateNotifier<String> {
+  LocaleProvider({required this.ref}) : super('en') {
+    state = ref.watch(sharedUtilityProvider).getLocaleKey();
   }
+  Ref ref;
 
-  Locale _currentLocale = const Locale('en');
-
-  // ignore: unnecessary_getters_setters
-  Locale get currentLocale => _currentLocale;
-
-  void _loadSettings() async {
-    _currentLocale = Locale(prefs.getString('locale') ?? 'en');
-    notifyListeners();
-  }
-
-  void _saveSettings(String newValue) async {
-    prefs.setString('locale', newValue);
-  }
-
-  void setLocale(Locale newValue) {
-    if (!L10n.locales.contains(newValue)) return;
-    _saveSettings(newValue.languageCode);
-    _currentLocale = newValue;
-    notifyListeners();
+  void setLocale(String newValue) {
+    if (!L10n.locales.contains(Locale(newValue))) return;
+    ref.watch(sharedUtilityProvider).setLocale(
+          locale: newValue,
+        );
+    state = ref.watch(sharedUtilityProvider).getLocaleKey();
   }
 }

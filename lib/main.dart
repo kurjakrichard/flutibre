@@ -23,7 +23,9 @@ final loadProvider = StateProvider<bool>((ref) {
 final themeProvider = StateNotifierProvider<ThemeProvider, bool>((ref) {
   return ThemeProvider(ref: ref);
 });
-final localeProvider = ChangeNotifierProvider((ref) => LocaleProvider());
+final localeProvider = StateNotifierProvider<LocaleProvider, String>((ref) {
+  return LocaleProvider(ref: ref);
+});
 final booklistProvider = FutureProvider<List<BookListItem>>(
     (ref) => BookListProvider().currentBooks!);
 
@@ -59,7 +61,7 @@ class Flutibre extends StatelessWidget {
       builder: (context, ref, child) => ref.watch(loadProvider)
           ? MaterialApp(
               localizationsDelegates: L10n.delegates,
-              locale: ref.watch(localeProvider).currentLocale,
+              locale: Locale(ref.watch(localeProvider)),
               supportedLocales: L10n.locales,
               theme: baseTheme,
               darkTheme: darkTheme,

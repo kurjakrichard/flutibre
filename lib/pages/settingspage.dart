@@ -149,16 +149,15 @@ class _SettingsPageState extends State<SettingsPage> {
           icon: const Icon(Icons.arrow_downward),
           isExpanded: true,
           underline: Container(),
-          value:
-              _localeList[ref.watch(localeProvider).currentLocale.languageCode],
+          value: _localeList[ref.watch(localeProvider)],
           items: _localeList.values.map((String value) {
             return DropdownMenuItem(
                 value: value, child: Center(child: Text(value)));
           }).toList(),
           onChanged: (newValueSelected) {
             ref
-                .read(localeProvider)
-                .setLocale(Locale(_reverseLocaleList[newValueSelected]!));
+                .read(localeProvider.notifier)
+                .setLocale(_reverseLocaleList[newValueSelected]!);
           }),
     );
   }
