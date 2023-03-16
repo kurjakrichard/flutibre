@@ -40,6 +40,10 @@
   "@librarypath": {
     "description": "Empty library"
   },
+  "nobookselected": "No book selected",
+  "@librarypath": {
+    "description": "No book selected"
+  },
   "ok": "OK",
   "@ok": {
     "description": "OK button"
@@ -107,6 +111,14 @@
   "open": "Open",
   "@open": {
     "description": "Open button"
+  },
+  "openbook": "Open book",
+  "@open": {
+    "description": "Open button"
+  },
+  "comment": "Comment",
+  "@open": {
+    "description": "Comment"
   },
   "pickfolder": "Pick folder",
   "@pickfolder": {

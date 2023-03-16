@@ -1,35 +1,16 @@
-import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'shared_utility_provider.dart';
 
-class ThemeProvider with ChangeNotifier {
-  ThemeProvider() {
-    _loadSettings();
+class ThemeProvider extends StateNotifier<bool> {
+  ThemeProvider({required this.ref}) : super(true) {
+    state = ref.watch(sharedUtilityProvider).isDarkTheme();
   }
-
-  bool _darkTheme = false;
-
-  bool _doneLoading = false;
-
-  // ignore: unnecessary_getters_setters
-  bool get darkTheme => _darkTheme;
-  bool get doneLoading => _doneLoading;
-  set doneLoading(bool value) {
-    _doneLoading = value;
-    notifyListeners();
-  }
-
-  void _loadSettings() async {
-    _darkTheme = prefs.getBool('darkTheme') ?? false;
-    notifyListeners();
-  }
-
-  void _saveSettings() async {
-    prefs.setBool('darkTheme', _darkTheme);
-  }
+  Ref ref;
 
   void toggleTheme() {
-    _darkTheme = !_darkTheme;
-    _saveSettings();
-    notifyListeners();
+    ref.watch(sharedUtilityProvider).setDarkMode(
+          isdark: !ref.watch(sharedUtilityProvider).isDarkTheme(),
+        );
+    state = ref.watch(sharedUtilityProvider).isDarkTheme();
   }
 }

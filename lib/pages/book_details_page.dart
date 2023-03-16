@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:image_size_getter/file_input.dart';
-import 'package:image_size_getter/image_size_getter.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:html/parser.dart';
 import 'dart:io';
 import '../main.dart';
@@ -19,31 +18,16 @@ class BookDetailsPage extends StatelessWidget {
     if (routeSettings.arguments != null) {
       book = routeSettings.arguments as Book;
     }
-    String bookPath = book!.has_cover == 1
-        ? '${prefs.getString('path')}/${book!.path}/cover.jpg'
-        : 'images/cover.png';
-    Size size;
-    try {
-      size = ImageSizeGetter.getSize(FileInput(File(bookPath)));
-    } on UnsupportedError {
-      size = const Size(200, 500);
-    }
-    var height = size.height.toDouble();
-    {
-      return BookDetailsContent(
-        book: book,
-        height: height,
-      );
-    }
+
+    return BookDetailsContent(
+      book: book,
+    );
   }
 }
 
-// ignore: must_be_immutable
 class BookDetailsContent extends StatefulWidget {
-  BookDetailsContent({Key? key, this.book, required this.height})
-      : super(key: key);
+  const BookDetailsContent({Key? key, this.book}) : super(key: key);
   final Book? book;
-  double height;
 
   @override
   State<BookDetailsContent> createState() => _BookDetailsContentState();
@@ -75,32 +59,45 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
           padding: const EdgeInsets.all(24.0),
           child: ListView(
             children: [
-              SizedBox(
-                  height: widget.height > 500 ? 500 : widget.height,
-                  child: loadCover()),
+              ConstrainedBox(
+                constraints:
+                    BoxConstraints.loose(const Size(double.minPositive, 450)),
+                child: loadCover(),
+              ),
               const SizedBox(
                 height: 16,
               ),
               bookDetailElement(
-                  detailType: 'Title: ', detailContent: widget.book!.title),
+                  detailType: '${AppLocalizations.of(context)!.title}: ',
+                  detailContent: widget.book!.title),
               bookDetailElement(
-                  detailType: 'Author: ',
+                  detailType: '${AppLocalizations.of(context)!.author}: ',
                   detailContent: widget.book!.authors![0].name),
               const SizedBox(
                 height: 8,
               ),
               Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
+                  padding: const EdgeInsets.only(bottom: 6.0),
                   child: Wrap(children: [
-                    const Text(
-                      'Open formats: ',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
+                      child: Text(
+                        '${AppLocalizations.of(context)!.openbook}:  ',
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                     ),
                     for (Data item in widget.book!.formats!)
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.only(right: 16.0, bottom: 16),
                         child: ElevatedButton(
+                          style: ButtonStyle(minimumSize:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.disabled)) {
+                              return const Size(65, 35);
+                            }
+                            return const Size(65, 35);
+                          })),
                           onPressed: () {
                             String bookPath =
                                 '${prefs.getString('path')}/${widget.book!.path}/${widget.book!.formats![0].name}.${item.format.toLowerCase()}';
@@ -109,13 +106,13 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
                           },
                           child: Text(
                             item.format.toLowerCase(),
-                            style: const TextStyle(fontSize: 20),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ),
                       ),
                   ])),
               bookDetailElement(
-                  detailType: 'Comment: ',
+                  detailType: '${AppLocalizations.of(context)!.comment}:  ',
                   detailContent:
                       parse(widget.book!.comment!.text).documentElement?.text ??
                           ''),

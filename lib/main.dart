@@ -6,18 +6,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/l10n.dart';
 import 'pages/book_details_page.dart';
-import 'pages/book_details_page.dart';
 import 'pages/homepage.dart';
 import 'pages/loadingpage.dart';
 import 'pages/settingspage.dart';
 import 'providers/locale_provider.dart';
+import 'providers/shared_utility_provider.dart';
 import 'utils/custom_scroll_behavior.dart';
 import 'widgets/theme.dart';
 import 'dart:io' as io;
 
 late SharedPreferences prefs;
 final bookListProvider = ChangeNotifierProvider((ref) => BookListProvider());
-final themeProvider = ChangeNotifierProvider((ref) => ThemeProvider());
+final loadProvider = StateProvider<bool>((ref) {
+  return false;
+});
+final themeProvider = StateNotifierProvider<ThemeProvider, bool>((ref) {
+  return ThemeProvider(ref: ref);
+});
 final localeProvider = ChangeNotifierProvider((ref) => LocaleProvider());
 final booklistProvider = FutureProvider<List<BookListItem>>(
     (ref) => BookListProvider().currentBooks!);
@@ -36,6 +41,9 @@ void main() async {
   }
 
   runApp(ProviderScope(
+    overrides: [
+      sharedPreferencesProvider.overrideWithValue(prefs),
+    ],
     child: Flutibre(isMetadataDb),
   ));
 }
@@ -48,16 +56,15 @@ class Flutibre extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (context, ref, child) => ref.watch(themeProvider).doneLoading
+      builder: (context, ref, child) => ref.watch(loadProvider)
           ? MaterialApp(
               localizationsDelegates: L10n.delegates,
               locale: ref.watch(localeProvider).currentLocale,
               supportedLocales: L10n.locales,
               theme: baseTheme,
               darkTheme: darkTheme,
-              themeMode: ref.watch(themeProvider).darkTheme
-                  ? ThemeMode.dark
-                  : ThemeMode.light,
+              themeMode:
+                  ref.watch(themeProvider) ? ThemeMode.dark : ThemeMode.light,
               scrollBehavior: CustomScrollBehavior(),
               initialRoute: '/',
               routes: {

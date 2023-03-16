@@ -21,7 +21,7 @@ class _LoadingScreenState extends ConsumerState<LoadingPage> {
   void wait() async {
     await Future.delayed(const Duration(seconds: 6));
 
-    ref.read(themeProvider).doneLoading = true;
+    ref.read(loadProvider.notifier).state = true;
   }
 
   @override

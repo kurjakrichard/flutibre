@@ -66,9 +66,9 @@ class _SettingsPageState extends State<SettingsPage> {
       Consumer(
         builder: (context, ref, child) => SwitchListTile(
           title: Text(AppLocalizations.of(context)!.darktheme),
-          value: ref.watch(themeProvider).darkTheme,
-          onChanged: (newValue) {
-            ref.read(themeProvider).toggleTheme();
+          value: ref.watch(themeProvider),
+          onChanged: (_) {
+            ref.read(themeProvider.notifier).toggleTheme();
           },
         ),
       )

@@ -47,7 +47,9 @@ class _ListPageState extends ConsumerState<ListPage>
                     SizedBox(
                       width: 450,
                       child: selectedBook == null
-                          ? const Center(child: Text('Nincs könyv kiválasztva'))
+                          ? Center(
+                              child: Text(
+                                  AppLocalizations.of(context)!.nobookselected))
                           : bookDetails,
                     ),
                   ],
