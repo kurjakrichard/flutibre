@@ -39,13 +39,12 @@ class _HomePageState extends State<HomePage>
                     content: TextField(
                       controller: searchController,
                       onChanged: (value) async {
-                        value.isEmpty
-                            ? await ref.read(bookListProvider).toggleAllBooks()
-                            : await ref
-                                .read(bookListProvider)
-                                .filteredBookList(value);
+                        print(value);
+                        ref.read(filteredBooklistProvider(value));
 
-                        await ref.read(booklistProvider.future);
+                        ref.refresh(bookProvider);
+                        ref.refresh(bookListProvider);
+                        ref.refresh(filteredBooklistProvider(value).future);
                       },
                       textInputAction: TextInputAction.go,
                       decoration: const InputDecoration(

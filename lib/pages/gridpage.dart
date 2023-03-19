@@ -24,7 +24,8 @@ class _GridPageState extends ConsumerState<GridPage>
   Widget build(BuildContext context) {
     super.build(context);
     int size = MediaQuery.of(context).size.width.round();
-    AsyncValue<List<BookListItem>> itemValue = ref.watch(booklistProvider);
+    AsyncValue<List<BookListItem>> itemValue = ref.watch(bookListProvider);
+    ref.refresh(bookListProvider);
     return itemValue.when(
       data: (item) => item.isNotEmpty
           ? Padding(

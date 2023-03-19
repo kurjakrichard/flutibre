@@ -28,7 +28,8 @@ class _ListPageState extends ConsumerState<ListPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    AsyncValue<List<BookListItem>> itemValue = ref.watch(booklistProvider);
+    AsyncValue<List<BookListItem>> itemValue = ref.watch(bookListProvider);
+    ref.refresh(bookListProvider);
     return itemValue.when(
       data: (item) => item.isNotEmpty
           ? LayoutBuilder(builder: (context, constraints) {

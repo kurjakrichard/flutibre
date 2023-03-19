@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../main.dart';
 import '../repository/database_handler.dart';
 
-class BookListProvider extends ChangeNotifier {
-  BookListProvider() {
+class BookProvider extends ChangeNotifier {
+  BookProvider() {
     databaseHandler = DatabaseHandler();
     if (prefs.containsKey("path")) {
       getBookItemList();
@@ -25,6 +25,15 @@ class BookListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<BookListItem>> getAllBookItemList() async {
+    _allBooks = databaseHandler!.getBookItemList();
+    return _allBooks!;
+  }
+
+  Future<List<BookListItem>> getCurrentBookItemList() async {
+    return _currentBooks!;
+  }
+
   Future<void> filteredBookList(String? searchItem) async {
     if (searchItem == null) {
       toggleAllBooks();
@@ -35,6 +44,16 @@ class BookListProvider extends ChangeNotifier {
       //print(await _currentBooks!.then((value) => value.length));
     }
     notifyListeners();
+  }
+
+  Future<List<BookListItem>> getfilteredBookList({String? searchItem}) async {
+    if (searchItem == null || searchItem == '') {
+      _allBooks = databaseHandler!.getBookItemList();
+      return _allBooks!;
+    } else {
+      _currentBooks = databaseHandler!.getResultBookList(searchItem);
+      return _currentBooks!;
+    }
   }
 
   Future<void> toggleAllBooks() async {

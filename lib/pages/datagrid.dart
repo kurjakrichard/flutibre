@@ -30,7 +30,8 @@ class _DataGridPageState extends ConsumerState<DataGridPage>
   @override
   void initState() {
     super.initState();
-    var provider = ref.read(booklistProvider);
+    var provider = ref.read(bookListProvider);
+
     _bookList = provider.value!;
 
     bookListDataSource = BookListDataSource(_bookList!);
@@ -40,7 +41,8 @@ class _DataGridPageState extends ConsumerState<DataGridPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    _bookList = ref.watch(booklistProvider).value!;
+    _bookList = ref.watch(bookListProvider).value!;
+    ref.refresh(bookListProvider);
 
     return LayoutBuilder(builder: (context, constraints) {
       var isWide = constraints.maxWidth > 900;

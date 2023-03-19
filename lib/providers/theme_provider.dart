@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'shared_utility_provider.dart';
+import 'shared_preferences_provider.dart';
 
 class ThemeProvider extends StateNotifier<bool> {
-  ThemeProvider({required this.ref}) : super(true) {
+  ThemeProvider({required this.ref}) : super(false) {
     state = ref.watch(sharedUtilityProvider).isDarkTheme();
   }
   Ref ref;

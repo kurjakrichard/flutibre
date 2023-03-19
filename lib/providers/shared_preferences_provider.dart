@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../utils/constants.dart';
 
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
@@ -33,5 +32,13 @@ class SharedUtility {
 
   void setLocale({required String locale}) {
     sharedPreferences.setString(shareLocaleKey, locale);
+  }
+
+  String getPath() {
+    return sharedPreferences.getString(shareLocaleKey) ?? '';
+  }
+
+  void setPath({required String path}) {
+    sharedPreferences.setString(shareLocaleKey, path);
   }
 }

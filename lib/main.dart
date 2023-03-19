@@ -10,13 +10,12 @@ import 'pages/homepage.dart';
 import 'pages/loadingpage.dart';
 import 'pages/settingspage.dart';
 import 'providers/locale_provider.dart';
-import 'providers/shared_utility_provider.dart';
+import 'providers/shared_preferences_provider.dart';
 import 'utils/custom_scroll_behavior.dart';
 import 'widgets/theme.dart';
 import 'dart:io' as io;
 
 late SharedPreferences prefs;
-final bookListProvider = ChangeNotifierProvider((ref) => BookListProvider());
 final loadProvider = StateProvider<bool>((ref) {
   return false;
 });
@@ -26,8 +25,17 @@ final themeProvider = StateNotifierProvider<ThemeProvider, bool>((ref) {
 final localeProvider = StateNotifierProvider<LocaleProvider, String>((ref) {
   return LocaleProvider(ref: ref);
 });
-final booklistProvider = FutureProvider<List<BookListItem>>(
-    (ref) => BookListProvider().currentBooks!);
+final bookProvider = ChangeNotifierProvider((ref) => BookProvider());
+final bookListProvider = FutureProvider<List<BookListItem>>((ref) {
+  final books = ref.read(bookProvider).getCurrentBookItemList();
+  return books;
+});
+final filteredBooklistProvider =
+    FutureProvider.family<List<BookListItem>, String>((ref, searchItem) {
+  final books =
+      ref.read(bookProvider).getfilteredBookList(searchItem: searchItem);
+  return books;
+});
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

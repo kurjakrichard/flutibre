@@ -186,10 +186,10 @@ class _SettingsPageState extends State<SettingsPage> {
         _newFolder = false;
       }
 
-      await ref.read(bookListProvider).databaseHandler!.initialDatabase();
-      await ref.read(bookListProvider).getBookItemList();
+      await ref.read(bookProvider).databaseHandler!.initialDatabase();
+      await ref.read(bookProvider).getBookItemList();
       // ignore: unused_result
-      ref.invalidate(booklistProvider);
+      ref.invalidate(bookListProvider);
 
       if (mounted) {
         Navigator.pushNamed(context, '/homepage');

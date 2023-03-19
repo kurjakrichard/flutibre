@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// ignore: depend_on_referenced_packages
 import 'package:html/parser.dart';
 import 'dart:io';
 import '../main.dart';
