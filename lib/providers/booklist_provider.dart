@@ -47,12 +47,11 @@ class BookProvider extends ChangeNotifier {
   }
 
   Future<List<BookListItem>> getfilteredBookList({String? searchItem}) async {
-    if (searchItem == null || searchItem == '') {
-      _allBooks = databaseHandler!.getBookItemList();
-      return _allBooks!;
-    } else {
-      _currentBooks = databaseHandler!.getResultBookList(searchItem);
+    if (searchItem != null || searchItem != '') {
+      _currentBooks = databaseHandler!.getResultBookList(searchItem!);
       return _currentBooks!;
+    } else {
+      return _allBooks!;
     }
   }
 
