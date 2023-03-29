@@ -1,33 +1,33 @@
-import 'package:riverpodcrud/models/note.dart';
+import '../model/booklist_item.dart';
 
-abstract class NotesState {
-  NotesState();
+abstract class BookListState {
+  BookListState();
 }
 
-class NotesInitial extends NotesState {
-  NotesInitial();
+class BookListInitial extends BookListState {
+  BookListInitial();
 }
 
-class NotesLoading extends NotesState {
-  NotesLoading();
+class BookListLoading extends BookListState {
+  BookListLoading();
 }
 
-class NotesLoaded extends NotesState {
-  NotesLoaded({
-    this.notes,
+class BookListLoaded extends BookListState {
+  BookListLoaded({
+    this.bookList,
   });
 
-  final List<Note>? notes;
+  final List<BookListItem>? bookList;
 }
 
-class NotesEmpty extends NotesState {
-  NotesEmpty();
+class BookListEmpty extends BookListState {
+  BookListEmpty();
 }
 
-class NotesFailure extends NotesState {
-  NotesFailure();
+class BookListFailure extends BookListState {
+  BookListFailure();
 }
 
-class NotesSuccess extends NotesState {
-  NotesSuccess();
+class BookListSuccess extends BookListState {
+  BookListSuccess();
 }
