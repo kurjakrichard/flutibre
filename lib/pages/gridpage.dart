@@ -18,6 +18,7 @@ class _GridPageState extends ConsumerState<GridPage>
     with AutomaticKeepAliveClientMixin {
   Book? selectedBook;
   final DatabaseHandler _databaseHandler = DatabaseHandler();
+
   @override
   bool get wantKeepAlive => true;
   @override
@@ -74,7 +75,8 @@ class _GridPageState extends ConsumerState<GridPage>
               child: Text(AppLocalizations.of(context)!.emptylibrary,
                   style: const TextStyle(fontSize: 20, color: Colors.grey))),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, st) => Center(child: Text(e.toString())),
+      error: (e, st) =>
+          Center(child: Text('hiba' + e.toString() + st.toString())),
     );
   }
 }

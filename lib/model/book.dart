@@ -6,7 +6,7 @@ import 'data.dart';
 
 // ignore: must_be_immutable
 class Book extends Equatable {
-  final int id;
+  final int? id;
   final String title;
   final String sort;
   final String timestamp;

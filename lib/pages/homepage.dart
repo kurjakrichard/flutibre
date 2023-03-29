@@ -21,7 +21,11 @@ class _HomePageState extends State<HomePage>
   bool get wantKeepAlive => true;
   TextEditingController searchController = TextEditingController();
   int currentIndex = 0;
-  final tabPages = [const ListPage(), const GridPage(), const DataGridPage()];
+  final List<ConsumerStatefulWidget> tabPages = [
+    const ListPage(),
+    const GridPage(),
+    const DataGridPage()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -88,20 +92,19 @@ class _HomePageState extends State<HomePage>
           controller: controller,
           children: tabPages,
           onPageChanged: (index) {
-            setState(() {
-              currentIndex = index;
-            });
+            WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+                  currentIndex = index;
+                }));
           },
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentIndex,
           onTap: (index) {
-            controller.jumpToPage(index);
-
             /// Switching the PageView tabs
-            setState(() {
-              currentIndex = index;
-            });
+            controller.jumpToPage(index);
+            WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+                  currentIndex = index;
+                }));
           },
           items: [
             BottomNavigationBarItem(

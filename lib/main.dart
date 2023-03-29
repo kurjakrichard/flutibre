@@ -27,14 +27,11 @@ final localeProvider = StateNotifierProvider<LocaleProvider, String>((ref) {
 });
 final bookProvider = ChangeNotifierProvider((ref) => BookProvider());
 final bookListProvider = FutureProvider<List<BookListItem>>((ref) {
-  final books = ref.read(bookProvider).getCurrentBookItemList();
-  return books;
+  return ref.watch(bookProvider).getCurrentBookItemList();
 });
 final filteredBooklistProvider =
     FutureProvider.family<List<BookListItem>, String>((ref, searchItem) {
-  final books =
-      ref.read(bookProvider).getfilteredBookList(searchItem: searchItem);
-  return books;
+  return ref.read(bookProvider).getfilteredBookList(searchItem: searchItem);
 });
 
 void main() async {

@@ -61,7 +61,8 @@ class _ListPageState extends ConsumerState<ListPage>
               child: Text(AppLocalizations.of(context)!.emptylibrary,
                   style: const TextStyle(fontSize: 20, color: Colors.grey))),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, st) => Center(child: Text(e.toString())),
+      error: (e, st) =>
+          Center(child: Text('hiba' + e.toString() + st.toString())),
     );
   }
 

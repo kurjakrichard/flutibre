@@ -14,7 +14,7 @@ class DatabaseHandler {
   static DatabaseHandler? _databaseHelper;
   static Database? _database;
 
-  DatabaseHandler._createInstance();
+  DatabaseHandler.createInstance();
 
   Future<Database> get database async {
     _database ??= await initialDatabase();
@@ -22,7 +22,7 @@ class DatabaseHandler {
   }
 
   factory DatabaseHandler() {
-    _databaseHelper ??= DatabaseHandler._createInstance();
+    _databaseHelper ??= DatabaseHandler.createInstance();
     return _databaseHelper!;
   }
 
