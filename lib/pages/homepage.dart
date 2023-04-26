@@ -4,6 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutibre/pages/gridpage.dart';
 import 'package:flutibre/pages/listpage.dart';
 import '../main.dart';
+import 'book_list_page.dart';
+import 'book_list_page2.dart';
 import 'datagrid.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,10 +23,12 @@ class _HomePageState extends State<HomePage>
   bool get wantKeepAlive => true;
   TextEditingController searchController = TextEditingController();
   int currentIndex = 0;
-  final List<ConsumerStatefulWidget> tabPages = [
+  final List<Widget> tabPages = [
     const ListPage(),
     const GridPage(),
-    const DataGridPage()
+    const DataGridPage(),
+    const BookListPage(),
+    const BookListPage2()
   ];
 
   @override
@@ -118,6 +122,18 @@ class _HomePageState extends State<HomePage>
               icon: Tooltip(
                   message: AppLocalizations.of(context)!.tiles,
                   child: const Icon(Icons.grid_4x4)),
+            ),
+            BottomNavigationBarItem(
+              label: '',
+              icon: Tooltip(
+                  message: AppLocalizations.of(context)!.datatable,
+                  child: const Icon(Icons.dataset)),
+            ),
+            BottomNavigationBarItem(
+              label: '',
+              icon: Tooltip(
+                  message: AppLocalizations.of(context)!.datatable,
+                  child: const Icon(Icons.dataset)),
             ),
             BottomNavigationBarItem(
               label: '',

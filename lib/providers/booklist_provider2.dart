@@ -37,6 +37,25 @@ class BookListNotifier extends StateNotifier<BookListState> {
     }
   }
 
+  Future<void> filteredBookItemList(String searchItem) async {
+    state = BookListLoading();
+    try {
+      await Future.delayed(const Duration(seconds: 2));
+
+      final bookList = await _databaseProvider.getResultBookList(searchItem);
+      if (bookList.isEmpty) {
+        state = BookListEmpty();
+      } else {
+        state = FilteredBookListLoaded(
+          bookList: bookList,
+        );
+      }
+    } catch (e) {
+      state = BookListFailure();
+      throw Exception();
+    }
+  }
+
   Future<void> editBook(Book book) async {
     Book newBook = book;
     state = BookListLoading();

@@ -13,9 +13,13 @@ class BookListLoading extends BookListState {
 }
 
 class BookListLoaded extends BookListState {
-  BookListLoaded({
-    this.bookList,
-  });
+  BookListLoaded({this.bookList});
+
+  final List<BookListItem>? bookList;
+}
+
+class FilteredBookListLoaded extends BookListState {
+  FilteredBookListLoaded({this.bookList});
 
   final List<BookListItem>? bookList;
 }
