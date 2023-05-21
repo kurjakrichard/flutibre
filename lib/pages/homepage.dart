@@ -1,21 +1,19 @@
+import 'package:flutibre/providers/booklist_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutibre/pages/gridpage.dart';
 import 'package:flutibre/pages/listpage.dart';
-import '../main.dart';
-import 'book_list_page.dart';
-import 'book_list_page2.dart';
 import 'datagrid.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _HomePageState extends ConsumerState<HomePage>
     with AutomaticKeepAliveClientMixin {
   final PageController controller = PageController();
 
@@ -26,9 +24,8 @@ class _HomePageState extends State<HomePage>
   final List<Widget> tabPages = [
     const ListPage(),
     const GridPage(),
-    const DataGridPage(),
-    const BookListPage(),
-    const BookListPage2()
+    //const DataGridPage(),
+    const DataGrid2(),
   ];
 
   @override
@@ -47,13 +44,9 @@ class _HomePageState extends State<HomePage>
                     content: TextField(
                       controller: searchController,
                       onChanged: (value) async {
-                        //print(value);
-
-                        //ref.refresh(bookProvider);
-                        //ref.refresh(bookListProvider);
-
-                        ref.read(filteredBooklistProvider(value));
-                        ref.invalidate(filteredBooklistProvider(value));
+                        ref
+                            .read(bookListProvider.notifier)
+                            .filteredBookItemList(value);
                       },
                       textInputAction: TextInputAction.go,
                       decoration: const InputDecoration(
@@ -128,19 +121,7 @@ class _HomePageState extends State<HomePage>
               icon: Tooltip(
                   message: AppLocalizations.of(context)!.datatable,
                   child: const Icon(Icons.dataset)),
-            ),
-            BottomNavigationBarItem(
-              label: '',
-              icon: Tooltip(
-                  message: AppLocalizations.of(context)!.datatable,
-                  child: const Icon(Icons.dataset)),
-            ),
-            BottomNavigationBarItem(
-              label: '',
-              icon: Tooltip(
-                  message: AppLocalizations.of(context)!.datatable,
-                  child: const Icon(Icons.dataset)),
-            ),
+            )
           ],
         ),
       ),

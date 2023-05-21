@@ -1,14 +1,13 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'package:flutibre/pages/book_details_page.dart';
-import 'package:flutibre/repository/database_handler.dart';
-import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../main.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
+import '../providers/book_list_state.dart';
+import '../providers/booklist_provider.dart';
+import '../repository/database_handler.dart';
+import 'book_details_page.dart';
 
 class ListPage extends ConsumerStatefulWidget {
   const ListPage({Key? key}) : super(key: key);
@@ -21,49 +20,71 @@ class _ListPageState extends ConsumerState<ListPage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  final DatabaseHandler _databaseHandler = DatabaseHandler();
-  Book? selectedBook;
-  BookDetailsPage? bookDetails;
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    AsyncValue<List<BookListItem>> itemValue = ref.watch(bookListProvider);
-    ref.invalidate(bookListProvider);
-    return itemValue.when(
-      data: (item) => item.isNotEmpty
-          ? LayoutBuilder(builder: (context, constraints) {
-              var isWide = constraints.maxWidth > 900;
-              if (!isWide) {
-                return listView(item, isWide);
-              } else {
-                return Row(
-                  children: [
-                    Expanded(child: listView(item, isWide)),
-                    const VerticalDivider(
-                      color: Colors.cyan,
-                      thickness: 3,
-                      width: 3,
-                    ),
-                    SizedBox(
-                      width: 450,
-                      child: selectedBook == null
-                          ? Center(
-                              child: Text(
-                                  AppLocalizations.of(context)!.nobookselected))
-                          : bookDetails,
-                    ),
-                  ],
-                );
-              }
-            })
-          : Center(
-              child: Text(AppLocalizations.of(context)!.emptylibrary,
-                  style: const TextStyle(fontSize: 20, color: Colors.grey))),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, st) =>
-          Center(child: Text('hiba' + e.toString() + st.toString())),
-    );
+    final state = ref.watch(bookListProvider);
+    if (state is BookListInitial) {
+      return const SizedBox();
+    } else if (state is BookListLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (state is BookListEmpty) {
+      return const Center(
+        child: Text('No books'),
+      );
+    } else if (state is FilteredBookListLoaded) {
+      return BookList(state.bookList);
+    } else if (state is BookListLoaded) {
+      return BookList(state.bookList);
+    } else {
+      return const Text('Error');
+    }
+  }
+}
+
+class BookList extends StatefulWidget {
+  const BookList(
+    List<BookListItem>? this.bookList, {
+    Key? key,
+  }) : super(key: key);
+  // ignore: prefer_typing_uninitialized_variables
+  final bookList;
+
+  @override
+  State<BookList> createState() => BookListState();
+}
+
+class BookListState extends State<BookList> {
+  BookDetailsPage? bookDetails;
+  Book? selectedBook;
+  final DatabaseHandler _databaseHandler = DatabaseHandler();
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      var isWide = constraints.maxWidth > 900;
+      if (!isWide) {
+        return listView(widget.bookList, isWide);
+      } else {
+        return Row(
+          children: [
+            Expanded(child: listView(widget.bookList, isWide)),
+            const VerticalDivider(
+              color: Colors.cyan,
+              thickness: 3,
+              width: 3,
+            ),
+            SizedBox(
+              width: 450,
+              child: selectedBook == null
+                  ? Center(
+                      child: Text(AppLocalizations.of(context)!.nobookselected))
+                  : bookDetails,
+            ),
+          ],
+        );
+      }
+    });
   }
 
   Widget listView(List<BookListItem> item, bool isWide) {
@@ -74,6 +95,7 @@ class _ListPageState extends ConsumerState<ListPage>
           onTap: () async {
             selectedBook = await _databaseHandler.selectedBook(item[index].id);
             if (!isWide) {
+              // ignore: use_build_context_synchronously
               Navigator.pushNamed(
                 context,
                 '/bookdetailspage',

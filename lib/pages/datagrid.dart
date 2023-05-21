@@ -1,49 +1,75 @@
 import 'package:flutter/material.dart';
-import 'package:pluto_grid/pluto_grid.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../main.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
+import '../providers/book_list_state.dart';
+import '../providers/booklist_provider.dart';
 import '../repository/database_handler.dart';
 import 'book_details_page.dart';
 
-class DataGridPage extends ConsumerStatefulWidget {
-  const DataGridPage({Key? key}) : super(key: key);
+class DataGrid2 extends ConsumerStatefulWidget {
+  const DataGrid2({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<DataGridPage> createState() => _DataGridPageState();
+  ConsumerState<DataGrid2> createState() => _DataGridState();
 }
 
-class _DataGridPageState extends ConsumerState<DataGridPage>
+class _DataGridState extends ConsumerState<DataGrid2>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    final state = ref.watch(bookListProvider);
+    if (state is BookListInitial) {
+      return const SizedBox();
+    } else if (state is BookListLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (state is BookListEmpty) {
+      return const Center(
+        child: Text('No books'),
+      );
+    } else if (state is FilteredBookListLoaded) {
+      return BookList(state.bookList);
+    } else if (state is BookListLoaded) {
+      return BookList(state.bookList);
+    } else {
+      return const Text('Error');
+    }
+  }
+}
 
-  Book? selectedBook;
+class BookList extends StatefulWidget {
+  const BookList(
+    List<BookListItem>? this.bookList, {
+    Key? key,
+  }) : super(key: key);
+  // ignore: prefer_typing_uninitialized_variables
+  final bookList;
+
+  @override
+  State<BookList> createState() => BookListState();
+}
+
+class BookListState extends State<BookList> {
   BookDetailsPage? bookDetails;
-  late List<BookListItem>? _bookList;
-
-  late List<PlutoRow> rows;
+  Book? selectedBook;
   final DatabaseHandler _databaseHandler = DatabaseHandler();
+  late List<PlutoRow> rows;
   late BookListDataSource bookListDataSource;
 
   @override
   void initState() {
     super.initState();
-    var provider = ref.read(bookListProvider);
 
-    _bookList = provider.value!;
-
-    bookListDataSource = BookListDataSource(_bookList!);
+    bookListDataSource = BookListDataSource(widget.bookList);
     rows = bookListDataSource.dataGridRows!;
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    _bookList = ref.watch(bookListProvider).value!;
-    ref.refresh(bookListProvider);
-
     return LayoutBuilder(builder: (context, constraints) {
       var isWide = constraints.maxWidth > 900;
       if (!isWide) {

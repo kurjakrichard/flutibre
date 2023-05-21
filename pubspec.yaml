@@ -19,7 +19,7 @@ dependencies:
   path_provider: ^2.0.13
   flutter_riverpod: ^2.2.0
   permission_handler: ^10.2.0
-  pluto_grid: ^6.0.4
+  pluto_grid: ^7.0.2
   flutter_html: ^2.2.1
   image_size_getter: ^2.1.2
   equatable: ^2.0.5

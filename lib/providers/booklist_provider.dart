@@ -1,62 +1,84 @@
-import 'dart:async';
-import 'package:flutibre/model/booklist_item.dart';
-import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../model/book.dart';
 import '../repository/database_handler.dart';
+import 'book_list_state.dart';
 
-class BookProvider extends ChangeNotifier {
-  BookProvider() {
-    databaseHandler = DatabaseHandler();
-    if (prefs.containsKey("path")) {
-      getBookItemList();
+final databaseProvider = Provider((ref) => DatabaseHandler.createInstance());
+
+final bookListProvider = StateNotifierProvider<BookListNotifier, BookListState>(
+    (ref) => BookListNotifier(ref));
+
+class BookListNotifier extends StateNotifier<BookListState> {
+  BookListNotifier(this.ref)
+      : _databaseProvider = ref.watch(databaseProvider),
+        super(BookListInitial()) {
+    loadBookItemList();
+  }
+  final Ref ref;
+  final DatabaseHandler _databaseProvider;
+
+  Future<void> loadBookItemList() async {
+    state = BookListLoading();
+    try {
+      await Future.delayed(const Duration(seconds: 2));
+
+      final bookList = await _databaseProvider.getBookItemList();
+      if (bookList.isEmpty) {
+        state = BookListEmpty();
+      } else {
+        state = BookListLoaded(
+          bookList: bookList,
+        );
+      }
+    } catch (e) {
+      state = BookListFailure();
+      throw Exception();
     }
   }
 
-  late Future<List<BookListItem>>? _allBooks;
-  late Future<List<BookListItem>>? _currentBooks;
-  Future<List<BookListItem>>? get currentBooks => _currentBooks;
+  Future<void> filteredBookItemList(String searchItem) async {
+    state = BookListLoading();
+    try {
+      //await Future.delayed(const Duration(seconds: 2));
 
-  DatabaseHandler? databaseHandler;
-
-  Future<void> getBookItemList() async {
-    _allBooks = databaseHandler!.getBookItemList();
-    _currentBooks = _allBooks;
-    await _allBooks;
-    notifyListeners();
-  }
-
-  Future<List<BookListItem>> getAllBookItemList() async {
-    _allBooks = databaseHandler!.getBookItemList();
-    return _allBooks!;
-  }
-
-  Future<List<BookListItem>> getCurrentBookItemList() async {
-    return _currentBooks!;
-  }
-
-  Future<void> filteredBookList(String? searchItem) async {
-    if (searchItem == null) {
-      toggleAllBooks();
-    } else {
-      Future<List<BookListItem>> filteredBookList =
-          databaseHandler!.getResultBookList(searchItem);
-      _currentBooks = filteredBookList;
-      //print(await _currentBooks!.then((value) => value.length));
-    }
-    notifyListeners();
-  }
-
-  Future<List<BookListItem>> getfilteredBookList({String? searchItem}) async {
-    if (searchItem != null || searchItem != '') {
-      _currentBooks = databaseHandler!.getResultBookList(searchItem!);
-      return _currentBooks!;
-    } else {
-      return _allBooks!;
+      final bookList = await _databaseProvider.getResultBookList(searchItem);
+      if (bookList.isEmpty) {
+        state = BookListEmpty();
+      } else {
+        state = FilteredBookListLoaded(
+          bookList: bookList,
+        );
+      }
+    } catch (e) {
+      state = BookListFailure();
+      throw Exception();
     }
   }
 
-  Future<void> toggleAllBooks() async {
-    _currentBooks = _allBooks;
-    notifyListeners();
+  Future<void> editBook(Book book) async {
+    Book newBook = book;
+    state = BookListLoading();
+    try {
+      await Future.delayed(const Duration(seconds: 2));
+      if (book.id == null) {
+        await _databaseProvider.insertBook(newBook);
+      } else {
+        await _databaseProvider.updateBook(newBook);
+      }
+      state = BookListSuccess();
+    } on Exception {
+      state = BookListFailure();
+    }
+  }
+
+  Future<void> deleteBook(id) async {
+    state = BookListLoading();
+    await Future.delayed(const Duration(seconds: 2));
+    try {
+      await _databaseProvider.deleteBook(id);
+      loadBookItemList();
+    } on Exception {
+      state = BookListFailure();
+    }
   }
 }

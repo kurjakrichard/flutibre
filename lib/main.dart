@@ -25,14 +25,6 @@ final themeProvider = StateNotifierProvider<ThemeProvider, bool>((ref) {
 final localeProvider = StateNotifierProvider<LocaleProvider, String>((ref) {
   return LocaleProvider(ref: ref);
 });
-final bookProvider = ChangeNotifierProvider((ref) => BookProvider());
-final bookListProvider = FutureProvider<List<BookListItem>>((ref) {
-  return ref.watch(bookProvider).getCurrentBookItemList();
-});
-final filteredBooklistProvider =
-    FutureProvider.family<List<BookListItem>, String>((ref, searchItem) {
-  return ref.read(bookProvider).getfilteredBookList(searchItem: searchItem);
-});
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'dart:io';
 // ignore: unnecessary_import
+import 'package:flutibre/providers/booklist_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
@@ -185,9 +186,8 @@ class _SettingsPageState extends State<SettingsPage> {
         await copyDatabase(_tempPath!, 'metadata_db_prefs_backup.json');
         _newFolder = false;
       }
+      ref.read(bookListProvider.notifier);
 
-      await ref.read(bookProvider).databaseHandler!.initialDatabase();
-      await ref.read(bookProvider).getBookItemList();
       // ignore: unused_result
       ref.invalidate(bookListProvider);
 
