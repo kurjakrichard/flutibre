@@ -21,109 +21,108 @@ class _HomePageState extends ConsumerState<HomePage>
   bool get wantKeepAlive => true;
   TextEditingController searchController = TextEditingController();
   int currentIndex = 0;
+  GlobalKey globalKey = GlobalKey();
   final List<Widget> tabPages = [
     const ListPage(),
     const GridPage(),
-    //const DataGridPage(),
-    const DataGrid2(),
+    const DataGrid(),
   ];
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Consumer(
-      builder: (context, ref, child) => Scaffold(
-        appBar: AppBar(
-          title: const Text("Flutibre"),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showMaterialBanner(
-                  MaterialBanner(
-                    content: TextField(
-                      controller: searchController,
-                      onChanged: (value) async {
-                        ref
-                            .read(bookListProvider.notifier)
-                            .filteredBookItemList(value);
-                      },
-                      textInputAction: TextInputAction.go,
-                      decoration: const InputDecoration(
-                        icon: Icon(
-                          Icons.search,
-                        ),
-                        border: InputBorder.none,
-                        hintText: 'Search term',
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Flutibre"),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showMaterialBanner(
+                MaterialBanner(
+                  content: TextField(
+                    key: globalKey,
+                    controller: searchController,
+                    onChanged: (value) async {
+                      ref
+                          .read(bookListProvider.notifier)
+                          .filteredBookItemList(value);
+                    },
+                    textInputAction: TextInputAction.go,
+                    decoration: const InputDecoration(
+                      icon: Icon(
+                        Icons.search,
                       ),
+                      border: InputBorder.none,
+                      hintText: 'Search term',
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).clearMaterialBanners();
-                        },
-                        child: const Text('Bezárás'),
-                      )
-                    ],
                   ),
-                );
-              },
-            )
-          ],
-        ),
-        drawer: drawerNavigation(context),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Consumer(
-          builder: (_, ref, child) {
-            return FloatingActionButton(
-              onPressed: () async {
-                // ignore: todo
-                //TODO
-              },
-              child: const Icon(Icons.add),
-            );
-          },
-        ),
-        body: PageView(
-          /// Wrapping the tabs with PageView
-          controller: controller,
-          children: tabPages,
-          onPageChanged: (index) {
-            WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-                  currentIndex = index;
-                }));
-          },
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: (index) {
-            /// Switching the PageView tabs
-            controller.jumpToPage(index);
-            WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-                  currentIndex = index;
-                }));
-          },
-          items: [
-            BottomNavigationBarItem(
-              label: '',
-              icon: Tooltip(
-                  message: AppLocalizations.of(context)!.list,
-                  child: const Icon(Icons.list)),
-            ),
-            BottomNavigationBarItem(
-              label: '',
-              icon: Tooltip(
-                  message: AppLocalizations.of(context)!.tiles,
-                  child: const Icon(Icons.grid_4x4)),
-            ),
-            BottomNavigationBarItem(
-              label: '',
-              icon: Tooltip(
-                  message: AppLocalizations.of(context)!.datatable,
-                  child: const Icon(Icons.dataset)),
-            )
-          ],
-        ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).clearMaterialBanners();
+                      },
+                      child: const Text('Bezárás'),
+                    )
+                  ],
+                ),
+              );
+            },
+          )
+        ],
+      ),
+      drawer: drawerNavigation(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Consumer(
+        builder: (_, ref, child) {
+          return FloatingActionButton(
+            onPressed: () async {
+              // ignore: todo
+              //TODO
+            },
+            child: const Icon(Icons.add),
+          );
+        },
+      ),
+      body: PageView(
+        /// Wrapping the tabs with PageView
+        controller: controller,
+        children: tabPages,
+        onPageChanged: (index) {
+          WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+                currentIndex = index;
+              }));
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: (index) {
+          /// Switching the PageView tabs
+          controller.jumpToPage(index);
+          WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+                currentIndex = index;
+              }));
+        },
+        items: [
+          BottomNavigationBarItem(
+            label: '',
+            icon: Tooltip(
+                message: AppLocalizations.of(context)!.list,
+                child: const Icon(Icons.list)),
+          ),
+          BottomNavigationBarItem(
+            label: '',
+            icon: Tooltip(
+                message: AppLocalizations.of(context)!.tiles,
+                child: const Icon(Icons.grid_4x4)),
+          ),
+          BottomNavigationBarItem(
+            label: '',
+            icon: Tooltip(
+                message: AppLocalizations.of(context)!.datatable,
+                child: const Icon(Icons.dataset)),
+          )
+        ],
       ),
     );
   }

@@ -8,14 +8,14 @@ import '../providers/booklist_provider.dart';
 import '../repository/database_handler.dart';
 import 'book_details_page.dart';
 
-class DataGrid2 extends ConsumerStatefulWidget {
-  const DataGrid2({Key? key}) : super(key: key);
+class DataGrid extends ConsumerStatefulWidget {
+  const DataGrid({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<DataGrid2> createState() => _DataGridState();
+  ConsumerState<DataGrid> createState() => _DataGridState();
 }
 
-class _DataGridState extends ConsumerState<DataGrid2>
+class _DataGridState extends ConsumerState<DataGrid>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;

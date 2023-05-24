@@ -1,4 +1,7 @@
+import 'package:flutibre/providers/booklist_provider.dart';
+import 'package:flutibre/providers/shared_preferences_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // ignore: depend_on_referenced_packages
@@ -26,15 +29,15 @@ class BookDetailsPage extends StatelessWidget {
   }
 }
 
-class BookDetailsContent extends StatefulWidget {
+class BookDetailsContent extends ConsumerStatefulWidget {
   const BookDetailsContent({Key? key, this.book}) : super(key: key);
   final Book? book;
 
   @override
-  State<BookDetailsContent> createState() => _BookDetailsContentState();
+  ConsumerState<BookDetailsContent> createState() => _BookDetailsContentState();
 }
 
-class _BookDetailsContentState extends State<BookDetailsContent> {
+class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
   @override
   void initState() {
     super.initState();
@@ -62,7 +65,7 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
             children: [
               ConstrainedBox(
                 constraints:
-                    BoxConstraints.loose(const Size(double.minPositive, 450)),
+                    BoxConstraints.loose(const Size(double.minPositive, 400)),
                 child: loadCover(),
               ),
               const SizedBox(
@@ -132,7 +135,7 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
             File(bookPath),
             height: 600,
           )
-        : Image.asset('images/cover.png', fit: BoxFit.contain);
+        : Image.asset('images/cover.png');
   }
 
   Future<dynamic> deleteDialog(BuildContext context) {
@@ -149,11 +152,22 @@ class _BookDetailsContentState extends State<BookDetailsContent> {
           ),
           TextButton(
             child: const Text('Ok'),
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
-              // ignore: todo
-              //TODO
-              Navigator.pop(context);
+              Directory dir = Directory(
+                  '${ref.read(sharedPreferencesProvider).getString('path')!}/${widget.book!.path}');
+              Directory parentDir = Directory(
+                  '${ref.read(sharedPreferencesProvider).getString('path')!}/${widget.book!.path.split('/')[0]}');
+              await dir.delete(recursive: true);
+              bool isEmpty = await Directory(
+                      '${ref.read(sharedPreferencesProvider).getString('path')!}/${widget.book!.path.split('/')[0]}')
+                  .list()
+                  .isEmpty;
+              if (isEmpty) {
+                parentDir.delete(recursive: true);
+              }
+              ref.read(bookListProvider.notifier).deleteBook(widget.book!.id);
+              Navigator.maybePop(context);
             },
           ),
         ],
