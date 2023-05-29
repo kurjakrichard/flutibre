@@ -6,7 +6,6 @@ import '../model/book.dart';
 import '../model/booklist_item.dart';
 import '../providers/book_list_state.dart';
 import '../repository/database_handler.dart';
-import 'book_details_page.dart';
 
 class GridPage extends ConsumerStatefulWidget {
   const GridPage({Key? key}) : super(key: key);
@@ -41,21 +40,13 @@ class _GridPageState extends ConsumerState<GridPage>
   }
 }
 
-class BookList extends StatefulWidget {
-  const BookList(
+class BookList extends StatelessWidget {
+  BookList(
     List<BookListItem>? this.bookList, {
     Key? key,
   }) : super(key: key);
   // ignore: prefer_typing_uninitialized_variables
   final bookList;
-
-  @override
-  State<BookList> createState() => BookListState();
-}
-
-class BookListState extends State<BookList> {
-  BookDetailsPage? bookDetails;
-  Book? selectedBook;
   final DatabaseHandler _databaseHandler = DatabaseHandler();
 
   @override
@@ -74,8 +65,8 @@ class BookListState extends State<BookList> {
           return Center(
             child: RawMaterialButton(
               onPressed: () async {
-                selectedBook = await _databaseHandler
-                    .selectedBook(widget.bookList[index].id);
+                Book selectedBook =
+                    await _databaseHandler.selectedBook(bookList[index].id);
                 // ignore: use_build_context_synchronously
                 Navigator.pushNamed(
                   context,
@@ -87,10 +78,10 @@ class BookListState extends State<BookList> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   image: DecorationImage(
-                    image: widget.bookList[index].has_cover == 1
+                    image: bookList[index].has_cover == 1
                         ? FileImage(
                             File(
-                                '${widget.bookList[index].fullPath}/${widget.bookList[index].path}/cover.jpg'),
+                                '${bookList[index].fullPath}/${bookList[index].path}/cover.jpg'),
                           )
                         : Image.asset('images/cover.png').image,
                     fit: BoxFit.cover,
@@ -100,90 +91,7 @@ class BookListState extends State<BookList> {
             ),
           );
         },
-        itemCount: widget.bookList.length,
-      ),
-    );
-  }
-
-  Widget listView(List<BookListItem> item, bool isWide) {
-    return ListView.builder(
-      itemCount: item.length,
-      itemExtent: 90,
-      itemBuilder: (context, index) => GestureDetector(
-          onTap: () async {
-            selectedBook = await _databaseHandler.selectedBook(item[index].id);
-            if (!isWide) {
-              // ignore: use_build_context_synchronously
-              Navigator.pushNamed(
-                context,
-                '/bookdetailspage',
-                arguments: selectedBook,
-              );
-            } else {
-              setState(() {
-                bookDetails = BookDetailsPage(
-                  book: selectedBook,
-                );
-              });
-            }
-          },
-          child: bookItem(item[index])),
-    );
-  }
-
-  Widget bookItem(BookListItem bookListItem) {
-    return Card(
-      child: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          color: Color.fromRGBO(98, 163, 191, 0.5),
-          boxShadow: [
-            BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.1),
-              offset: Offset(2, 2),
-              blurRadius: 40,
-            )
-          ],
-        ),
-        height: 70,
-        child: Row(
-          children: [
-            SizedBox(
-              width: 50,
-              child: bookListItem.has_cover == 1
-                  ? Image.file(File(
-                      '${bookListItem.fullPath}/${bookListItem.path}/cover.jpg'))
-                  : Image.asset('images/cover.png'),
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      bookListItem.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: Text(
-                      bookListItem.title,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
+        itemCount: bookList.length,
       ),
     );
   }
