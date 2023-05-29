@@ -15,6 +15,7 @@ import '../model/data.dart';
 class BookDetailsPage extends StatelessWidget {
   BookDetailsPage({Key? key, this.book}) : super(key: key);
   Book? book;
+
   @override
   Widget build(BuildContext context) {
     var routeSettings = ModalRoute.of(context)!.settings;
@@ -30,7 +31,9 @@ class BookDetailsPage extends StatelessWidget {
 }
 
 class BookDetailsContent extends ConsumerStatefulWidget {
-  const BookDetailsContent({Key? key, this.book}) : super(key: key);
+  const BookDetailsContent({Key? key, this.book, this.mainContext})
+      : super(key: key);
+  final BuildContext? mainContext;
   final Book? book;
 
   @override

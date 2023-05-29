@@ -13,6 +13,7 @@ dependencies:
   shared_preferences: ^2.0.15
   sqflite: ^2.0.3
   file_picker: ^5.0.1
+  msix: ^3.13.2
   io: ^1.0.3
   open_filex: ^4.3.2
   delayed_display: ^2.0.0
@@ -20,7 +21,7 @@ dependencies:
   flutter_riverpod: ^2.2.0
   permission_handler: ^10.2.0
   pluto_grid: ^7.0.2
-  flutter_html: ^2.2.1
+  flutter_html: ^3.0.0-beta.1
   image_size_getter: ^2.1.2
   equatable: ^2.0.5
   intl: ^0.18.0
@@ -77,8 +78,9 @@ flutter:
 
 msix_config:
   display_name: Flutibre
-  publisher_display_name: Richard Kurjak
-  identity_name: siretech.flutter.flutibre
+  publisher_display_name: Flutibre
+  identity_name: 8045Flutibre.Flutibre
   msix_version: 1.0.0.0
   logo_path: C:\Users\balza\VSCode\flutibre\images\bookshelf-icon2.png
   capabilities: "internetClient,location,microphone,webcam"
+  publisher: CN=32DEFD2D-9D37-49B8-8DD6-DA02364366C0

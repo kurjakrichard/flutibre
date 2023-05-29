@@ -73,7 +73,7 @@ class _HomePageState extends ConsumerState<HomePage>
       ),
       drawer: drawerNavigation(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: Consumer(
+      /*  floatingActionButton: Consumer(
         builder: (_, ref, child) {
           return FloatingActionButton(
             onPressed: () async {
@@ -83,7 +83,7 @@ class _HomePageState extends ConsumerState<HomePage>
             child: const Icon(Icons.add),
           );
         },
-      ),
+      ),*/
       body: PageView(
         /// Wrapping the tabs with PageView
         controller: controller,
