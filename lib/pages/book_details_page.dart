@@ -170,6 +170,7 @@ class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
                 parentDir.delete(recursive: true);
               }
               ref.read(bookListProvider.notifier).deleteBook(widget.book!.id);
+              // ignore: use_build_context_synchronously
               Navigator.maybePop(context);
             },
           ),

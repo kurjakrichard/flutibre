@@ -29,15 +29,15 @@ class _ListPageState extends ConsumerState<ListPage>
     } else if (state is BookListLoading) {
       return const Center(child: CircularProgressIndicator());
     } else if (state is BookListEmpty) {
-      return const Center(
-        child: Text('No books'),
+      return Center(
+        child: Text(AppLocalizations.of(context)!.emptylibrary),
       );
     } else if (state is FilteredBookListLoaded) {
       return BookList(state.bookList);
     } else if (state is BookListLoaded) {
       return BookList(state.bookList);
     } else {
-      return const Text('Error');
+      return Text(AppLocalizations.of(context)!.error);
     }
   }
 }
@@ -95,6 +95,7 @@ class BookListState extends State<BookList> {
           onTap: () async {
             selectedBook = await _databaseHandler.selectedBook(item[index].id);
             if (!isWide) {
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).clearMaterialBanners();
               // ignore: use_build_context_synchronously
               Navigator.pushNamed(

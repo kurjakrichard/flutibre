@@ -32,7 +32,7 @@
   "@chosepath": {
     "description": "Calibre library selection"
   },
-  "newlibrary": "Pick an empty folder to create a new library",
+  "newlibrary": "Pick an empty folder to create a new library.",
   "@newlibrary": {
     "description": "New library"
   },
@@ -64,9 +64,13 @@
   "@tiles": {
     "description": "Tiles button"
   },
-  "datatable": "Data table",
-  "@tiles": {
-    "description": "Data table"
+  "datagrid": "Data grid",
+  "@datagrid": {
+    "description": "Data grid"
+  },
+   "error": "Error",
+  "@error": {
+    "description": "Error"
   },
   "addbook": "Add book",
   "@addbook": {
@@ -79,6 +83,10 @@
   "author": "Author",
   "@author": {
     "description": "Author text"
+  },
+  "date": "Date",
+  "@date": {
+    "description": "Date"
   },
   "language": "Language",
   "@language": {
@@ -127,5 +135,13 @@
   "pickfolder": "Pick folder",
   "@pickfolder": {
     "description": "Pick folder"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close"
+  },
+  "search": "Search term",
+  "@search": {
+    "description": "Search term"
   }
 }

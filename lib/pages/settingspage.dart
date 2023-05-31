@@ -1,9 +1,10 @@
 // ignore_for_file: unused_field
+
 import 'dart:async';
 import 'dart:io' as io;
 import 'dart:io';
-// ignore: unnecessary_import
 import 'package:flutibre/providers/booklist_provider.dart';
+// ignore: unnecessary_import
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
@@ -118,6 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Text(AppLocalizations.of(context)!.chosepath),
           const Text(' '),
           Text(AppLocalizations.of(context)!.newlibrary),
+          const Text(' '),
           Text(AppLocalizations.of(context)!.attention),
         ]),
         const SizedBox(

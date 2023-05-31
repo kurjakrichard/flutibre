@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
 import '../providers/book_list_state.dart';
@@ -28,15 +29,15 @@ class _DataGridState extends ConsumerState<DataGrid>
     } else if (state is BookListLoading) {
       return const Center(child: CircularProgressIndicator());
     } else if (state is BookListEmpty) {
-      return const Center(
-        child: Text('No books'),
+      return Center(
+        child: Text(AppLocalizations.of(context)!.emptylibrary),
       );
     } else if (state is FilteredBookListLoaded) {
       return BookList(state.bookList);
     } else if (state is BookListLoaded) {
       return BookList(state.bookList);
     } else {
-      return const Text('Error');
+      return Text(AppLocalizations.of(context)!.error);
     }
   }
 }
@@ -85,7 +86,8 @@ class BookListState extends State<BookList> {
             SizedBox(
               width: 450,
               child: selectedBook == null
-                  ? const Center(child: Text('Nincs könyv kiválasztva'))
+                  ? Center(
+                      child: Text(AppLocalizations.of(context)!.nobookselected))
                   : bookDetails,
             ),
           ],
@@ -98,6 +100,7 @@ class BookListState extends State<BookList> {
     /// [PlutoGridStateManager] has many methods and properties to dynamically manipulate the grid.
     /// You can manipulate the grid dynamically at runtime by passing this through the [onLoaded] callback.
     late final PlutoGridStateManager stateManager;
+
     return PlutoGrid(
       mode: PlutoGridMode.selectWithOneTap,
       columns: columns,
@@ -105,6 +108,7 @@ class BookListState extends State<BookList> {
       onLoaded: (PlutoGridOnLoadedEvent event) {
         stateManager = event.stateManager;
         stateManager.setShowColumnFilter(false);
+        stateManager.notifyListeners();
       },
       onSelected: (event) async {
         int index = stateManager.currentRow!.cells.values.first.value;
@@ -144,7 +148,7 @@ class BookListState extends State<BookList> {
     ),
     PlutoColumn(
       frozen: PlutoColumnFrozen.start,
-      title: 'Name',
+      title: 'Author',
       field: 'name',
       type: PlutoColumnType.text(),
     ),

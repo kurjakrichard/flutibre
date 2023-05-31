@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutibre/providers/booklist_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
 import '../providers/book_list_state.dart';
@@ -27,15 +28,15 @@ class _GridPageState extends ConsumerState<GridPage>
     } else if (state is BookListLoading) {
       return const Center(child: CircularProgressIndicator());
     } else if (state is BookListEmpty) {
-      return const Center(
-        child: Text('No books'),
+      return Center(
+        child: Text(AppLocalizations.of(context)!.emptylibrary),
       );
     } else if (state is FilteredBookListLoaded) {
       return BookList(state.bookList);
     } else if (state is BookListLoaded) {
       return BookList(state.bookList);
     } else {
-      return const Text('Error');
+      return Text(AppLocalizations.of(context)!.error);
     }
   }
 }

@@ -49,12 +49,12 @@ class _HomePageState extends ConsumerState<HomePage>
                           .filteredBookItemList(value);
                     },
                     textInputAction: TextInputAction.go,
-                    decoration: const InputDecoration(
-                      icon: Icon(
+                    decoration: InputDecoration(
+                      icon: const Icon(
                         Icons.search,
                       ),
                       border: InputBorder.none,
-                      hintText: 'Search term',
+                      hintText: AppLocalizations.of(context)!.search,
                     ),
                   ),
                   actions: [
@@ -62,7 +62,7 @@ class _HomePageState extends ConsumerState<HomePage>
                       onPressed: () {
                         ScaffoldMessenger.of(context).clearMaterialBanners();
                       },
-                      child: const Text('Bezárás'),
+                      child: Text(AppLocalizations.of(context)!.close),
                     )
                   ],
                 ),
@@ -73,7 +73,7 @@ class _HomePageState extends ConsumerState<HomePage>
       ),
       drawer: drawerNavigation(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      /*  floatingActionButton: Consumer(
+      floatingActionButton: Consumer(
         builder: (_, ref, child) {
           return FloatingActionButton(
             onPressed: () async {
@@ -83,7 +83,7 @@ class _HomePageState extends ConsumerState<HomePage>
             child: const Icon(Icons.add),
           );
         },
-      ),*/
+      ),
       body: PageView(
         /// Wrapping the tabs with PageView
         controller: controller,
@@ -119,7 +119,7 @@ class _HomePageState extends ConsumerState<HomePage>
           BottomNavigationBarItem(
             label: '',
             icon: Tooltip(
-                message: AppLocalizations.of(context)!.datatable,
+                message: AppLocalizations.of(context)!.datagrid,
                 child: const Icon(Icons.dataset)),
           )
         ],

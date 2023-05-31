@@ -8,7 +8,7 @@
     "librarypath": "Könyvtár útvonal",
     "nolibraryselected": "Nincs könyvtár kiválasztva",
     "chosepath": "Válasszd ki a Calibre könyvtárat!",
-    "newlibrary": "Üres mappa esetén új könyvtár jön létre",
+    "newlibrary": "Üres mappa esetén új könyvtár jön létre.",
     "attention": "Az ingyenes verzió csak létező Calibre könyvtár megtekintésére használható. Nincs lehetőség hozzáadásra, törlésre, szerkesztésre.",
     "emptylibrary": "Üres könyvtár",
     "nobookselected": "Nincs könyv kiválasztva",
@@ -16,10 +16,12 @@
     "cancel": "Mégse",
     "list": "Lista nézet",
     "tiles": "Rács nézet",
-    "datatable": "Részletes lista",
+    "datagrid": "Részletes lista",
+    "error": "Hiba",
     "addbook": "Könyv hozzáadása",
     "title": "Cím",
     "author": "Szerző",
+    "date": "Dátum",
     "create": "Hozzáad",
     "confirmation": "Biztos vagy benne?",
     "titlerequired": "A cím megadása kötelező!",
@@ -28,7 +30,9 @@
     "wanttodelete": "Biztosan törlöd?",
     "back": "Vissza",
     "open": "Megnyit",
+    "close": "Bezárás",
     "openbook": "Könyv megnyitás",
     "comment": "Tartalom",
-    "pickfolder": "Mappa választó"
+    "pickfolder": "Mappa választó",
+    "search": "Keresés"
 }
