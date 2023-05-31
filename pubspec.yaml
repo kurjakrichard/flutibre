@@ -79,8 +79,11 @@ flutter:
 msix_config:
   display_name: Flutibre
   publisher_display_name: Flutibre
+  publisher: CN=32DEFD2D-9D37-49B8-8DD6-DA02364366C0
+  sign_msix: false
   identity_name: 8045Flutibre.Flutibre
   msix_version: 1.0.0.0
   logo_path: C:\Users\balza\VSCode\flutibre\images\bookshelf-icon2.png
   capabilities: "internetClient,location,microphone,webcam"
-  publisher: CN=32DEFD2D-9D37-49B8-8DD6-DA02364366C0
+  store: true
+  
