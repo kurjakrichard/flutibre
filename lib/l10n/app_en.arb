@@ -21,7 +21,7 @@
     "description": "Dark theme"
   },
   "nolibraryselected": "No library selected",
-  "@librarypath": {
+  "@nolibraryselected": {
     "description": "Calibre library selection"
   },
   "librarypath": "Library path",
@@ -29,19 +29,23 @@
     "description": "Ebook library path"
   },
   "chosepath": "Please select Calibre library.",
-  "@librarypath": {
+  "@chosepath": {
     "description": "Calibre library selection"
   },
   "newlibrary": "Pick an empty folder to create a new library",
-  "@librarypath": {
+  "@newlibrary": {
     "description": "New library"
   },
+  "attention": "Free version is only a Calibre library viewer. No add, edit, delete funkction.",
+  "@attention": {
+    "description": "Free version is only a Calibre library viewer. No add, edit, delete funkction."
+  },
   "emptylibrary": "Empty library",
-  "@librarypath": {
+  "@emptylibrary": {
     "description": "Empty library"
   },
   "nobookselected": "No book selected",
-  "@librarypath": {
+  "@nobookselected": {
     "description": "No book selected"
   },
   "ok": "OK",

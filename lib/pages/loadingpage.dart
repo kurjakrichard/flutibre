@@ -19,7 +19,7 @@ class _LoadingScreenState extends ConsumerState<LoadingPage> {
   }
 
   void wait() async {
-    await Future.delayed(const Duration(seconds: 6));
+    await Future.delayed(const Duration(seconds: 3));
 
     ref.read(loadProvider.notifier).state = true;
   }
@@ -49,10 +49,10 @@ class _LoadingScreenState extends ConsumerState<LoadingPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  delayedDisplay(0, 'Loading'),
-                  delayedDisplay(2, '.'),
-                  delayedDisplay(3, '.'),
-                  delayedDisplay(4, '.'),
+                  delayedDisplay(100, 'Loading'),
+                  delayedDisplay(500, '.'),
+                  delayedDisplay(1000, '.'),
+                  delayedDisplay(1500, '.'),
                 ],
               ),
             ),
@@ -64,7 +64,7 @@ class _LoadingScreenState extends ConsumerState<LoadingPage> {
 
   Widget delayedDisplay(int delay, String displayText) {
     return DelayedDisplay(
-      delay: Duration(seconds: initialDelay.inSeconds + delay),
+      delay: Duration(milliseconds: initialDelay.inSeconds + delay),
       child: Text(
         displayText,
         style: const TextStyle(

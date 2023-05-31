@@ -118,6 +118,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Text(AppLocalizations.of(context)!.chosepath),
           const Text(' '),
           Text(AppLocalizations.of(context)!.newlibrary),
+          Text(AppLocalizations.of(context)!.attention),
         ]),
         const SizedBox(
           height: 12,
