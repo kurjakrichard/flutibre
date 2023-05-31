@@ -62,10 +62,9 @@ class BookListState extends State<BookList> {
 
   @override
   void initState() {
-    super.initState();
-
     bookListDataSource = BookListDataSource(widget.bookList);
     rows = bookListDataSource.dataGridRows!;
+    super.initState();
   }
 
   @override
