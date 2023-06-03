@@ -73,16 +73,24 @@ class _HomePageState extends ConsumerState<HomePage>
       ),
       drawer: drawerNavigation(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: Consumer(
-        builder: (_, ref, child) {
-          return FloatingActionButton(
-            onPressed: () async {
-              // ignore: todo
-              //TODO
-            },
-            child: const Icon(Icons.add),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(AppLocalizations.of(context)!.addialog),
+              actions: [
+                TextButton(
+                  child: Text(AppLocalizations.of(context)!.close),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           );
         },
+        child: const Icon(Icons.add),
       ),
       body: PageView(
         /// Wrapping the tabs with PageView

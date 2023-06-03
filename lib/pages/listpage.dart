@@ -7,6 +7,7 @@ import '../model/booklist_item.dart';
 import '../providers/book_list_state.dart';
 import '../providers/booklist_provider.dart';
 import '../repository/database_handler.dart';
+import '../utils/constants.dart';
 import 'book_details_page.dart';
 
 class ListPage extends ConsumerStatefulWidget {
@@ -62,7 +63,7 @@ class BookListState extends State<BookList> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      var isWide = constraints.maxWidth > 900;
+      var isWide = constraints.maxWidth > maxWidth;
       if (!isWide) {
         return listView(widget.bookList, isWide);
       } else {

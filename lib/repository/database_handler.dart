@@ -117,11 +117,9 @@ class DatabaseHandler {
   // Get book by id
   Future<Comment> getCommentById(int id) async {
     List<Map<String, dynamic>> dataMapList =
-        await _database!.query('comments', where: 'id = ?', whereArgs: [id]);
-
+        await _database!.query('comments', where: 'book = ?', whereArgs: [id]);
     Comment comment =
         dataMapList.isEmpty ? const Comment() : Comment.fromMap(dataMapList[0]);
-
     return comment;
   }
 

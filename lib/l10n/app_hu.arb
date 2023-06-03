@@ -10,7 +10,7 @@
     "chosepath": "Válasszd ki a Calibre könyvtárat!",
     "newlibrary": "Üres mappa esetén új könyvtár jön létre.",
     "attention": "Az ingyenes verzió csak létező Calibre könyvtár megtekintésére használható. Nincs lehetőség hozzáadásra, törlésre, szerkesztésre.",
-    "emptylibrary": "Üres könyvtár",
+    "emptylibrary": "Üres lista",
     "nobookselected": "Nincs könyv kiválasztva",
     "ok": "OK",
     "cancel": "Mégse",
@@ -34,5 +34,6 @@
     "openbook": "Könyv megnyitás",
     "comment": "Tartalom",
     "pickfolder": "Mappa választó",
-    "search": "Keresés"
+    "search": "Keresés",
+    "addialog": "Nincs hozzáadás funkció az ingyenes verzióban. Használd a Calibre-t a könyvek kezeléséhez."
 }

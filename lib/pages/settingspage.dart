@@ -187,6 +187,13 @@ class _SettingsPageState extends State<SettingsPage> {
       if (_tempPath != null && _newFolder) {
         await copyDatabase(_tempPath!, 'metadata.db');
         await copyDatabase(_tempPath!, 'metadata_db_prefs_backup.json');
+        await copyDatabase(
+            _tempPath!, 'Richard Kurjak/Flutibre user manual (1)/cover.jpg');
+        await copyDatabase(_tempPath!,
+            'Richard Kurjak/Flutibre user manual (1)/Flutibre user manual - Richard Kurjak.pdf');
+        await copyDatabase(
+            _tempPath!, 'Richard Kurjak/Flutibre user manual (1)/metadata.opf');
+
         _newFolder = false;
       }
       ref.read(bookListProvider.notifier);

@@ -55,6 +55,7 @@ class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
           ),
           actions: [
             IconButton(
+              tooltip: 'Delete book',
               icon: const Icon(Icons.delete),
               onPressed: () {
                 deleteDialog(context);
@@ -145,16 +146,16 @@ class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Want to delete'),
+        title: Text(AppLocalizations.of(context)!.wanttodelete),
         actions: [
           TextButton(
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           TextButton(
-            child: const Text('Ok'),
+            child: Text(AppLocalizations.of(context)!.ok),
             onPressed: () async {
               Navigator.pop(context);
               Directory dir = Directory(

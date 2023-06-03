@@ -52,6 +52,8 @@ flutter:
     - images/bookmark-icon.png
     - images/cover.png
     - assets/books/
+    - assets/books/Richard Kurjak/ 
+    - assets/books/Richard Kurjak/Flutibre user manual (1)/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -40,9 +40,9 @@
   "@attention": {
     "description": "Free version is only a Calibre library viewer. No add, edit, delete funkction."
   },
-  "emptylibrary": "Empty library",
+  "emptylibrary": "Empty list",
   "@emptylibrary": {
-    "description": "Empty library"
+    "description": "Empty list"
   },
   "nobookselected": "No book selected",
   "@nobookselected": {
@@ -141,6 +141,10 @@
     "description": "Close"
   },
   "search": "Search term",
+  "@search": {
+    "description": "Search term"
+  },
+  "addialog": "No add funkction in the free version. You need Calibre to manage your library.",
   "@search": {
     "description": "Search term"
   }

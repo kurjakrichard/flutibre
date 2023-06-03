@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../main.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
 import '../providers/book_list_state.dart';
 import '../providers/booklist_provider.dart';
 import '../repository/database_handler.dart';
+import '../utils/constants.dart';
 import 'book_details_page.dart';
 
 class DataGrid extends ConsumerStatefulWidget {
@@ -24,6 +26,7 @@ class _DataGridState extends ConsumerState<DataGrid>
   Widget build(BuildContext context) {
     super.build(context);
     final state = ref.watch(bookListProvider);
+
     if (state is BookListInitial) {
       return const SizedBox();
     } else if (state is BookListLoading) {
@@ -33,9 +36,13 @@ class _DataGridState extends ConsumerState<DataGrid>
         child: Text(AppLocalizations.of(context)!.emptylibrary),
       );
     } else if (state is FilteredBookListLoaded) {
-      return BookList(state.bookList);
+      return BookList(
+        state.bookList,
+      );
     } else if (state is BookListLoaded) {
-      return BookList(state.bookList);
+      return BookList(
+        state.bookList,
+      );
     } else {
       return Text(AppLocalizations.of(context)!.error);
     }
@@ -71,7 +78,7 @@ class BookListState extends State<BookList> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      var isWide = constraints.maxWidth > 900;
+      var isWide = constraints.maxWidth > maxWidth;
       if (!isWide) {
         return plutoGrid(isWide);
       } else {
@@ -148,7 +155,7 @@ class BookListState extends State<BookList> {
     ),
     PlutoColumn(
       frozen: PlutoColumnFrozen.start,
-      title: 'Author',
+      title: prefs.getString('locale') == 'en' ? 'Author' : 'Szerző',
       field: 'name',
       type: PlutoColumnType.text(),
     ),
@@ -159,12 +166,12 @@ class BookListState extends State<BookList> {
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
-      title: 'Title',
+      title: prefs.getString('locale') == 'en' ? 'Title' : 'Cím',
       field: 'title',
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
-      title: 'Date',
+      title: prefs.getString('locale') == 'en' ? 'Date' : 'Dátum',
       field: 'timestamp',
       type: PlutoColumnType.date(),
     ),
