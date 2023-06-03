@@ -9,7 +9,7 @@
     "nolibraryselected": "Nincs könyvtár kiválasztva",
     "chosepath": "Válasszd ki a Calibre könyvtárat!",
     "newlibrary": "Üres mappa esetén új könyvtár jön létre.",
-    "attention": "Az ingyenes verzió csak létező Calibre könyvtár megtekintésére használható. Nincs lehetőség hozzáadásra, törlésre, szerkesztésre.",
+    "attention": "Az ingyenes verzióban nincs lehetőség könyvek hozzáadásra és szerkesztésére.",
     "emptylibrary": "Üres lista",
     "nobookselected": "Nincs könyv kiválasztva",
     "ok": "OK",

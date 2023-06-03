@@ -36,9 +36,9 @@
   "@newlibrary": {
     "description": "New library"
   },
-  "attention": "Free version is only a Calibre library viewer. No add, edit, delete funkction.",
+  "attention": "Free version has no add and edit funkction.",
   "@attention": {
-    "description": "Free version is only a Calibre library viewer. No add, edit, delete funkction."
+    "description": "Free version has no add and edit funkction."
   },
   "emptylibrary": "Empty list",
   "@emptylibrary": {
