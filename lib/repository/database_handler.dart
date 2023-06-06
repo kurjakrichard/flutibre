@@ -139,38 +139,30 @@ class DatabaseHandler {
   void deleteBook(int id) async {
     _database!.execute('DELETE FROM books WHERE id = $id');
   }
-/*
+
   // Insert Operation: Insert new record to database
-  Future<int> insertBook(Book book) async {
-    if (Platform.isWindows || Platform.isLinux) {
-      try {
-        await _database!.execute('DROP TRIGGER books_insert_trg');
-        return await _database!.insert('books', book.toMap());
-      } catch (e) {
-        throw Exception('Some error$e');
-      } finally {
-         _database!.select(
-            'CREATE TRIGGER books_insert_trg AFTER INSERT ON books BEGIN UPDATE books SET sort=title_sort(NEW.title),uuid=uuid4() WHERE id=NEW.id; END');
-      }
-    } else {
-      return await _database!.insert('books', book.toMap());
+  void insertBook(Book book) async {
+    try {
+      _database!.execute('DROP TRIGGER books_insert_trg');
+      return _database!.execute('INSERT books');
+    } catch (e) {
+      throw Exception('Some error$e');
+    } finally {
+      _database!.select(
+          'CREATE TRIGGER books_insert_trg AFTER INSERT ON books BEGIN UPDATE books SET sort=title_sort(NEW.title),uuid=uuid4() WHERE id=NEW.id; END');
     }
   }
 
   // Update Operation: Update record in the database
-  Future<int> updateBook(Book book) async {
-    var result = await _database!
-        .update('books', book.toMap(), where: 'id = ?', whereArgs: [book.id]);
-    return result;
+  void updateBook(Book book) async {
+    var result = _database!.execute('');
   }
-
-  
 
   // Get the numbers of the records in database
   Future<int> getCountBooks() async {
-    List<Map<String, dynamic>> records =
-        await _database!.rawQuery('SELECT COUNT (*) FROM books');
-    int result = Sqflite.firstIntValue(records) ?? 0;
-    return result;
-  }*/
+    // List<Map<String, dynamic>> records =
+    //     _database!.execute('SELECT COUNT (*) FROM books');
+    // int result = Sqflite.firstIntValue(records) ?? 0;
+    return 0;
+  }
 }
