@@ -77,15 +77,17 @@ flutter:
           weight: 700
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
+  
+  # sign_msix: false, store: true for Windows Store
+  # sign_msix: true, store: false for local installer
 msix_config:
   display_name: Flutibre
   publisher_display_name: Flutibre
   publisher: CN=32DEFD2D-9D37-49B8-8DD6-DA02364366C0
-  sign_msix: false
+  sign_msix: true
   identity_name: 8045Flutibre.Flutibre
   msix_version: 1.0.0.0
   logo_path: C:\Users\balza\VSCode\flutibre\images\bookshelf-icon2.png
   capabilities: "internetClient,location,microphone,webcam"
-  store: true
+  store: false
   
