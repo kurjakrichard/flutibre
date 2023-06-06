@@ -1,9 +1,7 @@
 // ignore_for_file: unused_field
-
 import 'dart:async';
 import 'dart:io' as io;
 import 'dart:io';
-import 'package:flutibre/providers/booklist_provider.dart';
 // ignore: unnecessary_import
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../main.dart';
+import '../providers/booklist_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);

@@ -1,10 +1,10 @@
-import 'package:flutibre/providers/booklist_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutibre/pages/gridpage.dart';
-import 'package:flutibre/pages/listpage.dart';
+import '../providers/booklist_provider.dart';
 import 'datagrid.dart';
+import 'gridpage.dart';
+import 'listpage.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);

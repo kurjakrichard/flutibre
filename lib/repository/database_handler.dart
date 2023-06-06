@@ -1,10 +1,10 @@
 // ignore_for_file: depend_on_referenced_packages
-import 'package:flutibre/model/author.dart';
-import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../main.dart';
+import 'package:sqlite3/sqlite3.dart';
+import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
+import '../model/author.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
 import '../model/comment.dart';
@@ -29,52 +29,25 @@ class DatabaseHandler {
   Future<Database> initialDatabase() async {
     if (prefs.getString('path') == null ||
         await Directory(prefs.getString('path')!).list().isEmpty) {
-      return await databaseFactoryFfi.openDatabase(inMemoryDatabasePath);
-    }
-    if (Platform.isWindows || Platform.isLinux) {
-      return await desktopDatabase();
+      return sqlite3.openInMemory();
     } else {
-      return await mobileDatabase();
+      return sqlite3.open('${prefs.getString('path')!}/metadata.db');
     }
-  }
-
-  Future<Database> desktopDatabase() async {
-    sqfliteFfiInit();
-    DatabaseFactory databaseFactory = databaseFactoryFfi;
-    _database = await databaseFactory
-        .openDatabase('${prefs.getString('path')!}/metadata.db');
-
-    return database;
-  }
-
-  Future<Future<Database>> mobileDatabase() async {
-    return openDatabase(
-      ('${prefs.getString('path')!}/metadata.db'),
-      onCreate: (database, version) async {
-        //never run
-        await database.execute(
-          "CREATE TABLE books(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, series_index REAL, author_sort TEXT NOT NULL )",
-        );
-      },
-      version: 1,
-    );
   }
 
   // Get Booklist from database
   Future<List<BookListItem>> getBookItemList() async {
     _database = await initialDatabase();
+    var resultSet = await _database!.select('SELECT COUNT(*) FROM books');
+    int? count = resultSet.length;
 
-    int? count = Sqflite.firstIntValue(
-        await _database!.rawQuery('SELECT COUNT(*) FROM books'));
-
-    List<Map<String, dynamic>> bookMapList = count != 0
-        ? await _database!.rawQuery(
-            'SELECT DISTINCT books.id, (SELECT group_concat(name, " & ") from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE book = books.id) as name, author_sort, title, books.sort, series_index, timestamp, has_cover, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id ORDER BY books.sort')
-        : [];
     List<BookListItem> bookListItems = <BookListItem>[];
 
-    if (bookMapList.isNotEmpty) {
-      for (var item in bookMapList) {
+    if (count != 0) {
+      var resultSet = await _database!.select(
+          'SELECT DISTINCT books.id, (SELECT group_concat(name) from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE book = books.id) as name, author_sort, title, books.sort, series_index, timestamp, has_cover, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id ORDER BY books.sort');
+      print(resultSet.length);
+      for (var item in resultSet) {
         BookListItem bookListItem = BookListItem.fromMap(item);
 
         bookListItems.add(bookListItem);
@@ -88,8 +61,8 @@ class DatabaseHandler {
   // Get Booklist from database
   Future<List<BookListItem>> getResultBookList(String searchItem) async {
     _database = await initialDatabase();
-    List<Map<String, dynamic>> bookMapList = await _database!.rawQuery(
-        'SELECT DISTINCT books.id, (SELECT group_concat(name, " & ") from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE book = books.id) as name, author_sort, title, books.sort, series_index, timestamp, has_cover, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id WHERE title LIKE ? OR name LIKE ? ORDER BY books.sort',
+    List<Map<String, dynamic>> bookMapList = _database!.select(
+        'SELECT DISTINCT books.id, (SELECT group_concat(name) from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE book = books.id) as name, author_sort, title, books.sort, series_index, timestamp, has_cover, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id WHERE title LIKE ? OR name LIKE ? ORDER BY books.sort',
         ['%${searchItem.toLowerCase()}%', '%${searchItem.toLowerCase()}%']);
     List<BookListItem> bookListItems = <BookListItem>[];
 
@@ -108,7 +81,7 @@ class DatabaseHandler {
   // Get book by id
   Future<Book> getBookById(int id) async {
     List<Map<String, dynamic>> bookMapById =
-        await _database!.query('books', where: 'id = ?', whereArgs: [id]);
+        _database!.select('SELECT * FROM books WHERE id = $id');
 
     Book bookById = Book.fromMap(bookMapById[0]);
     return bookById;
@@ -117,7 +90,7 @@ class DatabaseHandler {
   // Get book by id
   Future<Comment> getCommentById(int id) async {
     List<Map<String, dynamic>> dataMapList =
-        await _database!.query('comments', where: 'book = ?', whereArgs: [id]);
+        await _database!.select('SELECT * FROM comments WHERE book = $id');
     Comment comment =
         dataMapList.isEmpty ? const Comment() : Comment.fromMap(dataMapList[0]);
     return comment;
@@ -125,9 +98,8 @@ class DatabaseHandler {
 
   // Get authors by bookid
   Future<List<Author>> getAuthorsByBookId(int bookId) async {
-    List<Map<String, dynamic>> dataMapList = await _database!.rawQuery(
-        'SELECT authors.id, authors.name, authors.sort, authors.link from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE books_authors_link.book = ? ',
-        [bookId]);
+    List<Map<String, dynamic>> dataMapList = _database!.select(
+        'SELECT authors.id, authors.name, authors.sort, authors.link from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE books_authors_link.book = $bookId ');
     List<Author> dataList = <Author>[];
 
     for (var item in dataMapList) {
@@ -140,7 +112,7 @@ class DatabaseHandler {
   // Get book formats from database
   Future<List<Data>> getFormatsById(int id) async {
     List<Map<String, dynamic>> dataMapList =
-        await _database!.query('data', where: 'book = ?', whereArgs: [id]);
+        _database!.select('SELECT * FROM data WHERE book = $id');
     List<Data> dataList = <Data>[];
 
     for (var item in dataMapList) {
@@ -163,6 +135,11 @@ class DatabaseHandler {
     return selectedBook;
   }
 
+  // Delete Operation: Delete record from database
+  void deleteBook(int id) async {
+    _database!.execute('DELETE FROM books WHERE id = $id');
+  }
+/*
   // Insert Operation: Insert new record to database
   Future<int> insertBook(Book book) async {
     if (Platform.isWindows || Platform.isLinux) {
@@ -172,7 +149,7 @@ class DatabaseHandler {
       } catch (e) {
         throw Exception('Some error$e');
       } finally {
-        await _database!.rawQuery(
+         _database!.select(
             'CREATE TRIGGER books_insert_trg AFTER INSERT ON books BEGIN UPDATE books SET sort=title_sort(NEW.title),uuid=uuid4() WHERE id=NEW.id; END');
       }
     } else {
@@ -187,12 +164,7 @@ class DatabaseHandler {
     return result;
   }
 
-  // Delete Operation: Delete record from database
-  Future<int> deleteBook(int id) async {
-    int result =
-        await _database!.delete('books', where: 'id = ?', whereArgs: [id]);
-    return result;
-  }
+  
 
   // Get the numbers of the records in database
   Future<int> getCountBooks() async {
@@ -200,5 +172,5 @@ class DatabaseHandler {
         await _database!.rawQuery('SELECT COUNT (*) FROM books');
     int result = Sqflite.firstIntValue(records) ?? 0;
     return result;
-  }
+  }*/
 }

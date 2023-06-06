@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../model/book.dart';
 import '../repository/database_handler.dart';
 import 'book_list_state.dart';
 
@@ -20,7 +19,7 @@ class BookListNotifier extends StateNotifier<BookListState> {
   Future<void> loadBookItemList() async {
     state = BookListLoading();
     try {
-      await Future.delayed(const Duration(seconds: 0));
+      await Future.delayed(const Duration(seconds: 2));
 
       final bookList = await _databaseProvider.getBookItemList();
       if (bookList.isEmpty) {
@@ -31,6 +30,7 @@ class BookListNotifier extends StateNotifier<BookListState> {
         );
       }
     } catch (e) {
+      print(e);
       state = BookListFailure();
       throw Exception();
     }
@@ -55,6 +55,17 @@ class BookListNotifier extends StateNotifier<BookListState> {
     }
   }
 
+  Future<void> deleteBook(id) async {
+    state = BookListLoading();
+    await Future.delayed(const Duration(seconds: 2));
+    try {
+      _databaseProvider.deleteBook(id);
+      loadBookItemList();
+    } on Exception {
+      state = BookListFailure();
+    }
+  }
+/*
   Future<void> editBook(Book book) async {
     Book newBook = book;
     state = BookListLoading();
@@ -71,14 +82,5 @@ class BookListNotifier extends StateNotifier<BookListState> {
     }
   }
 
-  Future<void> deleteBook(id) async {
-    state = BookListLoading();
-    await Future.delayed(const Duration(seconds: 2));
-    try {
-      await _databaseProvider.deleteBook(id);
-      loadBookItemList();
-    } on Exception {
-      state = BookListFailure();
-    }
-  }
+ */
 }

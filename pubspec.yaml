@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.0.15
-  sqflite: ^2.0.3
+  sqlite3: ^1.11.2
   file_picker: ^5.0.1
   msix: ^3.13.2
   io: ^1.0.3
@@ -34,7 +34,7 @@ dev_dependencies:
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
-  sqflite_common_ffi: ^2.1.0+2
+  sqlite3_flutter_libs: ^0.5.15
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
