@@ -75,20 +75,7 @@ class _HomePageState extends ConsumerState<HomePage>
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text(AppLocalizations.of(context)!.addialog),
-              actions: [
-                TextButton(
-                  child: Text(AppLocalizations.of(context)!.close),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          );
+          Navigator.pushNamed(context, '/addpage');
         },
         child: const Icon(Icons.add),
       ),

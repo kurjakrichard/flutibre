@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../model/book.dart';
 import '../repository/database_handler.dart';
 import 'book_list_state.dart';
 
@@ -65,22 +66,20 @@ class BookListNotifier extends StateNotifier<BookListState> {
       state = BookListFailure();
     }
   }
-/*
+
   Future<void> editBook(Book book) async {
     Book newBook = book;
     state = BookListLoading();
     try {
       await Future.delayed(const Duration(seconds: 2));
       if (book.id == null) {
-        await _databaseProvider.insertBook(newBook);
+        _databaseProvider.insertBook(newBook);
       } else {
-        await _databaseProvider.updateBook(newBook);
+        _databaseProvider.updateBook(newBook);
       }
       state = BookListSuccess();
     } on Exception {
       state = BookListFailure();
     }
   }
-
- */
 }

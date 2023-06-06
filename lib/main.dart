@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/l10n.dart';
+import 'pages/add_edit_page.dart';
 import 'pages/book_details_page.dart';
 import 'pages/homepage.dart';
 import 'pages/loadingpage.dart';
@@ -70,6 +71,12 @@ class Flutibre extends StatelessWidget {
                 '/homepage': (context) => const HomePage(),
                 '/bookdetailspage': (context) => BookDetailsPage(),
                 '/settings': (context) => const SettingsPage(),
+                '/addpage': (context) => const AddEditPage(
+                      title: 'Add book',
+                    ),
+                '/editpage': (context) => const AddEditPage(
+                      title: 'Edit book',
+                    )
               },
               debugShowCheckedModeBanner: false,
               title: 'Flutibre',
