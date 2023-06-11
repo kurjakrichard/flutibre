@@ -31,7 +31,6 @@ class BookListNotifier extends StateNotifier<BookListState> {
         );
       }
     } catch (e) {
-      print(e);
       state = BookListFailure();
       throw Exception();
     }
@@ -52,7 +51,7 @@ class BookListNotifier extends StateNotifier<BookListState> {
       }
     } catch (e) {
       state = BookListFailure();
-      throw Exception();
+      throw Exception(e);
     }
   }
 
@@ -67,7 +66,7 @@ class BookListNotifier extends StateNotifier<BookListState> {
     }
   }
 
-  Future<void> editBook(Book book) async {
+  Future<void> insertBook(Book book) async {
     Book newBook = book;
     state = BookListLoading();
     try {

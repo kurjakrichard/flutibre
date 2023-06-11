@@ -12,54 +12,36 @@ import '../model/data.dart';
 import '../providers/booklist_provider.dart';
 import '../providers/shared_preferences_provider.dart';
 
-// ignore: must_be_immutable
-class BookDetailsPage extends StatelessWidget {
-  BookDetailsPage({Key? key, this.book}) : super(key: key);
+class BookDetailsPage extends ConsumerStatefulWidget {
+  const BookDetailsPage({Key? key, this.book}) : super(key: key);
+  final Book? book;
+
+  @override
+  ConsumerState<BookDetailsPage> createState() => _BookDetailsPageState();
+}
+
+class _BookDetailsPageState extends ConsumerState<BookDetailsPage> {
   Book? book;
 
   @override
   Widget build(BuildContext context) {
     var routeSettings = ModalRoute.of(context)!.settings;
-
     if (routeSettings.arguments != null) {
       book = routeSettings.arguments as Book;
+    } else {
+      book = widget.book;
     }
-
-    return BookDetailsContent(
-      book: book,
-    );
-  }
-}
-
-class BookDetailsContent extends ConsumerStatefulWidget {
-  const BookDetailsContent({Key? key, this.book, this.mainContext})
-      : super(key: key);
-  final BuildContext? mainContext;
-  final Book? book;
-
-  @override
-  ConsumerState<BookDetailsContent> createState() => _BookDetailsContentState();
-}
-
-class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.book!.title,
+            book!.title,
           ),
           actions: [
             IconButton(
               tooltip: 'Delete book',
               icon: const Icon(Icons.delete),
               onPressed: () {
-                deleteDialog(context);
+                deleteDialog(context, ref);
               },
             ),
           ],
@@ -78,10 +60,10 @@ class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
               ),
               bookDetailElement(
                   detailType: '${AppLocalizations.of(context)!.title}: ',
-                  detailContent: widget.book!.title),
+                  detailContent: book!.title),
               bookDetailElement(
                   detailType: '${AppLocalizations.of(context)!.author}: ',
-                  detailContent: authors(widget.book!.authors!)),
+                  detailContent: authors(book!.authors!)),
               const SizedBox(
                 height: 8,
               ),
@@ -96,7 +78,7 @@ class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    for (Data item in widget.book!.formats!)
+                    for (Data item in book!.formats!)
                       Padding(
                         padding: const EdgeInsets.only(right: 16.0, bottom: 16),
                         child: ElevatedButton(
@@ -109,7 +91,7 @@ class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
                           })),
                           onPressed: () {
                             String bookPath =
-                                '${prefs.getString('path')}/${widget.book!.path}/${widget.book!.formats![0].name}.${item.format.toLowerCase()}';
+                                '${prefs.getString('path')}/${book!.path}/${book!.formats![0].name}.${item.format.toLowerCase()}';
 
                             OpenFilex.open(bookPath);
                           },
@@ -123,8 +105,7 @@ class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
               bookDetailElement(
                   detailType: '${AppLocalizations.of(context)!.comment}:  ',
                   detailContent:
-                      parse(widget.book!.comment!.text).documentElement?.text ??
-                          ''),
+                      parse(book!.comment!.text).documentElement?.text ?? ''),
             ],
           ),
         ));
@@ -141,8 +122,8 @@ class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
   }
 
   Image loadCover() {
-    int hasCover = widget.book!.has_cover;
-    String path = widget.book!.path;
+    int hasCover = book!.has_cover;
+    String path = book!.path;
     String bookPath = '${prefs.getString('path')}/$path/cover.jpg';
 
     return hasCover == 1
@@ -153,7 +134,7 @@ class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
         : Image.asset('images/cover.png');
   }
 
-  Future<dynamic> deleteDialog(BuildContext context) {
+  Future<dynamic> deleteDialog(BuildContext context, WidgetRef ref) {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -170,18 +151,18 @@ class _BookDetailsContentState extends ConsumerState<BookDetailsContent> {
             onPressed: () async {
               Navigator.pop(context);
               Directory dir = Directory(
-                  '${ref.read(sharedPreferencesProvider).getString('path')!}/${widget.book!.path}');
+                  '${ref.read(sharedPreferencesProvider).getString('path')!}/${book!.path}');
               Directory parentDir = Directory(
-                  '${ref.read(sharedPreferencesProvider).getString('path')!}/${widget.book!.path.split('/')[0]}');
+                  '${ref.read(sharedPreferencesProvider).getString('path')!}/${book!.path.split('/')[0]}');
               await dir.delete(recursive: true);
               bool isEmpty = await Directory(
-                      '${ref.read(sharedPreferencesProvider).getString('path')!}/${widget.book!.path.split('/')[0]}')
+                      '${ref.read(sharedPreferencesProvider).getString('path')!}/${book!.path.split('/')[0]}')
                   .list()
                   .isEmpty;
               if (isEmpty) {
                 parentDir.delete(recursive: true);
               }
-              ref.read(bookListProvider.notifier).deleteBook(widget.book!.id);
+              ref.read(bookListProvider.notifier).deleteBook(book!.id);
               // ignore: use_build_context_synchronously
               Navigator.maybePop(context);
             },

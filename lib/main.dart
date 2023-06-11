@@ -69,7 +69,7 @@ class Flutibre extends StatelessWidget {
                 '/': (context) =>
                     isMetadataDb ? const HomePage() : const SettingsPage(),
                 '/homepage': (context) => const HomePage(),
-                '/bookdetailspage': (context) => BookDetailsPage(),
+                '/bookdetailspage': (context) => const BookDetailsPage(),
                 '/settings': (context) => const SettingsPage(),
                 '/addpage': (context) => const AddEditPage(
                       title: 'Add book',

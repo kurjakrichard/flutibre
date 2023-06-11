@@ -1,9 +1,10 @@
 // ignore_for_file: depend_on_referenced_packages
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/material.dart';
+
 import '../main.dart';
 import 'package:sqlite3/sqlite3.dart';
-import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 import '../model/author.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
@@ -38,18 +39,18 @@ class DatabaseHandler {
   // Get Booklist from database
   Future<List<BookListItem>> getBookItemList() async {
     _database = await initialDatabase();
-    var resultSet = await _database!.select('SELECT COUNT(*) FROM books');
+    var resultSet = _database!.select('SELECT COUNT(*) FROM books');
     int? count = resultSet.length;
 
     List<BookListItem> bookListItems = <BookListItem>[];
 
     if (count != 0) {
-      var resultSet = await _database!.select(
+      var resultSet = _database!.select(
           'SELECT DISTINCT books.id, (SELECT group_concat(name) from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE book = books.id) as name, author_sort, title, books.sort, series_index, timestamp, has_cover, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id ORDER BY books.sort');
-      print(resultSet.length);
+
       for (var item in resultSet) {
         BookListItem bookListItem = BookListItem.fromMap(item);
-
+        print(bookListItem.title);
         bookListItems.add(bookListItem);
       }
       return bookListItems;
@@ -90,7 +91,7 @@ class DatabaseHandler {
   // Get book by id
   Future<Comment> getCommentById(int id) async {
     List<Map<String, dynamic>> dataMapList =
-        await _database!.select('SELECT * FROM comments WHERE book = $id');
+        _database!.select('SELECT * FROM comments WHERE book = $id');
     Comment comment =
         dataMapList.isEmpty ? const Comment() : Comment.fromMap(dataMapList[0]);
     return comment;
@@ -144,25 +145,27 @@ class DatabaseHandler {
   void insertBook(Book book) async {
     try {
       _database!.execute('DROP TRIGGER books_insert_trg');
-      return _database!.execute('INSERT books');
+      final stmt = _database!.prepare('INSERT INTO books (title) VALUES (?)');
+      return stmt.execute(['The Beatles']);
     } catch (e) {
       throw Exception('Some error$e');
     } finally {
-      _database!.select(
+      _database!.execute(
           'CREATE TRIGGER books_insert_trg AFTER INSERT ON books BEGIN UPDATE books SET sort=title_sort(NEW.title),uuid=uuid4() WHERE id=NEW.id; END');
     }
   }
 
   // Update Operation: Update record in the database
   void updateBook(Book book) async {
-    var result = _database!.execute('');
+    _database!.execute('');
   }
 
   // Get the numbers of the records in database
   Future<int> getCountBooks() async {
-    // List<Map<String, dynamic>> records =
-    //     _database!.execute('SELECT COUNT (*) FROM books');
-    // int result = Sqflite.firstIntValue(records) ?? 0;
+    ResultSet records = _database!.select('SELECT COUNT (*) FROM books');
+    for (var element in records) {
+      debugPrint(element.entries.first.toString());
+    }
     return 0;
   }
 }
