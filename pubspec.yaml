@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.0.15
+  easy_splash_screen:
   sqlite3: ^1.11.2
   file_picker: ^5.0.1
   msix: ^3.13.2

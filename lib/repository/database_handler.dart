@@ -50,12 +50,11 @@ class DatabaseHandler {
 
       for (var item in resultSet) {
         BookListItem bookListItem = BookListItem.fromMap(item);
-        print(bookListItem.title);
         bookListItems.add(bookListItem);
       }
       return bookListItems;
     }
-
+    _database!.dispose();
     return bookListItems;
   }
 
@@ -95,6 +94,28 @@ class DatabaseHandler {
     Comment comment =
         dataMapList.isEmpty ? const Comment() : Comment.fromMap(dataMapList[0]);
     return comment;
+  }
+
+// Get Booklist from database
+  Future<List<Author>> getAuthorList() async {
+    _database = await initialDatabase();
+    var resultSet = _database!.select('SELECT COUNT(*) FROM authors');
+    int? count = resultSet.length;
+
+    List<Author> authorList = <Author>[];
+
+    if (count != 0) {
+      var resultSet = _database!.select('SELECT * from authors');
+
+      for (var item in resultSet) {
+        Author author = Author.fromMap(item);
+        print(author.name);
+        authorList.add(author);
+      }
+      return authorList;
+    }
+    _database!.dispose();
+    return authorList;
   }
 
   // Get authors by bookid

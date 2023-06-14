@@ -1,12 +1,12 @@
+import 'package:flutibre/pages/splash_page.dart';
 import 'package:flutibre/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/l10n.dart';
-import 'pages/add_edit_page.dart';
+import 'pages/update_page.dart';
 import 'pages/book_details_page.dart';
 import 'pages/homepage.dart';
-import 'pages/loadingpage.dart';
 import 'pages/settingspage.dart';
 import 'providers/locale_provider.dart';
 import 'providers/shared_preferences_provider.dart';
@@ -15,9 +15,6 @@ import 'widgets/theme.dart';
 import 'dart:io' as io;
 
 late SharedPreferences prefs;
-final loadProvider = StateProvider<bool>((ref) {
-  return false;
-});
 final themeProvider = StateNotifierProvider<ThemeProvider, bool>((ref) {
   return ThemeProvider(ref: ref);
 });
@@ -54,8 +51,7 @@ class Flutibre extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (context, ref, child) => ref.watch(loadProvider)
-          ? MaterialApp(
+        builder: (context, ref, child) => MaterialApp(
               localizationsDelegates: L10n.delegates,
               locale: Locale(ref.watch(localeProvider)),
               supportedLocales: L10n.locales,
@@ -67,21 +63,19 @@ class Flutibre extends StatelessWidget {
               initialRoute: '/',
               routes: {
                 '/': (context) =>
-                    isMetadataDb ? const HomePage() : const SettingsPage(),
+                    isMetadataDb ? const SplashPage() : const SettingsPage(),
                 '/homepage': (context) => const HomePage(),
                 '/bookdetailspage': (context) => const BookDetailsPage(),
                 '/settings': (context) => const SettingsPage(),
-                '/addpage': (context) => const AddEditPage(
+                '/addpage': (context) => const UpdatePage(
                       title: 'Add book',
                     ),
-                '/editpage': (context) => const AddEditPage(
+                '/editpage': (context) => const UpdatePage(
                       title: 'Edit book',
                     )
               },
               debugShowCheckedModeBanner: false,
               title: 'Flutibre',
-            )
-          : const LoadingPage(),
-    );
+            ));
   }
 }
