@@ -11,10 +11,8 @@ import '../repository/database_handler.dart';
 import '../utils/constants.dart';
 
 class UpdatePage extends ConsumerStatefulWidget {
-  const UpdatePage({Key? key, this.bookId, required this.title})
-      : super(key: key);
+  const UpdatePage({Key? key, required this.title}) : super(key: key);
   final String title;
-  final int? bookId;
 
   @override
   ConsumerState<UpdatePage> createState() => _UpdatePageState();
@@ -22,15 +20,23 @@ class UpdatePage extends ConsumerStatefulWidget {
 
 class _UpdatePageState extends ConsumerState<UpdatePage> {
   final DatabaseHandler _databaseHandler = DatabaseHandler();
+  Book? book;
 
   @override
   void initState() {
     _databaseHandler.getAuthorList();
+    // book =     widget.addingBook ? _databaseHandler.getBookById(widget.bookId!) : null;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var routeSettings = ModalRoute.of(context)!.settings;
+    if (routeSettings.arguments != null) {
+      book = routeSettings.arguments as Book;
+    } else {
+      book = null;
+    }
     return WillPopScope(
       onWillPop: () async {
         var result = await showDialog(
@@ -67,14 +73,17 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
             return Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [listView(), Expanded(child: Placeholder())]);
+                children: [
+                  listView(600),
+                  const Expanded(child: Placeholder())
+                ]);
           } else {
             return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  listView(),
-                  SingleChildScrollView(
+                  listView(maxWidth),
+                  const SingleChildScrollView(
                       child: SizedBox(height: 40, child: Placeholder()))
                 ]);
           }
@@ -83,12 +92,12 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
     );
   }
 
-  Widget listView() {
+  Widget listView(double width) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: FormBuilder(
         child: SizedBox(
-          width: 600,
+          width: width,
           height: 220,
           child: ListView(
             shrinkWrap: true,
@@ -100,6 +109,7 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
               textField(
                   context: context,
                   name: 'title',
+                  initialValue: book?.title,
                   icon: Icons.book,
                   labelText: AppLocalizations.of(context)!.title,
                   hintText: AppLocalizations.of(context)!.title,
@@ -107,6 +117,7 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
               textField(
                   context: context,
                   name: 'author',
+                  initialValue: book?.authors?[0].name,
                   icon: Icons.person,
                   labelText: AppLocalizations.of(context)!.author,
                   hintText: AppLocalizations.of(context)!.author,
@@ -168,6 +179,7 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
   Widget textField(
       {BuildContext? context,
       required String name,
+      String? initialValue,
       required IconData icon,
       required String labelText,
       required String hintText,
@@ -176,6 +188,7 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
       padding: const EdgeInsets.only(bottom: 8),
       child: FormBuilderTextField(
         name: name,
+        initialValue: initialValue ?? '',
         decoration: InputDecoration(
             icon: Icon(icon),
             labelText: labelText,

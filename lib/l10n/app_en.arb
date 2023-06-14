@@ -1,5 +1,9 @@
 {
   "@@locale": "en",
+  "loading": "Loading",
+  "@loading": {
+    "description": "Loading"
+  },
   "homepage": "HomePage",
   "@homepage": {
     "description": "HomePage"
@@ -75,6 +79,14 @@
   "addbook": "Add book",
   "@addbook": {
     "description": "Add book text"
+  },
+  "editbook": "Edit book",
+  "@addbook": {
+    "description": "Edit book text"
+  },
+  "deletebook": "Delete book",
+  "@addbook": {
+    "description": "Delete book text"
   },
   "title": "Title",
   "@title": {

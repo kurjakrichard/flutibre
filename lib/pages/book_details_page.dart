@@ -38,7 +38,14 @@ class _BookDetailsPageState extends ConsumerState<BookDetailsPage> {
           ),
           actions: [
             IconButton(
-              tooltip: 'Delete book',
+              tooltip: AppLocalizations.of(context)!.editbook,
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                Navigator.pushNamed(context, '/editpage', arguments: book!);
+              },
+            ),
+            IconButton(
+              tooltip: AppLocalizations.of(context)!.deletebook,
               icon: const Icon(Icons.delete),
               onPressed: () {
                 deleteDialog(context, ref);

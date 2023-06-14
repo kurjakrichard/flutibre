@@ -1,5 +1,6 @@
 {
     "@@locale": "hu",
+    "loading": "Betöltés",
     "homepage": "Kezdőoldal",
     "settingspage": "Beállítások",
     "language": "Nyelv",
@@ -19,6 +20,8 @@
     "datagrid": "Részletes lista",
     "error": "Hiba",
     "addbook": "Könyv hozzáadása",
+    "editbook": "Könyv szerkesztése",
+    "deletebook": "Könyv törlése",
     "title": "Cím",
     "author": "Szerző",
     "date": "Dátum",

@@ -1,4 +1,5 @@
 import 'package:easy_splash_screen/easy_splash_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'homepage.dart';
 
@@ -17,13 +18,22 @@ class SplashPageState extends State<SplashPage> {
       title: const Text(
         "Flutibre",
         style: TextStyle(
+          color: Colors.black,
           fontSize: 28,
           fontWeight: FontWeight.normal,
         ),
       ),
-      backgroundColor: Colors.grey.shade400,
+      backgroundColor: Colors.cyan.shade50,
       showLoader: true,
-      loadingText: const Text("Loading..."),
+      loaderColor: Colors.black,
+      loadingText: Text(
+        "${AppLocalizations.of(context)!.loading}...",
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 22,
+          fontWeight: FontWeight.normal,
+        ),
+      ),
       navigator: const HomePage(),
       durationInSeconds: 3,
     );

@@ -76,7 +76,7 @@ class BookListState extends State<BookList> {
               width: 3,
             ),
             SizedBox(
-              width: 450,
+              width: 500,
               child: selectedBook == null
                   ? Center(
                       child: Text(AppLocalizations.of(context)!.nobookselected))
