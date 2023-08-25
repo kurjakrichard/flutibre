@@ -74,6 +74,7 @@ class _HomePageState extends ConsumerState<HomePage>
       drawer: drawerNavigation(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
         onPressed: () {
           Navigator.pushNamed(context, '/addpage');
         },

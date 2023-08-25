@@ -57,11 +57,7 @@ class _BookDetailsPageState extends ConsumerState<BookDetailsPage> {
           padding: const EdgeInsets.all(24.0),
           child: ListView(
             children: [
-              ConstrainedBox(
-                constraints:
-                    BoxConstraints.loose(const Size(double.minPositive, 400)),
-                child: loadCover(),
-              ),
+              loadCover(),
               const SizedBox(
                 height: 16,
               ),
@@ -136,9 +132,14 @@ class _BookDetailsPageState extends ConsumerState<BookDetailsPage> {
     return hasCover == 1
         ? Image.file(
             File(bookPath),
-            height: 600,
+            height: 400,
+            fit: BoxFit.fitHeight,
           )
-        : Image.asset('images/cover.png');
+        : Image.asset(
+            'images/cover.png',
+            fit: BoxFit.fitHeight,
+            height: 400,
+          );
   }
 
   Future<dynamic> deleteDialog(BuildContext context, WidgetRef ref) {

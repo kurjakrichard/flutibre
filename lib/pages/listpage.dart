@@ -133,13 +133,19 @@ class BookListState extends State<BookList> {
         ),
         height: 70,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              width: 50,
+              width: 60,
               child: bookListItem.has_cover == 1
-                  ? Image.file(File(
-                      '${bookListItem.fullPath}/${bookListItem.path}/cover.jpg'))
-                  : Image.asset('images/cover.png'),
+                  ? Image.file(
+                      File(
+                          '${bookListItem.fullPath}/${bookListItem.path}/cover.jpg'),
+                      fit: BoxFit.fitHeight)
+                  : Image.asset(
+                      'images/cover.png',
+                      fit: BoxFit.fitHeight,
+                    ),
             ),
             const SizedBox(
               width: 16,

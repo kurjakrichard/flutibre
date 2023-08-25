@@ -84,7 +84,7 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
                 children: [
                   listView(maxWidth),
                   const SingleChildScrollView(
-                      child: SizedBox(height: 40, child: Placeholder()))
+                      child: SizedBox(height: 50, child: Placeholder()))
                 ]);
           }
         }),
@@ -98,7 +98,7 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
       child: FormBuilder(
         child: SizedBox(
           width: width,
-          height: 220,
+          height: 270,
           child: ListView(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
