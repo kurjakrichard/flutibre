@@ -60,6 +60,7 @@ class DatabaseHandler {
 
   // Get Booklist from database
   Future<List<BookListItem>> getResultBookList(String searchItem) async {
+    _database = await initialDatabase();
     List<Map<String, dynamic>> bookMapList = _database!.select(
         'SELECT DISTINCT books.id, (SELECT group_concat(name) from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE book = books.id) as name, author_sort, title, books.sort, series_index, timestamp, has_cover, path from books INNER JOIN books_authors_link on books.id = books_authors_link.book INNER JOIN authors on books_authors_link.author = authors.id WHERE title LIKE ? OR name LIKE ? ORDER BY books.sort',
         ['%${searchItem.toLowerCase()}%', '%${searchItem.toLowerCase()}%']);
@@ -76,7 +77,8 @@ class DatabaseHandler {
   }
 
   // Get book by id
-  Book getBookById(int id) {
+  Future<Book> getBookById(int id) async {
+    _database = await initialDatabase();
     List<Map<String, dynamic>> bookMapById =
         _database!.select('SELECT * FROM books WHERE id = $id');
 
@@ -86,6 +88,7 @@ class DatabaseHandler {
 
   // Get book by id
   Future<Comment> getCommentById(int id) async {
+    _database = await initialDatabase();
     List<Map<String, dynamic>> dataMapList =
         _database!.select('SELECT * FROM comments WHERE book = $id');
     Comment comment =
@@ -95,6 +98,7 @@ class DatabaseHandler {
 
 // Get Booklist from database
   Future<List<Author>> getAuthorList() async {
+    _database = await initialDatabase();
     var resultSet = _database!.select('SELECT COUNT(*) FROM authors');
     int? count = resultSet.length;
     List<Author> authorList = <Author>[];
@@ -112,6 +116,7 @@ class DatabaseHandler {
 
   // Get authors by bookid
   Future<List<Author>> getAuthorsByBookId(int bookId) async {
+    _database = await initialDatabase();
     List<Map<String, dynamic>> dataMapList = _database!.select(
         'SELECT authors.id, authors.name, authors.sort, authors.link from authors INNER JOIN books_authors_link on authors.id = books_authors_link.author WHERE books_authors_link.book = $bookId ');
     List<Author> dataList = <Author>[];
@@ -125,6 +130,7 @@ class DatabaseHandler {
 
   // Get book formats from database
   Future<List<Data>> getFormatsById(int id) async {
+    _database = await initialDatabase();
     List<Map<String, dynamic>> dataMapList =
         _database!.select('SELECT * FROM data WHERE book = $id');
     List<Data> dataList = <Data>[];
@@ -138,7 +144,7 @@ class DatabaseHandler {
 
   //Get book by id
   Future<Book> selectedBook(int id) async {
-    Book? selectedBook = getBookById(id);
+    Book? selectedBook = await getBookById(id);
     List<Data>? formats = await getFormatsById(id);
     selectedBook.formats = formats;
     List<Author> authors = await getAuthorsByBookId(id);
@@ -149,17 +155,47 @@ class DatabaseHandler {
     return selectedBook;
   }
 
-  // Delete Operation: Delete record from database
-  void deleteBook(int id) async {
-    _database!.execute('DELETE FROM books WHERE id = $id');
+// Check the author has a book
+  Future<bool> checkAuthorBook(int id) async {
+    _database = await initialDatabase();
+    List<Map<String, dynamic>> authorMapById = await _database!
+        .select('SELECT * FROM books_authors_link WHERE id = $id');
+    return authorMapById.isEmpty ? false : true;
+  }
+
+  Future<int> authorIdByAuthorsort(String authorSort) async {
+    String author = "'$authorSort'";
+    _database = await initialDatabase();
+    List<Map<String, dynamic>> authorMapById =
+        await _database!.select('SELECT * FROM authors WHERE sort = $author');
+    return authorMapById.isNotEmpty ? authorMapById[0]['id'] : 0;
+  }
+
+  // Delete Operation: Delete book from database
+  void deleteBook(Book book) async {
+    _database = await initialDatabase();
+    int authorId = await authorIdByAuthorsort(book.author_sort);
+    _database!.execute('DELETE FROM books WHERE id = ${book.id}');
+    bool checkAuthorHasBook = await checkAuthorBook(authorId);
+    if (!checkAuthorHasBook) {
+      deleteAuthor(authorId);
+    }
+  }
+
+  // Delete Operation: Delete author from database
+  void deleteAuthor(int authorId) async {
+    _database = await initialDatabase();
+    _database!.execute('DELETE FROM authors WHERE id = $authorId');
   }
 
   // Insert Operation: Insert new record to database
   void insertBook(Book book) async {
+    _database = await initialDatabase();
     try {
       _database!.execute('DROP TRIGGER books_insert_trg');
-      final stmt = _database!.prepare('INSERT INTO books (title) VALUES (?)');
-      return stmt.execute(['The Beatles']);
+      final stmt = _database!
+          .prepare('INSERT INTO books (title, author_sort) VALUES (?, ?)');
+      return stmt.execute([book.title, book.author_sort]);
     } catch (e) {
       throw Exception('Some error$e');
     } finally {
@@ -170,6 +206,7 @@ class DatabaseHandler {
 
   // Update Operation: Update record in the database
   void updateBook(Book book) async {
+    _database = await initialDatabase();
     _database!.execute('');
   }
 
@@ -179,6 +216,6 @@ class DatabaseHandler {
     for (var element in records) {
       debugPrint(element.entries.first.toString());
     }
-    return 0;
+    return records.length;
   }
 }

@@ -55,11 +55,11 @@ class BookListNotifier extends StateNotifier<BookListState> {
     }
   }
 
-  Future<void> deleteBook(id) async {
+  Future<void> deleteBook(book) async {
     state = BookListLoading();
     await Future.delayed(const Duration(seconds: 2));
     try {
-      _databaseProvider.deleteBook(id);
+      _databaseProvider.deleteBook(book);
       loadBookItemList();
     } on Exception {
       state = BookListFailure();

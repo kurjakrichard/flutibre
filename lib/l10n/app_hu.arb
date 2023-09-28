@@ -29,7 +29,7 @@
     "confirmation": "Biztos vagy benne?",
     "titlerequired": "A cím megadása kötelező!",
     "authorrequired": "A szerző megadása kötelező!",
-    "languagerequired": "A nyelv megadása kötelező!",
+    "commentrequired": "A tartalom megadása kötelező!",
     "wanttodelete": "Biztosan törlöd?",
     "back": "Vissza",
     "open": "Megnyit",

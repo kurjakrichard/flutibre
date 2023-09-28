@@ -120,9 +120,9 @@
   "@authorrequired": {
     "description": "Author is required!"
   },
-  "languagerequired": "Language is required!",
-  "@languagerequired": {
-    "description": "Language is required!"
+  "commentrequired": "Comment is required!",
+  "@commentrequired": {
+    "description": "Comment is required!"
   },
   "wanttodelete": "Want to delete?",
   "@wanttodelete": {

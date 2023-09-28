@@ -124,11 +124,12 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
                   errorText: AppLocalizations.of(context)!.authorrequired),
               textField(
                   context: context,
-                  name: 'language',
-                  icon: Icons.language,
-                  labelText: AppLocalizations.of(context)!.language,
-                  hintText: AppLocalizations.of(context)!.language,
-                  errorText: AppLocalizations.of(context)!.languagerequired),
+                  name: 'comment',
+                  initialValue: book?.comment?.text ?? ' ',
+                  icon: Icons.comment,
+                  labelText: AppLocalizations.of(context)!.comment,
+                  hintText: AppLocalizations.of(context)!.comment,
+                  errorText: AppLocalizations.of(context)!.commentrequired),
               Builder(builder: (context) {
                 return Row(
                   children: [

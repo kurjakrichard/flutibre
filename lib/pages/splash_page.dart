@@ -23,7 +23,7 @@ class SplashPageState extends State<SplashPage> {
           fontWeight: FontWeight.normal,
         ),
       ),
-      backgroundColor: Colors.cyan.shade50,
+      //backgroundColor: Colors.cyan.shade50,
       showLoader: true,
       loaderColor: Colors.black,
       loadingText: Text(
