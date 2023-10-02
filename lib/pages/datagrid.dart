@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -33,7 +35,17 @@ class _DataGridState extends ConsumerState<DataGrid>
       return const Center(child: CircularProgressIndicator());
     } else if (state is BookListEmpty) {
       return Center(
-        child: Text(AppLocalizations.of(context)!.emptylibrary),
+        child: TweenAnimationBuilder<double>(
+          duration: const Duration(seconds: 2),
+          tween: Tween<double>(begin: 0, end: 1),
+          builder: (context, value, child) {
+            return Transform.rotate(
+                angle: value * 2 * pi,
+                alignment: Alignment.center,
+                child: child);
+          },
+          child: Text(AppLocalizations.of(context)!.emptylibrary),
+        ),
       );
     } else if (state is FilteredBookListLoaded) {
       return BookList(
