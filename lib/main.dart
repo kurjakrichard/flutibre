@@ -10,6 +10,7 @@ import 'pages/book_details_page.dart';
 import 'pages/homepage.dart';
 import 'pages/settingspage.dart';
 import 'providers/locale_provider.dart';
+import 'providers/path_provider.dart';
 import 'providers/shared_preferences_provider.dart';
 import 'utils/custom_scroll_behavior.dart';
 import 'widgets/theme.dart';
@@ -22,16 +23,16 @@ final themeProvider = StateNotifierProvider<ThemeProvider, bool>((ref) {
 final localeProvider = StateNotifierProvider<LocaleProvider, String>((ref) {
   return LocaleProvider(ref: ref);
 });
-
+final pathProvider = StateNotifierProvider<PathProvider, String>((ref) {
+  return PathProvider(ref: ref);
+});
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   prefs = await SharedPreferences.getInstance();
-  bool isMetadataDb = false;
 
   try {
     await io.File('${prefs.getString('path')}/metadata.db').length();
-    isMetadataDb = true;
   } on Exception {
     prefs.remove('path');
   }
@@ -40,14 +41,12 @@ void main() async {
     overrides: [
       sharedPreferencesProvider.overrideWithValue(prefs),
     ],
-    child: Flutibre(isMetadataDb),
+    child: const Flutibre(),
   ));
 }
 
 class Flutibre extends StatelessWidget {
-  const Flutibre(this.isMetadataDb, {Key? key}) : super(key: key);
-
-  final bool isMetadataDb;
+  const Flutibre({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +62,9 @@ class Flutibre extends StatelessWidget {
               scrollBehavior: CustomScrollBehavior(),
               initialRoute: '/',
               routes: {
-                '/': (context) =>
-                    isMetadataDb ? const SplashPage() : const SettingsPage(),
+                '/': (context) => ref.watch(pathProvider).isNotEmpty
+                    ? const SplashPage()
+                    : const SettingsPage(),
                 '/homepage': (context) => const HomePage(),
                 '/bookdetailspage': (context) => const BookDetailsPage(),
                 '/settings': (context) => const SettingsPage(),
