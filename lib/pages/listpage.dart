@@ -131,6 +131,7 @@ class BookListState extends State<BookList> {
 
   Widget bookItem(BookListItem bookListItem) {
     return Card(
+      elevation: 5,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: const BoxDecoration(

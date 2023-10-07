@@ -158,8 +158,8 @@ class DatabaseHandler {
 // Check the author has a book
   Future<bool> checkAuthorBook(int id) async {
     _database = await initialDatabase();
-    List<Map<String, dynamic>> authorMapById = await _database!
-        .select('SELECT * FROM books_authors_link WHERE id = $id');
+    List<Map<String, dynamic>> authorMapById =
+        _database!.select('SELECT * FROM books_authors_link WHERE id = $id');
     return authorMapById.isEmpty ? false : true;
   }
 
@@ -167,7 +167,7 @@ class DatabaseHandler {
     String author = "'$authorSort'";
     _database = await initialDatabase();
     List<Map<String, dynamic>> authorMapById =
-        await _database!.select('SELECT * FROM authors WHERE sort = $author');
+        _database!.select('SELECT * FROM authors WHERE sort = $author');
     return authorMapById.isNotEmpty ? authorMapById[0]['id'] : 0;
   }
 
