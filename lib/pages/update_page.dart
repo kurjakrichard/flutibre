@@ -163,6 +163,7 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
                               ref
                                   .read(bookListProvider.notifier)
                                   .insertBook(book);
+
                               Navigator.pop(context);
                             }
                           }),

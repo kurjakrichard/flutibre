@@ -1,8 +1,8 @@
 // ignore_for_file: depend_on_referenced_packages
 import 'dart:async';
 import 'dart:io';
+import 'package:flutibre/model/books_authors_link.dart';
 import 'package:flutter/material.dart';
-
 import '../main.dart';
 import 'package:sqlite3/sqlite3.dart';
 import '../model/author.dart';
@@ -193,14 +193,49 @@ class DatabaseHandler {
     _database = await initialDatabase();
     try {
       _database!.execute('DROP TRIGGER books_insert_trg');
-      final stmt = _database!
-          .prepare('INSERT INTO books (title, author_sort) VALUES (?, ?)');
-      return stmt.execute([book.title, book.author_sort]);
+      final stmt = _database!.prepare(
+          'INSERT INTO books (title, sort, author_sort) VALUES (?, ?, ?)');
+      stmt.execute([book.title, book.sort, book.author_sort]);
     } catch (e) {
       throw Exception('Some error$e');
     } finally {
       _database!.execute(
           'CREATE TRIGGER books_insert_trg AFTER INSERT ON books BEGIN UPDATE books SET sort=title_sort(NEW.title),uuid=uuid4() WHERE id=NEW.id; END');
+    }
+  }
+
+  void insertBooksAuthorsLink(BooksAuthorsLink booksAuthorsLink) async {
+    _database = await initialDatabase();
+    try {
+      _database!.execute('DROP TRIGGER "main"."fkc_insert_books_authors_link"');
+      final stmt = _database!.prepare(
+          'INSERT INTO books_authors_link (book, author) VALUES (?, ?)');
+      return stmt.execute([booksAuthorsLink.book, booksAuthorsLink.author]);
+    } catch (e) {
+      throw Exception('Some error$e');
+    } finally {
+      _database!.execute('''CREATE TRIGGER fkc_insert_books_authors_link
+        BEFORE INSERT ON books_authors_link
+        BEGIN
+          SELECT CASE
+              WHEN (SELECT id from books WHERE id=NEW.book) IS NULL
+              THEN RAISE(ABORT, 'Foreign key violation: book not in books')
+              WHEN (SELECT id from authors WHERE id=NEW.author) IS NULL
+              THEN RAISE(ABORT, 'Foreign key violation: author not in authors')
+          END;
+        END''');
+    }
+  }
+
+  // Insert Operation: Insert new record to database
+  void insertAuthor(Author author) async {
+    _database = await initialDatabase();
+    try {
+      final stmt = _database!
+          .prepare('INSERT INTO authors (name, sort, link) VALUES (?, ?, ?)');
+      return stmt.execute([author.name, author.sort, author.link]);
+    } catch (e) {
+      throw Exception('Some error$e');
     }
   }
 
