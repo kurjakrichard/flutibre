@@ -22,7 +22,7 @@ class BookListNotifier extends StateNotifier<BookListState> {
   Future<void> loadBookItemList() async {
     state = BookListLoading();
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      //await Future.delayed(const Duration(seconds: 2));
 
       final bookList = await _databaseProvider.getBookItemList();
       if (bookList.isEmpty) {

@@ -40,23 +40,7 @@ class _HomePageState extends ConsumerState<HomePage>
             onPressed: () {
               ScaffoldMessenger.of(context).showMaterialBanner(
                 MaterialBanner(
-                  content: TextField(
-                    key: globalKey,
-                    controller: searchController,
-                    onChanged: (value) async {
-                      ref
-                          .read(bookListProvider.notifier)
-                          .filteredBookItemList(value);
-                    },
-                    textInputAction: TextInputAction.go,
-                    decoration: InputDecoration(
-                      icon: const Icon(
-                        Icons.search,
-                      ),
-                      border: InputBorder.none,
-                      hintText: AppLocalizations.of(context)!.search,
-                    ),
-                  ),
+                  content: showBanner(context),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -120,6 +104,34 @@ class _HomePageState extends ConsumerState<HomePage>
           )
         ],
       ),
+    );
+  }
+
+  Widget showBanner(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+            tooltip: 'Reset',
+            onPressed: () async {
+              searchController.clear();
+              ref.read(bookListProvider.notifier).loadBookItemList();
+            },
+            icon: const Icon(Icons.clear)),
+        Expanded(
+          child: TextField(
+            key: globalKey,
+            controller: searchController,
+            onSubmitted: (value) async {
+              ref.read(bookListProvider.notifier).filteredBookItemList(value);
+            },
+            textInputAction: TextInputAction.go,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: AppLocalizations.of(context)!.search,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

@@ -50,10 +50,12 @@ class _DataGridState extends ConsumerState<DataGrid>
     } else if (state is FilteredBookListLoaded) {
       return BookList(
         state.bookList,
+        key: const ValueKey('Filtered'),
       );
     } else if (state is BookListLoaded) {
       return BookList(
         state.bookList,
+        key: const ValueKey('Full list'),
       );
     } else {
       return Text(AppLocalizations.of(context)!.error);
