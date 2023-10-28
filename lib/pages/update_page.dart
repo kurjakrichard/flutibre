@@ -7,7 +7,6 @@ import '../model/author.dart';
 import '../model/book.dart';
 import '../model/comment.dart';
 import '../providers/booklist_provider.dart';
-import '../repository/database_handler.dart';
 import '../utils/constants.dart';
 
 class UpdatePage extends ConsumerStatefulWidget {
@@ -19,15 +18,7 @@ class UpdatePage extends ConsumerStatefulWidget {
 }
 
 class _UpdatePageState extends ConsumerState<UpdatePage> {
-  final DatabaseHandler _databaseHandler = DatabaseHandler();
   Book? book;
-
-  @override
-  void initState() {
-    _databaseHandler.getAuthorList();
-    // book =     widget.addingBook ? _databaseHandler.getBookById(widget.bookId!) : null;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

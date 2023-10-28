@@ -108,7 +108,10 @@ class BookListState extends State<BookList> {
               width: 500,
               child: selectedBook == null
                   ? Center(
-                      child: Text(AppLocalizations.of(context)!.nobookselected))
+                      child: Text(
+                      AppLocalizations.of(context)!.nobookselected,
+                      style: const TextStyle(fontSize: 25),
+                    ))
                   : bookDetails,
             ),
           ],
@@ -136,6 +139,8 @@ class BookListState extends State<BookList> {
 
         selectedBook = await _databaseHandler.selectedBook(index);
         if (!isWide) {
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).clearMaterialBanners();
           // ignore: use_build_context_synchronously
           Navigator.pushNamed(
             context,

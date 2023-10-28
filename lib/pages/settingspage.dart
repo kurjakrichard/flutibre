@@ -49,9 +49,12 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.settingspage)),
       body: ListView(
         children: [
-          Wrap(
-              alignment: WrapAlignment.center,
-              children: [themeSwitcher(), languageSelector(), manageLibrary()]),
+          Wrap(alignment: WrapAlignment.center, children: [
+            if (true) themeSwitcher(),
+            themeSwitcher(),
+            languageSelector(),
+            manageLibrary()
+          ]),
         ],
       ),
     );

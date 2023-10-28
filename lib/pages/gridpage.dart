@@ -39,7 +39,8 @@ class _GridPageState extends ConsumerState<GridPage>
                 alignment: Alignment.center,
                 child: child);
           },
-          child: Text(AppLocalizations.of(context)!.emptylibrary),
+          child: Text(AppLocalizations.of(context)!.emptylibrary,
+              style: const TextStyle(fontSize: 25)),
         ),
       );
     } else if (state is FilteredBookListLoaded) {
@@ -77,6 +78,7 @@ class BookList extends StatelessWidget {
           return Center(
             child: RawMaterialButton(
               onPressed: () async {
+                ScaffoldMessenger.of(context).clearMaterialBanners();
                 Book selectedBook =
                     await _databaseHandler.selectedBook(bookList[index].id);
                 // ignore: use_build_context_synchronously

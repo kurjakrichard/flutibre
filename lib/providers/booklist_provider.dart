@@ -34,7 +34,7 @@ class BookListNotifier extends StateNotifier<BookListState> {
       }
     } catch (e) {
       state = BookListFailure();
-      throw Exception();
+      throw Exception(e);
     }
   }
 
@@ -75,8 +75,8 @@ class BookListNotifier extends StateNotifier<BookListState> {
       await Future.delayed(const Duration(seconds: 2));
       if (book.id == null) {
         _databaseProvider.insertBook(newBook);
-        _databaseProvider.insertAuthor(
-            Author(name: 'Brandon Sanderson', sort: 'Sanderson, Brandon'));
+        _databaseProvider.insertAuthor(const Author(
+            name: 'Brandon Sanderson', sort: 'Sanderson, Brandon'));
         _databaseProvider
             .insertBooksAuthorsLink(BooksAuthorsLink(book: 22, author: 10));
       } else {

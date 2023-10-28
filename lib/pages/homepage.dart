@@ -19,6 +19,7 @@ class _HomePageState extends ConsumerState<HomePage>
 
   @override
   bool get wantKeepAlive => true;
+  bool isShowBanner = false;
   TextEditingController searchController = TextEditingController();
   int currentIndex = 0;
   GlobalKey globalKey = GlobalKey();
@@ -38,19 +39,25 @@ class _HomePageState extends ConsumerState<HomePage>
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              ScaffoldMessenger.of(context).showMaterialBanner(
-                MaterialBanner(
-                  content: showBanner(context),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).clearMaterialBanners();
-                      },
-                      child: Text(AppLocalizations.of(context)!.close),
+              !isShowBanner
+                  ? ScaffoldMessenger.of(context).showMaterialBanner(
+                      MaterialBanner(
+                        content: showBanner(context),
+                        actions: [
+                          IconButton(
+                              tooltip: 'Reset',
+                              onPressed: () async {
+                                searchController.clear();
+                                ref
+                                    .read(bookListProvider.notifier)
+                                    .loadBookItemList();
+                              },
+                              icon: const Icon(Icons.clear))
+                        ],
+                      ),
                     )
-                  ],
-                ),
-              );
+                  : ScaffoldMessenger.of(context).clearMaterialBanners();
+              isShowBanner = !isShowBanner;
             },
           )
         ],
@@ -60,6 +67,7 @@ class _HomePageState extends ConsumerState<HomePage>
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         onPressed: () {
+          ScaffoldMessenger.of(context).clearMaterialBanners();
           Navigator.pushNamed(context, '/addpage');
         },
         child: const Icon(Icons.add),
@@ -110,13 +118,6 @@ class _HomePageState extends ConsumerState<HomePage>
   Widget showBanner(BuildContext context) {
     return Row(
       children: [
-        IconButton(
-            tooltip: 'Reset',
-            onPressed: () async {
-              searchController.clear();
-              ref.read(bookListProvider.notifier).loadBookItemList();
-            },
-            icon: const Icon(Icons.clear)),
         Expanded(
           child: TextField(
             key: globalKey,
@@ -168,7 +169,8 @@ class _HomePageState extends ConsumerState<HomePage>
             leading: const Icon(Icons.settings),
             title: Text(AppLocalizations.of(context)!.settingspage),
             onTap: () {
-              ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              ScaffoldMessenger.of(context).clearMaterialBanners();
+              isShowBanner = !isShowBanner;
               Navigator.pop(context);
               Navigator.pushNamed(context, '/settings');
             },

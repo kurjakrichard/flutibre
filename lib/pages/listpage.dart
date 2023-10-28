@@ -42,7 +42,8 @@ class _ListPageState extends ConsumerState<ListPage>
                   alignment: Alignment.center,
                   child: child);
             },
-            child: Text(AppLocalizations.of(context)!.emptylibrary),
+            child: Text(AppLocalizations.of(context)!.emptylibrary,
+                style: const TextStyle(fontSize: 25)),
           ),
         ),
       );
