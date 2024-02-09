@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -7,6 +8,7 @@ import '../model/author.dart';
 import '../model/book.dart';
 import '../model/comment.dart';
 import '../providers/booklist_provider.dart';
+import '../repository/database_handler.dart';
 import '../utils/constants.dart';
 
 class UpdatePage extends ConsumerStatefulWidget {
@@ -19,12 +21,14 @@ class UpdatePage extends ConsumerStatefulWidget {
 
 class _UpdatePageState extends ConsumerState<UpdatePage> {
   Book? book;
+  Author? selectedAuthor;
 
   @override
   Widget build(BuildContext context) {
     var routeSettings = ModalRoute.of(context)!.settings;
     if (routeSettings.arguments != null) {
       book = routeSettings.arguments as Book;
+      selectedAuthor = book!.authors![0];
     } else {
       book = null;
     }
@@ -105,14 +109,32 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
                   labelText: AppLocalizations.of(context)!.title,
                   hintText: AppLocalizations.of(context)!.title,
                   errorText: AppLocalizations.of(context)!.titlerequired),
-              textField(
-                  context: context,
-                  name: 'author',
-                  initialValue: book?.authors?[0].name,
-                  icon: Icons.person,
-                  labelText: AppLocalizations.of(context)!.author,
-                  hintText: AppLocalizations.of(context)!.author,
-                  errorText: AppLocalizations.of(context)!.authorrequired),
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownSearch<Author>(
+                      onChanged: (value) {
+                        selectedAuthor = value;
+                      },
+                      asyncItems: (String? filter) => getData(filter),
+                      popupProps: PopupPropsMultiSelection.modalBottomSheet(
+                        showSelectedItems: true,
+                        itemBuilder: _customPopupItemBuilderExample2,
+                        showSearchBox: true,
+                      ),
+                      compareFn: (item, sItem) => item.id == sItem.id,
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: selectedAuthor?.name,
+                          filled: true,
+                          fillColor:
+                              Theme.of(context).inputDecorationTheme.fillColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               textField(
                   context: context,
                   name: 'comment',
@@ -191,5 +213,34 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
         validator: MinLengthValidator(1, errorText: errorText),
       ),
     );
+  }
+
+  Widget _customPopupItemBuilderExample2(
+      BuildContext context, Author item, bool isSelected) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: !isSelected
+          ? null
+          : BoxDecoration(
+              border: Border.all(color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
+      child: ListTile(
+        selected: isSelected,
+        title: Text(item.name),
+      ),
+    );
+  }
+
+  Future<List<Author>> getData(filter) async {
+    DatabaseHandler databaseHandler = DatabaseHandler();
+
+    List<Author> authors = await databaseHandler.getAuthorList(filter);
+    if (authors.isNotEmpty) {
+      return authors;
+    }
+
+    return [];
   }
 }

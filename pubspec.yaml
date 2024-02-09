@@ -28,6 +28,7 @@ dependencies:
   image_size_getter: ^2.1.2
   equatable: ^2.0.5
   intl: ^0.18.0
+  dropdown_search: ^5.0.6
   flutter_localizations:
     sdk: flutter
 

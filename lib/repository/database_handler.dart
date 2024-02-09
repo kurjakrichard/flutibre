@@ -97,14 +97,15 @@ class DatabaseHandler {
   }
 
 // Get Booklist from database
-  Future<List<Author>> getAuthorList() async {
+  Future<List<Author>> getAuthorList(String? filter) async {
     _database = await initialDatabase();
     var resultSet = _database!.select('SELECT COUNT(*) FROM authors');
     int? count = resultSet.length;
     List<Author> authorList = <Author>[];
 
     if (count != 0) {
-      var resultSet = _database!.select('SELECT * from authors');
+      var resultSet =
+          _database!.select('SELECT * from authors WHERE name = $filter');
       for (var item in resultSet) {
         Author author = Author.fromMap(item);
         authorList.add(author);

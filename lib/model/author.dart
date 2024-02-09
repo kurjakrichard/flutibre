@@ -18,6 +18,14 @@ class Author extends Equatable {
     return {'name': name, 'sort': sort, 'link': link};
   }
 
+  ///this method will prevent the override of toString
+  String userAsString() {
+    return '#$id $name';
+  }
+
+  @override
+  String toString() => name;
+
   @override
   List<Object?> get props => [id, name, sort, link];
 }
