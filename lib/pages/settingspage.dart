@@ -51,7 +51,6 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           Wrap(alignment: WrapAlignment.center, children: [
             if (true) themeSwitcher(),
-            themeSwitcher(),
             languageSelector(),
             manageLibrary()
           ]),

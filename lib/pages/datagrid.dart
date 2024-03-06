@@ -209,7 +209,7 @@ class BookListDataSource {
       PlutoRow row = PlutoRow(
         cells: {
           'id': PlutoCell(value: item.id),
-          'name': PlutoCell(value: item.name),
+          'name': PlutoCell(value: item.authors),
           'author_sort': PlutoCell(value: item.author_sort),
           'title': PlutoCell(value: item.title),
           'sort': PlutoCell(value: item.sort),

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../main.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
 import '../providers/book_list_state.dart';
@@ -95,7 +96,7 @@ class BookList extends StatelessWidget {
                     image: bookList[index].has_cover == 1
                         ? FileImage(
                             File(
-                                '${bookList[index].fullPath}/${bookList[index].path}/cover.jpg'),
+                                '${prefs.getString('path')}/${bookList[index].path}/cover.jpg'),
                           )
                         : Image.asset('images/cover.png').image,
                     fit: BoxFit.cover,

@@ -158,9 +158,9 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
                               var book = Book(
                                   title: form.value['title']!,
                                   authors: [
-                                    Author(id: 1, name: form.value['author'])
+                                    Author(id: 1, name: selectedAuthor!.name)
                                   ],
-                                  author_sort: form.value['author'],
+                                  author_sort: selectedAuthor!.name,
                                   comment:
                                       const Comment(book: 1, id: 1, text: ''),
                                   formats: const [],
@@ -235,7 +235,6 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
 
   Future<List<Author>> getData(filter) async {
     DatabaseHandler databaseHandler = DatabaseHandler();
-
     List<Author> authors = await databaseHandler.getAuthorList(filter);
     if (authors.isNotEmpty) {
       return authors;

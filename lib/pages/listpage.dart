@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../main.dart';
 import '../model/book.dart';
 import '../model/booklist_item.dart';
 import '../providers/book_list_state.dart';
@@ -155,7 +156,7 @@ class BookListState extends State<BookList> {
               child: bookListItem.has_cover == 1
                   ? Image.file(
                       File(
-                          '${bookListItem.fullPath}/${bookListItem.path}/cover.jpg'),
+                          '${prefs.getString('path')}/${bookListItem.path}/cover.jpg'),
                       fit: BoxFit.fitHeight)
                   : Image.asset(
                       'images/cover.png',
@@ -172,7 +173,7 @@ class BookListState extends State<BookList> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
-                      bookListItem.name,
+                      bookListItem.authors,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontSize: 16),
                     ),

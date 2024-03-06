@@ -1,6 +1,4 @@
-import 'package:flutibre/model/books_authors_link.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../model/author.dart';
 import '../model/book.dart';
 import '../repository/database_handler.dart';
 import 'book_list_state.dart';
@@ -75,10 +73,8 @@ class BookListNotifier extends StateNotifier<BookListState> {
       await Future.delayed(const Duration(seconds: 2));
       if (book.id == null) {
         _databaseProvider.insertBook(newBook);
-        _databaseProvider.insertAuthor(const Author(
-            name: 'Brandon Sanderson', sort: 'Sanderson, Brandon'));
-        _databaseProvider
-            .insertBooksAuthorsLink(BooksAuthorsLink(book: 22, author: 10));
+        // _databaseProvider.insertAuthor(const Author(name: 'Brandon Sanderson', sort: 'Sanderson, Brandon'));
+        //_databaseProvider.insertBooksAuthorsLink(BooksAuthorsLink(book: 22, author: 10));
       } else {
         _databaseProvider.updateBook(newBook);
       }
