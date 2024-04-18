@@ -107,7 +107,9 @@ class BookListState extends State<BookList> {
     return ListView.builder(
       itemCount: item.length,
       itemExtent: 90,
-      itemBuilder: (context, index) => GestureDetector(
+      itemBuilder: (context, index) => InkWell(
+          highlightColor: const Color.fromARGB(255, 47, 119, 177),
+          splashColor: Colors.green,
           onTap: () async {
             selectedBook = await _databaseHandler.selectedBook(item[index].id);
             if (!isWide) {

@@ -22,7 +22,6 @@ class _HomePageState extends ConsumerState<HomePage>
   bool isShowBanner = false;
   TextEditingController searchController = TextEditingController();
   int currentIndex = 0;
-  bool isSearching = false;
   GlobalKey globalKey = GlobalKey();
   final List<Widget> tabPages = [
     const ListPage(),
@@ -34,7 +33,35 @@ class _HomePageState extends ConsumerState<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: appBar(context),
+      appBar: AppBar(
+        title: const Text("Flutibre"),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              !isShowBanner
+                  ? ScaffoldMessenger.of(context).showMaterialBanner(
+                      MaterialBanner(
+                        content: showBanner(context),
+                        actions: [
+                          IconButton(
+                              tooltip: 'Reset',
+                              onPressed: () async {
+                                searchController.clear();
+                                ref
+                                    .read(bookListProvider.notifier)
+                                    .loadBookItemList();
+                              },
+                              icon: const Icon(Icons.clear))
+                        ],
+                      ),
+                    )
+                  : ScaffoldMessenger.of(context).clearMaterialBanners();
+              isShowBanner = !isShowBanner;
+            },
+          )
+        ],
+      ),
       drawer: drawerNavigation(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
@@ -150,79 +177,6 @@ class _HomePageState extends ConsumerState<HomePage>
           )
         ]),
       ),
-    );
-  }
-
-  PreferredSizeWidget? appBar2(BuildContext context) {
-    return AppBar(
-      title: const Text("Flutibre"),
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: () {
-            !isShowBanner
-                ? ScaffoldMessenger.of(context).showMaterialBanner(
-                    MaterialBanner(
-                      content: showBanner(context),
-                      actions: [
-                        IconButton(
-                            tooltip: 'Reset',
-                            onPressed: () async {
-                              searchController.clear();
-                              ref
-                                  .read(bookListProvider.notifier)
-                                  .loadBookItemList();
-                            },
-                            icon: const Icon(Icons.clear))
-                      ],
-                    ),
-                  )
-                : ScaffoldMessenger.of(context).clearMaterialBanners();
-            isShowBanner = !isShowBanner;
-          },
-        )
-      ],
-    );
-  }
-
-  PreferredSizeWidget? appBar(BuildContext context) {
-    return AppBar(
-      title: !isSearching
-          ? const Text('Flutibre')
-          : TextField(
-              onSubmitted: (value) => ref
-                  .read(bookListProvider.notifier)
-                  .filteredBookItemList(value),
-              cursorColor: Colors.white,
-              style: Theme.of(context).textTheme.titleMedium,
-              decoration: const InputDecoration(
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                hintText: 'Search book',
-                //hintStyle: TextStyle(color: Colors.white)
-              ),
-            ),
-      actions: <Widget>[
-        isSearching
-            ? IconButton(
-                onPressed: () {
-                  setState(() {
-                    isSearching = false;
-                    searchController.clear();
-                    ref.read(bookListProvider.notifier).loadBookItemList();
-                  });
-                },
-                icon: const Icon(Icons.cancel))
-            : IconButton(
-                onPressed: () {
-                  setState(() {
-                    isSearching = true;
-                  });
-                },
-                icon: const Icon(Icons.search))
-      ],
     );
   }
 }
