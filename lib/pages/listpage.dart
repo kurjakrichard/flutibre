@@ -106,7 +106,7 @@ class BookListState extends State<BookList> {
   Widget listView(List<BookListItem> item, bool isWide) {
     return ListView.builder(
       itemCount: item.length,
-      itemExtent: 90,
+      itemExtent: 110,
       itemBuilder: (context, index) => InkWell(
           highlightColor: const Color.fromARGB(255, 47, 119, 177),
           splashColor: Colors.green,
@@ -149,12 +149,12 @@ class BookListState extends State<BookList> {
             )
           ],
         ),
-        height: 70,
+        height: 110,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              width: 60,
+              width: 80,
               child: bookListItem.has_cover == 1
                   ? Image.file(
                       File(

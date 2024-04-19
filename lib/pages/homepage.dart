@@ -35,7 +35,7 @@ class _HomePageState extends ConsumerState<HomePage>
     super.build(context);
     return Scaffold(
       appBar: appBar(context),
-      drawer: drawerNavigation(context),
+      drawer: !isSearching ? drawerNavigation(context) : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),

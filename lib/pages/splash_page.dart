@@ -35,7 +35,7 @@ class SplashPageState extends State<SplashPage> {
         ),
       ),
       navigator: const HomePage(),
-      durationInSeconds: 3,
+      durationInSeconds: 1,
     );
   }
 }
