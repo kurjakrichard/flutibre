@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, non_constant_identifier_names
 
 import 'package:equatable/equatable.dart';
 
@@ -19,6 +19,7 @@ class BookListItem extends Equatable {
   String formats;
   String isbn;
   String path;
+  String? name;
   String lccn;
   String pubdate;
   String last_modified;
@@ -41,6 +42,7 @@ class BookListItem extends Equatable {
     this.formats = '',
     this.isbn = '',
     this.path = '',
+    this.name = '',
     this.lccn = '',
     this.pubdate = '',
     this.last_modified = '',
@@ -64,6 +66,7 @@ class BookListItem extends Equatable {
         formats = res['formats'] ?? '',
         isbn = res['isbn'],
         path = res['path'],
+        name = res['name'],
         lccn = res['lccn'],
         pubdate = res['pubdate'],
         last_modified = res['last_modified'].toString(),

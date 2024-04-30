@@ -110,7 +110,7 @@ class BookListState extends State<BookList> {
       itemBuilder: (context, index) => InkWell(
           highlightColor: const Color.fromARGB(255, 47, 119, 177),
           splashColor: Colors.green,
-          onTap: () async {
+          onLongPress: () async {
             selectedBook = await _databaseHandler.selectedBook(item[index].id);
             if (!isWide) {
               // ignore: use_build_context_synchronously
@@ -119,6 +119,25 @@ class BookListState extends State<BookList> {
               Navigator.pushNamed(
                 context,
                 '/bookdetailspage',
+                arguments: selectedBook,
+              );
+            } else {
+              setState(() {
+                bookDetails = BookDetailsPage(
+                  book: selectedBook,
+                );
+              });
+            }
+          },
+          onTap: () async {
+            selectedBook = await _databaseHandler.selectedBook(item[index].id);
+            if (!isWide) {
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context).clearMaterialBanners();
+              // ignore: use_build_context_synchronously
+              Navigator.pushNamed(
+                context,
+                '/readspage',
                 arguments: selectedBook,
               );
             } else {
@@ -177,7 +196,7 @@ class BookListState extends State<BookList> {
                     child: Text(
                       bookListItem.authors,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ),
                   Padding(
@@ -185,7 +204,7 @@ class BookListState extends State<BookList> {
                     child: Text(
                       bookListItem.title,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 15),
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ],

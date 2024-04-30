@@ -134,7 +134,7 @@ class BookListState extends State<BookList> {
         stateManager.setShowColumnFilter(false);
         stateManager.notifyListeners();
       },
-      onSelected: (event) async {
+      onRowDoubleTap: (event) async {
         int index = stateManager.currentRow!.cells.values.first.value;
 
         selectedBook = await _databaseHandler.selectedBook(index);
@@ -145,6 +145,27 @@ class BookListState extends State<BookList> {
           Navigator.pushNamed(
             context,
             '/bookdetailspage',
+            arguments: selectedBook,
+          );
+        } else {
+          setState(() {
+            bookDetails = BookDetailsPage(
+              book: selectedBook,
+            );
+          });
+        }
+      },
+      onSelected: (event) async {
+        int index = stateManager.currentRow!.cells.values.first.value;
+
+        selectedBook = await _databaseHandler.selectedBook(index);
+        if (!isWide) {
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).clearMaterialBanners();
+          // ignore: use_build_context_synchronously
+          Navigator.pushNamed(
+            context,
+            '/readpage',
             arguments: selectedBook,
           );
         } else {
