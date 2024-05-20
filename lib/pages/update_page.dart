@@ -32,8 +32,9 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
     } else {
       book = null;
     }
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didpop) async {
         var result = await showDialog(
           context: context,
           builder: (context) => AlertDialog(

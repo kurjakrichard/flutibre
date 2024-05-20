@@ -130,13 +130,13 @@ class BookListState extends State<BookList> {
             }
           },
           onTap: () async {
+            final nav = Navigator.of(context);
             selectedBook = await _databaseHandler.selectedBook(item[index].id);
             if (!isWide) {
               // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).clearMaterialBanners();
               // ignore: use_build_context_synchronously
-              Navigator.pushNamed(
-                context,
+              nav.pushNamed(
                 '/readspage',
                 arguments: selectedBook,
               );

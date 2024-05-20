@@ -79,23 +79,22 @@ class BookList extends StatelessWidget {
           return Center(
             child: RawMaterialButton(
               onLongPress: () async {
+                final nav = Navigator.of(context);
                 ScaffoldMessenger.of(context).clearMaterialBanners();
                 Book selectedBook =
                     await _databaseHandler.selectedBook(bookList[index].id);
-                // ignore: use_build_context_synchronously
-                Navigator.pushNamed(
-                  context,
+
+                nav.pushNamed(
                   '/bookdetailspage',
                   arguments: selectedBook,
                 );
               },
               onPressed: () async {
+                final nav = Navigator.of(context);
                 ScaffoldMessenger.of(context).clearMaterialBanners();
                 Book selectedBook =
                     await _databaseHandler.selectedBook(bookList[index].id);
-                // ignore: use_build_context_synchronously
-                Navigator.pushNamed(
-                  context,
+                nav.pushNamed(
                   '/readpage',
                   arguments: selectedBook,
                 );
