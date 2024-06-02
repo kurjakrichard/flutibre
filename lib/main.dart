@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'l10n/l10n.dart';
+import 'model/booklist_item.dart';
 import 'pages/readscreen.dart';
 import 'pages/update_page.dart';
 import 'pages/book_details_page.dart';
@@ -26,6 +27,10 @@ final localeProvider = StateNotifierProvider<LocaleProvider, String>((ref) {
 });
 final pathProvider = StateNotifierProvider<PathProvider, String>((ref) {
   return PathProvider(ref: ref);
+});
+// Provider for the selected eBook
+final selectedEbookProvider = StateProvider<BookListItem?>((ref) {
+  return null;
 });
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

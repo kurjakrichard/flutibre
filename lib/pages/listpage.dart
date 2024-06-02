@@ -58,7 +58,7 @@ class _ListPageState extends ConsumerState<ListPage>
   }
 }
 
-class BookList extends StatefulWidget {
+class BookList extends ConsumerStatefulWidget {
   const BookList(
     List<BookListItem>? this.bookList, {
     Key? key,
@@ -67,10 +67,10 @@ class BookList extends StatefulWidget {
   final bookList;
 
   @override
-  State<BookList> createState() => BookListState();
+  ConsumerState<BookList> createState() => BookListState();
 }
 
-class BookListState extends State<BookList> {
+class BookListState extends ConsumerState<BookList> {
   BookDetailsPage? bookDetails;
   Book? selectedBook;
   final DatabaseHandler _databaseHandler = DatabaseHandler();
@@ -80,11 +80,11 @@ class BookListState extends State<BookList> {
     return LayoutBuilder(builder: (context, constraints) {
       var isWide = constraints.maxWidth > maxWidth;
       if (!isWide) {
-        return listView(widget.bookList, isWide);
+        return listView(widget.bookList, isWide, ref);
       } else {
         return Row(
           children: [
-            Expanded(child: listView(widget.bookList, isWide)),
+            Expanded(child: listView(widget.bookList, isWide, ref)),
             const VerticalDivider(
               color: Colors.cyan,
               thickness: 3,
@@ -103,7 +103,7 @@ class BookListState extends State<BookList> {
     });
   }
 
-  Widget listView(List<BookListItem> item, bool isWide) {
+  Widget listView(List<BookListItem> item, bool isWide, WidgetRef ref) {
     return ListView.builder(
       itemCount: item.length,
       itemExtent: 110,
@@ -131,6 +131,7 @@ class BookListState extends State<BookList> {
           },
           onTap: () async {
             final nav = Navigator.of(context);
+            ref.read(selectedEbookProvider.notifier).state = item[index];
             selectedBook = await _databaseHandler.selectedBook(item[index].id);
             if (!isWide) {
               // ignore: use_build_context_synchronously
@@ -148,19 +149,21 @@ class BookListState extends State<BookList> {
               });
             }
           },
-          child: bookItem(item[index])),
+          child: bookItem(item[index], ref)),
     );
   }
 
-  Widget bookItem(BookListItem bookListItem) {
+  Widget bookItem(BookListItem bookListItem, ref) {
     return Card(
       elevation: 5,
       child: Container(
         clipBehavior: Clip.antiAlias,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          color: Color.fromRGBO(98, 163, 191, 0.5),
-          boxShadow: [
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          color: bookListItem == ref.watch(selectedEbookProvider)
+              ? const Color.fromRGBO(98, 163, 191, 0.7)
+              : const Color.fromRGBO(98, 163, 191, 0.3),
+          boxShadow: const [
             BoxShadow(
               color: Color.fromRGBO(0, 0, 0, 0.1),
               offset: Offset(2, 2),
