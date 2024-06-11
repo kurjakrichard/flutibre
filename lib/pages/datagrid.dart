@@ -135,6 +135,7 @@ class BookListState extends State<BookList> {
         stateManager.notifyListeners();
       },
       onRowDoubleTap: (event) async {
+        var nav = Navigator.of(context);
         int index = stateManager.currentRow!.cells.values.first.value;
 
         selectedBook = await _databaseHandler.selectedBook(index);
@@ -142,8 +143,7 @@ class BookListState extends State<BookList> {
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).clearMaterialBanners();
           // ignore: use_build_context_synchronously
-          Navigator.pushNamed(
-            context,
+          nav.pushNamed(
             '/bookdetailspage',
             arguments: selectedBook,
           );
@@ -156,6 +156,7 @@ class BookListState extends State<BookList> {
         }
       },
       onSelected: (event) async {
+        var nav = Navigator.of(context);
         int index = stateManager.currentRow!.cells.values.first.value;
 
         selectedBook = await _databaseHandler.selectedBook(index);
@@ -163,8 +164,7 @@ class BookListState extends State<BookList> {
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).clearMaterialBanners();
           // ignore: use_build_context_synchronously
-          Navigator.pushNamed(
-            context,
+          nav.pushNamed(
             '/readpage',
             arguments: selectedBook,
           );

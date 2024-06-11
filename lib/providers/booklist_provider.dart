@@ -32,6 +32,7 @@ class BookListNotifier extends StateNotifier<BookListState> {
       }
     } catch (e) {
       state = BookListFailure();
+
       throw Exception(e);
     }
   }

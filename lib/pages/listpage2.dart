@@ -111,14 +111,14 @@ class BookListState extends ConsumerState<BookList> {
           highlightColor: const Color.fromARGB(255, 47, 119, 177),
           splashColor: Colors.green,
           onTap: () async {
-             ref.read(selectedEbookProvider.notifier).state = item[index];
+            var nav = Navigator.of(context);
+            ref.read(selectedEbookProvider.notifier).state = item[index];
             selectedBook = await _databaseHandler.selectedBook(item[index].id);
             if (!isWide) {
               // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).clearMaterialBanners();
               // ignore: use_build_context_synchronously
-              Navigator.pushNamed(
-                context,
+              nav.pushNamed(
                 '/bookdetailspage',
                 arguments: selectedBook,
               );
@@ -139,11 +139,13 @@ class BookListState extends ConsumerState<BookList> {
       elevation: 5,
       child: Container(
         clipBehavior: Clip.antiAlias,
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(4)),
-          color:  bookListItem == ref.watch(selectedEbookProvider) ? const Color.fromRGBO(98, 163, 191, 0.7) : const Color.fromRGBO(98, 163, 191, 0.3),
-          boxShadow: [
-            const BoxShadow(
+          color: bookListItem == ref.watch(selectedEbookProvider)
+              ? const Color.fromRGBO(98, 163, 191, 0.7)
+              : const Color.fromRGBO(98, 163, 191, 0.3),
+          boxShadow: const [
+            BoxShadow(
               color: Color.fromRGBO(0, 0, 0, 0.1),
               offset: Offset(2, 2),
               blurRadius: 40,

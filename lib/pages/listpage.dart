@@ -111,13 +111,14 @@ class BookListState extends ConsumerState<BookList> {
           highlightColor: const Color.fromARGB(255, 47, 119, 177),
           splashColor: Colors.green,
           onLongPress: () async {
+            var nav = Navigator.of(context);
+
             selectedBook = await _databaseHandler.selectedBook(item[index].id);
             if (!isWide) {
               // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).clearMaterialBanners();
               // ignore: use_build_context_synchronously
-              Navigator.pushNamed(
-                context,
+              nav.pushNamed(
                 '/bookdetailspage',
                 arguments: selectedBook,
               );
@@ -138,7 +139,7 @@ class BookListState extends ConsumerState<BookList> {
               ScaffoldMessenger.of(context).clearMaterialBanners();
               // ignore: use_build_context_synchronously
               nav.pushNamed(
-                '/readspage',
+                '/bookdetailspage',
                 arguments: selectedBook,
               );
             } else {

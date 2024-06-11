@@ -63,7 +63,7 @@ class _ReadScreenState extends State<ReadScreen> with WidgetsBindingObserver {
     var routeSettings = ModalRoute.of(context)!.settings;
     oldBookListItem = routeSettings.arguments as BookListItem;
     File book = File(
-        '/home/sire/Sablonok/Ebooks3/${oldBookListItem!.path}/${oldBookListItem!.name}.${oldBookListItem!.formats}');
+        '/home/sire/Nyilvános/Ebooks2/${oldBookListItem!.path}/${oldBookListItem!.name}.${oldBookListItem!.formats}');
     _epubReaderController = EpubController(
       document: EpubDocument.openFile(book),
     );
