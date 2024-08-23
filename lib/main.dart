@@ -68,7 +68,7 @@ class Flutibre extends StatelessWidget {
               scrollBehavior: CustomScrollBehavior(),
               initialRoute: '/',
               routes: {
-                '/': (context) => ref.watch(pathProvider).isEmpty
+                '/': (context) => ref.watch(pathProvider).isNotEmpty
                     ? const SplashPage()
                     : const SettingsPage(),
                 '/homepage': (context) => const HomePage(),

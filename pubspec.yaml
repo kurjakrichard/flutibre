@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
   shared_preferences: ^2.0.15
   epub_view: ^3.2.0
-  easy_splash_screen:
   sqlite3: ^1.11.2
   file_picker: ^8.0.3
   msix: ^3.7.0
@@ -31,6 +30,8 @@ dependencies:
   intl: ^0.19.0
   dropdown_search: ^5.0.6
   flutter_localization: ^0.2.0
+  flutter_localizations:
+    sdk: flutter
 
 
 dev_dependencies:
@@ -55,6 +56,8 @@ flutter:
     - images/bookmark-icon.png
     - images/flutibre new logo.png
     - images/cover.png
+    - images/flutibre-icon.png
+    - images/flutibre-logo.png
     - assets/books/
     - assets/books/Richard Kurjak/ 
     - assets/books/Richard Kurjak/Flutibre user manual (1)/

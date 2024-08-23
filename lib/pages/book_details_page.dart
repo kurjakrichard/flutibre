@@ -86,8 +86,8 @@ class _BookDetailsPageState extends ConsumerState<BookDetailsPage> {
                         padding: const EdgeInsets.only(right: 16.0, bottom: 16),
                         child: ElevatedButton(
                           style: ButtonStyle(minimumSize:
-                              MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.disabled)) {
+                              WidgetStateProperty.resolveWith((states) {
+                            if (states.contains(WidgetState.disabled)) {
                               return const Size(65, 35);
                             }
                             return const Size(65, 35);

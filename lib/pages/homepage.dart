@@ -117,7 +117,7 @@ class _HomePageState extends ConsumerState<HomePage>
           DrawerHeader(
               child: Row(
             children: [
-              Image.asset('images/bookshelf-icon2.png'),
+              Image.asset('images/flutibre-icon.png'),
               const Padding(
                 padding: EdgeInsets.only(left: 12.0),
                 child: Text(

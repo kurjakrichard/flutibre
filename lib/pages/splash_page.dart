@@ -1,7 +1,5 @@
-import 'package:easy_splash_screen/easy_splash_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'homepage.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -11,31 +9,39 @@ class SplashPage extends StatefulWidget {
 }
 
 class SplashPageState extends State<SplashPage> {
+  startTimeout() {
+    return Timer(const Duration(seconds: 2), changeScreen);
+  }
+
+  void changeScreen() {
+    Navigator.of(context).pushReplacementNamed(
+      '/homepage',
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimeout();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return EasySplashScreen(
-      logo: Image.asset('images/bookshelf-icon2.png'),
-      title: const Text(
-        "Flutibre",
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 28,
-          fontWeight: FontWeight.normal,
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(28, 47, 67, 1),
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(
+              'images/flutibre-logo.png',
+              height: 400.0,
+              width: 400.0,
+            ),
+          ],
         ),
       ),
-      //backgroundColor: Colors.cyan.shade50,
-      showLoader: true,
-      loaderColor: Colors.black,
-      loadingText: Text(
-        "${AppLocalizations.of(context)!.loading}...",
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 22,
-          fontWeight: FontWeight.normal,
-        ),
-      ),
-      navigator: const HomePage(),
-      durationInSeconds: 1,
     );
   }
 }

@@ -35,6 +35,7 @@ class _ReadScreenState extends State<ReadScreen> with WidgetsBindingObserver {
   }
 
   Brightness get platformBrightness =>
+      // ignore: deprecated_member_use
       MediaQueryData.fromView(WidgetsBinding.instance.window)
           .platformBrightness;
 
