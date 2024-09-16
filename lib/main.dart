@@ -1,16 +1,16 @@
-import 'package:flutibre/pages/splash_page.dart';
 import 'package:flutibre/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'l10n/l10n.dart';
+import 'mobil_pages/book_details_page.dart';
+import 'mobil_pages/homepage.dart';
+import 'mobil_pages/readscreen.dart';
+import 'mobil_pages/settingspage.dart';
+import 'mobil_pages/splash_page.dart';
+import 'mobil_pages/update_page.dart';
 import 'model/booklist_item.dart';
-import 'pages/readscreen.dart';
-import 'pages/update_page.dart';
-import 'pages/book_details_page.dart';
-import 'pages/homepage.dart';
-import 'pages/settingspage.dart';
 import 'providers/locale_provider.dart';
 import 'providers/path_provider.dart';
 import 'providers/shared_preferences_provider.dart';
@@ -37,11 +37,11 @@ void main() async {
 
   prefs = await SharedPreferences.getInstance();
 
-  try {
+  /*try {
     await io.File('${prefs.getString('path')}/metadata.db').length();
   } on Exception {
     prefs.remove('path');
-  }
+  }*/
 
   runApp(ProviderScope(
     overrides: [

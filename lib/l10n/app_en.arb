@@ -72,20 +72,20 @@
   "@datagrid": {
     "description": "Data grid"
   },
-   "error": "Error",
+   "error": "Error. Please select another library.",
   "@error": {
-    "description": "Error"
+    "description": "Error. Please select another library."
   },
   "addbook": "Add book",
   "@addbook": {
     "description": "Add book text"
   },
   "editbook": "Edit book",
-  "@addbook": {
+  "@editbook": {
     "description": "Edit book text"
   },
   "deletebook": "Delete book",
-  "@addbook": {
+  "@deletebook": {
     "description": "Delete book text"
   },
   "title": "Title",
@@ -99,10 +99,6 @@
   "date": "Date",
   "@date": {
     "description": "Date"
-  },
-  "language": "Language",
-  "@language": {
-    "description": "Language"
   },
   "create": "Create",
   "@create": {
@@ -137,11 +133,11 @@
     "description": "Open button"
   },
   "openbook": "Open book",
-  "@open": {
+  "@openbook": {
     "description": "Open button"
   },
   "comment": "Comment",
-  "@open": {
+  "@comment": {
     "description": "Comment"
   },
   "pickfolder": "Pick folder",
@@ -157,7 +153,7 @@
     "description": "Search term"
   },
   "addialog": "No add funkction in the free version. You need Calibre to manage your library.",
-  "@search": {
-    "description": "Search term"
+  "@addialog": {
+    "description": "No add funkction in the free version. You need Calibre to manage your library."
   }
 }

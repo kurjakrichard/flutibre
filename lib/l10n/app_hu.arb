@@ -18,7 +18,7 @@
     "list": "Lista nézet",
     "tiles": "Rács nézet",
     "datagrid": "Részletes lista",
-    "error": "Hiba",
+    "error": "Hiba történt. Kérlek válassz másik mappát!",
     "addbook": "Könyv hozzáadása",
     "editbook": "Könyv szerkesztése",
     "deletebook": "Könyv törlése",
