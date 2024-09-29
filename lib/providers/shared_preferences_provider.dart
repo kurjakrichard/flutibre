@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/constants.dart';
+import '../utils/utils.dart';
 
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError();
@@ -40,5 +40,13 @@ class SharedUtility {
 
   void setPath({required String path}) {
     sharedPreferences.setString(shareLocaleKey, path);
+  }
+
+  String getMode() {
+    return sharedPreferences.getString(shareModeKey) ?? '';
+  }
+
+  void setMode({required String mode}) {
+    sharedPreferences.setString(shareModeKey, mode);
   }
 }
