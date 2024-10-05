@@ -1,7 +1,7 @@
-import 'package:equatable/equatable.dart';
-import '../../data/data.dart';
+//import 'package:equatable/equatable.dart';
+import '../../data/data_export.dart';
 
-class BookState extends Equatable {
+class BookState /*extends Equatable*/ {
   final List<Book> books;
 
   const BookState({

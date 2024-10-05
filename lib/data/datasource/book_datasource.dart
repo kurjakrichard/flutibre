@@ -56,11 +56,13 @@ class BookDatasource {
       CREATE TABLE ${AppKeys.dbTable} (
         ${Bookkeys.id} ${DbTypekeys.idType},
         ${Bookkeys.title} ${DbTypekeys.stringType},
-        ${Bookkeys.note} ${DbTypekeys.stringType},
-        ${Bookkeys.date} ${DbTypekeys.stringType},
-        ${Bookkeys.time} ${DbTypekeys.stringType},
-        ${Bookkeys.category} ${DbTypekeys.stringType},
-        ${Bookkeys.isCompleted} ${DbTypekeys.integerType}
+        ${Bookkeys.writer} ${DbTypekeys.stringType},
+        ${Bookkeys.price} ${DbTypekeys.stringType},
+        ${Bookkeys.image} ${DbTypekeys.stringType},
+        ${Bookkeys.description} ${DbTypekeys.stringType},
+        ${Bookkeys.pages} ${DbTypekeys.integerType},
+        ${Bookkeys.rating} ${DbTypekeys.doubleType},
+
       )
     ''');
   }

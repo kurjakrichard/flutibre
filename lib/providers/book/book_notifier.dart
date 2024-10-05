@@ -1,7 +1,7 @@
-import 'package:flutibre/data/data.dart';
+import 'package:flutibre/data/data_export.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'task.dart';
+import 'book_export.dart';
 
 class BookNotifier extends StateNotifier<BookState> {
   final BookRepository _repository;
@@ -30,8 +30,7 @@ class BookNotifier extends StateNotifier<BookState> {
 
   Future<void> updateBook(Book book) async {
     try {
-      final isCompleted = !book.isCompleted;
-      final updatedBook = book.copyWith(isCompleted: isCompleted);
+      final updatedBook = book.copyWith();
       await _repository.updateBook(updatedBook);
       getBooks();
     } catch (e) {

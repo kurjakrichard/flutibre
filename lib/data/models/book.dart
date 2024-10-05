@@ -2,33 +2,35 @@ import 'package:equatable/equatable.dart';
 import 'package:flutibre/utils/utils.dart';
 
 class Book extends Equatable {
-  final int? id;
+  final int id;
   final String title;
-  final String note;
-  final BookCategory category;
-  final String time;
-  final String date;
-  final bool isCompleted;
+  final String writer;
+  final String price;
+  final String image;
+  final String description;
+  final double rating;
+  final int pages;
 
-  const Book({
-    this.id,
-    required this.title,
-    required this.category,
-    required this.time,
-    required this.date,
-    required this.note,
-    required this.isCompleted,
-  });
+  Book(
+      {required this.id,
+      required this.title,
+      required this.writer,
+      required this.price,
+      required this.image,
+      required this.description,
+      required this.rating,
+      required this.pages});
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       Bookkeys.id: id,
       Bookkeys.title: title,
-      Bookkeys.note: note,
-      Bookkeys.category: category.name,
-      Bookkeys.time: time,
-      Bookkeys.date: date,
-      Bookkeys.isCompleted: isCompleted ? 1 : 0,
+      Bookkeys.writer: writer,
+      Bookkeys.price: price,
+      Bookkeys.image: image,
+      Bookkeys.description: description,
+      Bookkeys.rating: rating,
+      Bookkeys.pages: pages
     };
   }
 
@@ -36,43 +38,38 @@ class Book extends Equatable {
     return Book(
       id: map[Bookkeys.id],
       title: map[Bookkeys.title],
-      note: map[Bookkeys.note],
-      category: BookCategory.stringToTaskCategory(map[Bookkeys.category]),
-      time: map[Bookkeys.time],
-      date: map[Bookkeys.date],
-      isCompleted: map[Bookkeys.isCompleted] == 1 ? true : false,
+      writer: map[Bookkeys.writer],
+      price: map[Bookkeys.price],
+      image: map[Bookkeys.image],
+      description: map[Bookkeys.description],
+      rating: map[Bookkeys.rating],
+      pages: map[Bookkeys.pages],
     );
   }
 
   @override
   List<Object> get props {
-    return [
-      title,
-      note,
-      category,
-      time,
-      date,
-      isCompleted,
-    ];
+    return [title, writer, price, image, description, rating, pages];
   }
 
   Book copyWith({
     int? id,
     String? title,
-    String? note,
-    BookCategory? category,
-    String? time,
-    String? date,
-    bool? isCompleted,
+    String? writer,
+    String? price,
+    String? image,
+    String? description,
+    double? rating,
+    int? pages,
   }) {
     return Book(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      note: note ?? this.note,
-      category: category ?? this.category,
-      time: time ?? this.time,
-      date: date ?? this.date,
-      isCompleted: isCompleted ?? this.isCompleted,
-    );
+        id: id ?? this.id,
+        title: title ?? this.title,
+        writer: writer ?? this.writer,
+        price: price ?? this.price,
+        image: image ?? this.image,
+        description: description ?? this.description,
+        rating: rating ?? this.rating,
+        pages: pages ?? this.pages);
   }
 }

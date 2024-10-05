@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import '../../widgets/widgets.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class MobileHome extends StatelessWidget {
+  const MobileHome({super.key, required this.bookList});
+  final Widget bookList;
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(''),
-      ),
-    );
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Mobile'),
+        ),
+        drawer: const SideMenu(),
+        body: bookList);
   }
 }

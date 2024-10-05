@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutibre/data/data.dart';
+import 'package:flutibre/data/data_export.dart';
 import 'package:flutibre/utils/utils.dart';
 import '../providers/providers.dart';
 

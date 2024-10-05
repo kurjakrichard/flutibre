@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
+import '../../widgets/widgets.dart';
 
 class DesktopHome extends StatelessWidget {
-  static DesktopHome builder(
-    BuildContext context,
-    GoRouterState state,
-  ) =>
-      const DesktopHome();
-  const DesktopHome({super.key});
-
+  const DesktopHome(
+      {super.key, required this.bookList, required this.bookDetail});
+  final Widget bookList;
+  final Widget bookDetail;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutibre'),
+        title: const Text('Desktop'),
       ),
-      body: const Center(
-        child: Text('Desktop'),
+      drawer: null,
+      body: Row(
+        children: [
+          const Expanded(
+            flex: 1,
+            child: SideMenu(),
+          ),
+          Expanded(
+            flex: 5,
+            child: bookList,
+          ),
+          Expanded(
+            flex: 2,
+            child: bookDetail,
+          )
+        ],
       ),
     );
   }
