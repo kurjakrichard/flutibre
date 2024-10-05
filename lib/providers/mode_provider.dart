@@ -6,7 +6,7 @@ final modeProvider = StateNotifierProvider<ModeProvider, String>((ref) {
 });
 
 class ModeProvider extends StateNotifier<String> {
-  ModeProvider({required this.ref}) : super('') {
+  ModeProvider({required this.ref}) : super('mobile') {
     state = ref.watch(sharedUtilityProvider).getMode();
   }
   Ref ref;

@@ -22,7 +22,7 @@ class GridList extends ConsumerWidget {
             shadowColor: Colors.yellow.shade900,
             child: InkWell(
               onTap: () {
-                ref.read(selectedBookProvider.notifier).state = book;
+                ref.read(selectedBookProvider.notifier).setSelectedBook(book);
                 print(book);
                 // Navigator.pushNamed(context, 'detail/${book.title}');
               },

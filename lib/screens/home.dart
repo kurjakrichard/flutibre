@@ -1,3 +1,4 @@
+import 'package:flutibre/providers/providers.dart';
 import 'package:flutibre/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +23,7 @@ class Home extends ConsumerWidget {
     double breakpointMedium = 1100.0;
 
     if (screenSize.width < breakpointSmall) {
-      return MobileHome(bookList: bookList(0.75));
+      return MobileHome(bookList: bookList(1));
     } else if (screenSize.width < breakpointMedium) {
       return TabletHome(
         bookList: bookList(1.5),
@@ -41,7 +42,7 @@ class Home extends ConsumerWidget {
   }
 
   Widget bookDetails() {
-    return Detail();
+    return const Detail();
   }
 
   Widget bookList(double count) {

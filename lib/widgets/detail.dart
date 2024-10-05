@@ -1,6 +1,6 @@
-import 'package:flutibre/providers/selected_book_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/data_export.dart';
+import '../providers/providers.dart';
 import 'rating_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -9,16 +9,16 @@ class Detail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Book? selectedBook = ref.watch(selectedBookProvider.notifier).state;
+    Book? selectedBook = ref.watch(selectedBookProvider);
 
     return selectedBook != null
         ? ListView(
             children: <Widget>[
-              topContent(selectedBook!),
+              topContent(selectedBook),
               bottomContent(selectedBook)
             ],
           )
-        : const Text('Nincs könyv kiválasztva');
+        : const Center(child: Text('Nincs könyv kiválasztva'));
   }
 
   Container topContent(Book selectedBook) {
