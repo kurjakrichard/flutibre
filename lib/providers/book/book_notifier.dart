@@ -10,7 +10,7 @@ class BookNotifier extends StateNotifier<BookState> {
     getBooks();
   }
 
-  Future<void> createBook(Book book) async {
+  Future<void> addBook(Book book) async {
     try {
       await _repository.addBook(book);
       getBooks();

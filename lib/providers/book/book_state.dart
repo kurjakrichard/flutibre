@@ -19,6 +19,14 @@ class BookState extends Equatable {
     );
   }
 
+  BookState update({
+    List<Book>? books,
+  }) {
+    return BookState(
+      books: books ?? this.books,
+    );
+  }
+
   @override
   List<Object> get props => [books];
 }

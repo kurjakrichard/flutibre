@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../config/config.dart';
 import '../../widgets/widgets.dart';
 
 class DesktopHome extends StatelessWidget {
@@ -14,6 +16,10 @@ class DesktopHome extends StatelessWidget {
         title: const Text('Desktop'),
       ),
       drawer: null,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push(RouteLocation.insertBook),
+        child: const Icon(Icons.add),
+      ),
       body: Row(
         children: [
           const Expanded(

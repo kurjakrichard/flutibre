@@ -36,4 +36,7 @@ class AppTheme {
       popupMenuOpacity: 0.95,
     ),
   );
+  static final dark = FlexThemeData.dark(
+    scheme: FlexScheme.mandyRed,
+  );
 }

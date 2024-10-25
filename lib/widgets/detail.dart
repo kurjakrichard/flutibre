@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../config/config.dart';
 import '../data/data_export.dart';
 import '../providers/providers.dart';
 import 'rating_bar.dart';
@@ -14,35 +16,38 @@ class Detail extends ConsumerWidget {
     return selectedBook != null
         ? ListView(
             children: <Widget>[
-              topContent(selectedBook),
+              topContent(selectedBook, context),
               bottomContent(selectedBook)
             ],
           )
-        : const Center(child: Text('Nincs könyv kiválasztva'));
+        : const Align(
+            alignment: AlignmentDirectional.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 48.0),
+              child: Text('Nincs könyv kiválasztva'),
+            ));
   }
 
-  Container topContent(Book selectedBook) {
+  Container topContent(Book selectedBook, BuildContext context) {
     return Container(
-      // color: Theme.of(context).primaryColor,
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Flexible(flex: 2, child: topLeft(selectedBook!)),
-          Flexible(flex: 3, child: topRight(selectedBook!)),
+          Flexible(flex: 2, child: topLeft(selectedBook)),
+          Flexible(flex: 3, child: topRight(selectedBook, context)),
         ],
       ),
     );
   }
 
-  ///scrolling text description
   SizedBox bottomContent(Book selectedBook) {
     return SizedBox(
-      height: 220.0,
+      height: 400,
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Text(
-          selectedBook!.description,
+          selectedBook.description,
           style: const TextStyle(fontSize: 13.0, height: 1.5),
         ),
       ),
@@ -50,14 +55,14 @@ class Detail extends ConsumerWidget {
   }
 
   ///detail top right
-  Column topRight(Book selectedBook) {
+  Column topRight(Book selectedBook, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         text(selectedBook.title,
             size: 16, isBold: true, padding: const EdgeInsets.only(top: 16.0)),
         text(
-          'by ${selectedBook.writer}',
+          'by ${selectedBook.author}',
           color: Colors.black54,
           size: 12,
           padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
@@ -74,10 +79,12 @@ class Detail extends ConsumerWidget {
           shadowColor: Colors.blue.shade200,
           elevation: 5.0,
           child: MaterialButton(
-            onPressed: () {},
+            onPressed: () {
+              context.push(RouteLocation.updateBook);
+            },
             minWidth: 160.0,
             color: Colors.blue,
-            child: text('BUY IT NOW', color: Colors.white, size: 13),
+            child: text('Edit book', color: Colors.white, size: 13),
           ),
         )
       ],
@@ -90,19 +97,16 @@ class Detail extends ConsumerWidget {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Hero(
-            tag: selectedBook!.title,
-            child: Material(
-              elevation: 15.0,
-              shadowColor: Colors.yellow.shade900,
-              child: Image(
-                image: AssetImage(selectedBook!.image),
-                fit: BoxFit.cover,
-              ),
+          child: Material(
+            elevation: 15.0,
+            shadowColor: Colors.yellow.shade900,
+            child: Image(
+              image: AssetImage(selectedBook.image),
+              fit: BoxFit.cover,
             ),
           ),
         ),
-        text('${selectedBook!.pages} pages', color: Colors.black38, size: 12)
+        text('${selectedBook.pages} pages', color: Colors.black38, size: 12)
       ],
     );
   }

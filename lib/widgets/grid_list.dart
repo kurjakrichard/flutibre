@@ -1,29 +1,101 @@
+import 'dart:io';
+import 'package:flutibre/providers/book/book_export.dart';
 import 'package:flutibre/providers/selected_book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:open_filex/open_filex.dart';
 
+import '../config/config.dart';
 import '../data/data_export.dart';
 
 class GridList extends ConsumerWidget {
-  const GridList({super.key, required this.books, this.count = 1});
-  final List<Book> books;
+  const GridList({super.key, this.count = 1});
+
   final double count;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final List<Book> books = ref.watch(booksProvider).books;
     int size = MediaQuery.of(context).size.width.round();
-    //app bar
 
     ///create book tile hero
     createTile(Book book) => Hero(
-          tag: book.title,
+          tag: book.id.toString(),
           child: Material(
             elevation: 15.0,
             shadowColor: Colors.yellow.shade900,
             child: InkWell(
-              onTap: () {
+              onDoubleTap: () {
                 ref.read(selectedBookProvider.notifier).setSelectedBook(book);
-                print(book);
+                showDialog(
+                    context: context,
+                    builder: (_) {
+                      return SimpleDialog(
+                        //title: const Text("Dialog Title"),
+                        children: [
+                          SimpleDialogOption(
+                            child: TextButton(
+                                onPressed: () {
+                                  OpenFilex.open(
+                                      '/home/sire/vscode/flutibre/res/Richard Powers - Orfeo.epub');
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Megnyitás',
+                                    style: TextStyle(fontSize: 16),
+                                    textAlign: TextAlign.start)),
+                          ),
+                          SimpleDialogOption(
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  context.push(RouteLocation.updateBook);
+                                },
+                                child: const Text('Szerkesztés',
+                                    style: TextStyle(fontSize: 16),
+                                    textAlign: TextAlign.start)),
+                          ),
+                          SimpleDialogOption(
+                            child: TextButton(
+                                onPressed: () {
+                                  ref
+                                      .read(booksProvider.notifier)
+                                      .deleteBook(book);
+                                  ref
+                                      .read(selectedBookProvider.notifier)
+                                      .resetSelectedBook();
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Törlés',
+                                    style: TextStyle(fontSize: 16),
+                                    textAlign: TextAlign.start)),
+                          ),
+                        ],
+                      );
+                    });
+              },
+              onLongPress: () {
+                showDialog(
+                    context: context,
+                    builder: (_) {
+                      return const AlertDialog(
+                        title: Text("Dialog Title"),
+                        content: Text("This is the dialog content."),
+                      );
+                    });
+              },
+              onTap: () async {
+                ref.read(selectedBookProvider.notifier).setSelectedBook(book);
+                String path = '/home/sire/vscode/flutibre/${book.image}';
+                print(path);
+
+                File image =
+                    File(path); // Or any other way to get a File instance.
+                var decodedImage =
+                    await decodeImageFromList(image.readAsBytesSync());
+                print(decodedImage.width);
+                print(decodedImage.height);
+                Navigator.of(context).canPop();
                 // Navigator.pushNamed(context, 'detail/${book.title}');
               },
               child: Image(
@@ -39,7 +111,7 @@ class GridList extends ConsumerWidget {
       primary: false,
       slivers: <Widget>[
         SliverPadding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           sliver: SliverGrid.count(
             childAspectRatio: 2 / 3,
             crossAxisCount: (size / 150 / count).round(),

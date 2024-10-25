@@ -14,10 +14,10 @@ class BookDatasource {
   Future<Database> get database async {
     if (Platform.isAndroid || Platform.isIOS) {
       _database ??= await _initDbMobile();
-      print('mobil'); // Mobile-specific code
+      // Mobile-specific code
     } else {
       _database ??= await _initDbDesktop();
-      print('desktop'); // Desktop-specific code
+      // Desktop-specific code
     }
     return _database!;
   }
@@ -56,12 +56,14 @@ class BookDatasource {
       CREATE TABLE ${AppKeys.dbTable} (
         ${Bookkeys.id} ${DbTypekeys.idType},
         ${Bookkeys.title} ${DbTypekeys.stringType},
-        ${Bookkeys.writer} ${DbTypekeys.stringType},
+        ${Bookkeys.author} ${DbTypekeys.stringType},
         ${Bookkeys.price} ${DbTypekeys.stringType},
         ${Bookkeys.image} ${DbTypekeys.stringType},
+        ${Bookkeys.path} ${DbTypekeys.stringType},
+        ${Bookkeys.last_modified} ${DbTypekeys.stringType},
         ${Bookkeys.description} ${DbTypekeys.stringType},
         ${Bookkeys.pages} ${DbTypekeys.integerType},
-        ${Bookkeys.rating} ${DbTypekeys.doubleType},
+        ${Bookkeys.rating} ${DbTypekeys.doubleType}
 
       )
     ''');

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../config/config.dart';
 import '../../widgets/widgets.dart';
 
 class TabletHome extends StatelessWidget {
@@ -12,6 +14,10 @@ class TabletHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const SideMenu(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push(RouteLocation.insertBook),
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(
         title: const Text('Tablet'),
       ),
@@ -20,6 +26,10 @@ class TabletHome extends StatelessWidget {
           Expanded(
             flex: 2,
             child: bookList,
+          ),
+          const VerticalDivider(
+            thickness: 4,
+            color: Colors.purple,
           ),
           Expanded(
             flex: 1,

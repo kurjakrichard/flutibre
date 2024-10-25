@@ -6,4 +6,6 @@ class RouteLocation {
 
   static String get home => '/home';
   static String get desktopDetails => '/desktopDetails';
+  static String get insertBook => '/insertBook';
+  static String get updateBook => '/updateBook';
 }
