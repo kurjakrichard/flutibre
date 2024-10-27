@@ -44,7 +44,9 @@ class Home extends ConsumerWidget {
   }
 
   Widget bookDetails() {
-    return const Detail();
+    return const Detail(
+      isPage: false,
+    );
   }
 
   Widget bookList({double count = 1.0}) {

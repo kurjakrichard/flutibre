@@ -58,6 +58,16 @@ class GridList extends ConsumerWidget {
                           SimpleDialogOption(
                             child: TextButton(
                                 onPressed: () {
+                                  Navigator.of(context).pop();
+                                  context.push(RouteLocation.bookDetails);
+                                },
+                                child: const Text('Részletek',
+                                    style: TextStyle(fontSize: 16),
+                                    textAlign: TextAlign.start)),
+                          ),
+                          SimpleDialogOption(
+                            child: TextButton(
+                                onPressed: () {
                                   ref
                                       .read(booksProvider.notifier)
                                       .deleteBook(book);
@@ -87,7 +97,6 @@ class GridList extends ConsumerWidget {
               onTap: () async {
                 ref.read(selectedBookProvider.notifier).setSelectedBook(book);
                 String path = '/home/sire/vscode/flutibre/${book.image}';
-                print(path);
 
                 File image =
                     File(path); // Or any other way to get a File instance.

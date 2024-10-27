@@ -1,3 +1,4 @@
+import 'package:flutibre/utils/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../config/config.dart';
@@ -7,7 +8,8 @@ import 'rating_bar.dart';
 import 'package:flutter/material.dart';
 
 class Detail extends ConsumerWidget {
-  const Detail({super.key});
+  const Detail({super.key, required this.isPage});
+  final bool isPage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,17 +30,33 @@ class Detail extends ConsumerWidget {
             ));
   }
 
-  Container topContent(Book selectedBook, BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Flexible(flex: 2, child: topLeft(selectedBook)),
-          Flexible(flex: 3, child: topRight(selectedBook, context)),
-        ],
-      ),
-    );
+  Widget topContent(Book selectedBook, BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      var isWide = constraints.maxWidth > maxWidth;
+      if (!isWide && isPage) {
+        return Container(
+          padding: const EdgeInsets.only(bottom: 16.0, left: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              topLeft(selectedBook),
+              topRight(selectedBook, context),
+            ],
+          ),
+        );
+      } else {
+        return Container(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Flexible(flex: 2, child: topLeft(selectedBook)),
+              Flexible(flex: 3, child: topRight(selectedBook, context)),
+            ],
+          ),
+        );
+      }
+    });
   }
 
   SizedBox bottomContent(Book selectedBook) {
@@ -97,12 +115,15 @@ class Detail extends ConsumerWidget {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Material(
-            elevation: 15.0,
-            shadowColor: Colors.yellow.shade900,
-            child: Image(
-              image: AssetImage(selectedBook.image),
-              fit: BoxFit.cover,
+          child: SizedBox(
+            width: 360,
+            child: Material(
+              elevation: 15.0,
+              shadowColor: Colors.yellow.shade900,
+              child: Image(
+                image: AssetImage(selectedBook.image),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),

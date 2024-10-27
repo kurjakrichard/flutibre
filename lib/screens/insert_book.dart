@@ -110,6 +110,7 @@ class _CreateTaskScreenState extends ConsumerState<InsertBook> {
 
       await ref.read(booksProvider.notifier).addBook(book).then((value) {
         AppAlerts.displaySnackbar(context, 'Update book successfully');
+        ref.read(selectedBookProvider.notifier).setSelectedBook(book);
         context.go(RouteLocation.home);
       });
     } else {

@@ -29,7 +29,7 @@ class TabletHome extends StatelessWidget {
           ),
           const VerticalDivider(
             thickness: 4,
-            color: Colors.purple,
+            color: Colors.transparent,
           ),
           Expanded(
             flex: 1,

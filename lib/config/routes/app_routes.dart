@@ -14,6 +14,11 @@ final appRoutes = [
     builder: InsertBook.builder,
   ),
   GoRoute(
+    path: RouteLocation.bookDetails,
+    parentNavigatorKey: navigationKey,
+    builder: BookDetails.builder,
+  ),
+  GoRoute(
     path: RouteLocation.updateBook,
     parentNavigatorKey: navigationKey,
     builder: UpdateBook.builder,

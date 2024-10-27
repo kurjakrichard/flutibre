@@ -116,7 +116,6 @@ class _CreateTaskScreenState extends ConsumerState<UpdateBook> {
         rating: 1.0,
         pages: 0,
       );
-      print(book);
       ref.read(selectedBookProvider.notifier).setSelectedBook(book);
       await ref.read(booksProvider.notifier).updateBook(book).then((value) {
         AppAlerts.displaySnackbar(context, 'Update book successfully');
