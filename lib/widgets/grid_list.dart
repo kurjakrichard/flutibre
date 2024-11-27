@@ -8,6 +8,7 @@ import 'package:open_filex/open_filex.dart';
 
 import '../config/config.dart';
 import '../data/data_export.dart';
+import '../utils/utils.dart';
 
 class GridList extends ConsumerWidget {
   const GridList({super.key, this.count = 1});
@@ -38,7 +39,7 @@ class GridList extends ConsumerWidget {
                             child: TextButton(
                                 onPressed: () {
                                   OpenFilex.open(
-                                      '/home/sire/vscode/flutibre/res/Richard Powers - Orfeo.epub');
+                                      '/home/sire/Dokumentumok/ebooks/${book.path}/${book.filename}.${book.format}');
                                   Navigator.of(context).pop();
                                 },
                                 child: const Text('Megnyitás',
@@ -68,13 +69,13 @@ class GridList extends ConsumerWidget {
                           SimpleDialogOption(
                             child: TextButton(
                                 onPressed: () {
-                                  ref
+                                  Navigator.of(context).pop();
+                                  AppAlerts.showAlertDeleteDialog(
+                                      context: context, ref: ref, book: book);
+                                  /* ref
                                       .read(booksProvider.notifier)
                                       .deleteBook(book);
-                                  ref
-                                      .read(selectedBookProvider.notifier)
-                                      .resetSelectedBook();
-                                  Navigator.of(context).pop();
+                                  */
                                 },
                                 child: const Text('Törlés',
                                     style: TextStyle(fontSize: 16),

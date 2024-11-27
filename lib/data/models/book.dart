@@ -9,6 +9,8 @@ class Book extends Equatable {
   final String price;
   final String image;
   final String path;
+  final String filename;
+  final String format;
   final String last_modified;
   final String description;
   final double rating;
@@ -21,6 +23,8 @@ class Book extends Equatable {
       required this.price,
       required this.image,
       required this.path,
+      required this.filename,
+      required this.format,
       required this.last_modified,
       required this.description,
       required this.rating,
@@ -34,6 +38,8 @@ class Book extends Equatable {
       Bookkeys.price: price,
       Bookkeys.image: image,
       Bookkeys.path: path,
+      Bookkeys.filename: filename,
+      Bookkeys.format: format,
       Bookkeys.last_modified: last_modified,
       Bookkeys.description: description,
       Bookkeys.rating: rating,
@@ -49,6 +55,8 @@ class Book extends Equatable {
       price: map[Bookkeys.price],
       image: map[Bookkeys.image],
       path: map[Bookkeys.path],
+      filename: map[Bookkeys.filename],
+      format: map[Bookkeys.format],
       last_modified: map[Bookkeys.last_modified],
       description: map[Bookkeys.description],
       rating: map[Bookkeys.rating],
@@ -64,6 +72,8 @@ class Book extends Equatable {
       price,
       image,
       path,
+      filename,
+      format,
       last_modified,
       description,
       rating,
@@ -78,6 +88,8 @@ class Book extends Equatable {
     String? price,
     String? image,
     String? path,
+    String? filename,
+    String? format,
     String? last_modified,
     String? description,
     double? rating,
@@ -90,6 +102,8 @@ class Book extends Equatable {
         price: price ?? this.price,
         image: image ?? this.image,
         path: path ?? this.path,
+        filename: filename ?? this.filename,
+        format: format ?? this.format,
         last_modified: last_modified ?? this.last_modified,
         description: description ?? this.description,
         rating: rating ?? this.rating,

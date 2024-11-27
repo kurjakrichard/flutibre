@@ -11,6 +11,8 @@ class Bookkeys {
   static const String price = 'price';
   static const String image = 'image';
   static const String path = 'path';
+  static const String filename = 'filename';
+  static const String format = 'format';
   static const String last_modified = 'last_modified';
   static const String description = 'description';
   static const String pages = 'pages';

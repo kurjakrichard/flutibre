@@ -7,12 +7,14 @@ class BookRepositoryImpl implements BookRepository {
   BookRepositoryImpl(this._datasource);
 
   @override
-  Future<void> addBook(Book book) async {
+  Future<int?> addBook(Book book) async {
+    int bookId;
     try {
-      await _datasource.addBook(book);
+      bookId = await _datasource.addBook(book);
     } catch (e) {
       throw '$e';
     }
+    return bookId;
   }
 
   @override
@@ -28,6 +30,15 @@ class BookRepositoryImpl implements BookRepository {
   Future<List<Book>> getAllBooks() async {
     try {
       return await _datasource.getAllBooks();
+    } catch (e) {
+      throw '$e';
+    }
+  }
+
+  @override
+  Future<Book?> getBook(int bookId) async {
+    try {
+      return _datasource.getBook(bookId);
     } catch (e) {
       throw '$e';
     }

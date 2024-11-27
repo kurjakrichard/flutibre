@@ -7,6 +7,8 @@ import '../providers/providers.dart';
 
 @immutable
 class AppAlerts {
+  static FileService fileService = FileService();
+
   const AppAlerts._();
 
   static displaySnackbar(BuildContext context, String message) {
@@ -36,17 +38,21 @@ class AppAlerts {
           (value) {
             displaySnackbar(
               context,
-              'Task deleted successfully',
+              'Book deleted successfully',
             );
+
+            ref.read(selectedBookProvider.notifier).resetSelectedBook();
             context.pop();
           },
         );
+        await fileService
+            .deleteBook('/home/sire/Dokumentumok/ebooks/${book.path}');
       },
       child: const Text('YES'),
     );
 
     AlertDialog alert = AlertDialog(
-      title: const Text('Are you sure you want to delete this task?'),
+      title: const Text('Are you sure you want to delete this book?'),
       actions: [
         deleteButton,
         cancelButton,

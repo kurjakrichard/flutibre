@@ -2,16 +2,11 @@ import 'package:go_router/go_router.dart';
 import '../../screens/screens.dart';
 import '../config.dart';
 
-final appRoutes = [
+final List<GoRoute> appRoutes = [
   GoRoute(
     path: RouteLocation.home,
     parentNavigatorKey: navigationKey,
     builder: Home.builder,
-  ),
-  GoRoute(
-    path: RouteLocation.insertBook,
-    parentNavigatorKey: navigationKey,
-    builder: InsertBook.builder,
   ),
   GoRoute(
     path: RouteLocation.bookDetails,

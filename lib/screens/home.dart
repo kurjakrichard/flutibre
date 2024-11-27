@@ -1,42 +1,89 @@
+import 'package:path/path.dart' as p;
+import 'package:file_picker/file_picker.dart';
 import 'package:flutibre/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:remove_diacritic/remove_diacritic.dart';
+import '../config/config.dart';
 import '../data/data_export.dart';
+import '../providers/providers.dart';
 import '../utils/utils.dart';
-import 'screens.dart';
 
-class Home extends ConsumerWidget {
+class Home extends ConsumerStatefulWidget {
   static Home builder(
     BuildContext context,
     GoRouterState state,
   ) =>
       const Home();
   const Home({super.key});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<Home> createState() => _HomeState();
+}
+
+class _HomeState extends ConsumerState<Home> {
+  Book? selectedBook;
+  PlatformFile? _pickedfile;
+  bool _isLoading = false;
+  FileService fileService = FileService();
+  var allowedExtensions = ['pdf', 'odt', 'epub', 'mobi'];
+
+  @override
+  Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktop(context);
     final isTablet = Responsive.isTablet(context);
     final isMobile = Responsive.isMobile(context);
 
-    if (isMobile) {
-      return MobileHome(bookList: bookList());
-    } else if (isTablet) {
-      return TabletHome(
-        bookList: bookList(count: 1.5),
-        bookDetail: bookDetails(),
-      );
-    } else if (isDesktop) {
-      return DesktopHome(
-        bookList: bookList(count: 1.5),
-        bookDetail: bookDetails(),
-      );
-    } else {
-      return DesktopHome(
-        bookList: bookList(count: 1.5),
-        bookDetail: bookDetails(),
-      );
-    }
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Desktop'),
+        ),
+        drawer: isDesktop ? null : const SideMenu(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            Book? newBook = await pickFile();
+            if (newBook != null) {
+              _insertBook(newBook);
+            }
+          },
+          child: const Icon(Icons.add),
+        ),
+        body: (isMobile)
+            ? SafeArea(child: bookList())
+            : isTablet
+                ? Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: bookList(count: 1.5),
+                      ),
+                      const VerticalDivider(
+                        thickness: 4,
+                        color: Colors.transparent,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: bookDetails(),
+                      )
+                    ],
+                  )
+                : Row(
+                    children: [
+                      const Expanded(
+                        flex: 1,
+                        child: SideMenu(),
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: bookList(count: 1.5),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: bookDetails(),
+                      )
+                    ],
+                  ));
   }
 
   Widget sideBar() {
@@ -52,6 +99,82 @@ class Home extends ConsumerWidget {
   Widget bookList({double count = 1.0}) {
     return GridList(count: count);
   }
+
+  void _insertBook(Book book) async {
+    await ref.read(booksProvider.notifier).addBook(book).then((value) async {
+      AppAlerts.displaySnackbar(context, 'Update book successfully');
+      Book? selectedBook =
+          await ref.read(booksProvider.notifier).getBook(value!);
+      ref.read(selectedBookProvider.notifier).setSelectedBook(selectedBook!);
+      context.go(RouteLocation.home);
+    });
+  }
+
+  Future<Book?> pickFile() async {
+    Book? newBook;
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowMultiple: false,
+          allowedExtensions: allowedExtensions);
+
+      if (result != null) {
+        _pickedfile = result.files.first;
+        print('Name: ${_pickedfile!.name}');
+        // ignore: avoid_print
+        print('Bytes: ${_pickedfile!.bytes}');
+        // ignore: avoid_print
+        print('Size: ${_pickedfile!.size}');
+        // ignore: avoid_print
+        print('Extension: ${_pickedfile!.extension}');
+        // ignore: avoid_print
+        print('Path: ${_pickedfile!.path}');
+        String title = p.basenameWithoutExtension(_pickedfile!.name);
+        String format = _pickedfile!.extension.toString();
+        String author = 'Unknown author';
+        String filename =
+            '${removeDiacritics(author)} - ${removeDiacritics(title)}';
+        String path = '${removeDiacritics(author)}/${removeDiacritics(title)}';
+        newBook = Book(
+          author: author,
+          title: title,
+          description: '',
+          image: 'res/corel.jpg',
+          last_modified: '',
+          path: path,
+          filename: filename,
+          format: format,
+          pages: 0,
+          price: '',
+          rating: 0,
+        );
+        print('Filename: ${newBook.filename}');
+        print('Path: ${newBook.path}');
+        await fileService.copyFile(
+            oldpath: _pickedfile!.path!,
+            newpath:
+                '/home/sire/Dokumentumok/ebooks/${newBook.path}/${newBook.filename}.${newBook.format}');
+        //await fileService.addFile(_pickedfile);
+        //fileService.openFile(_pickedfile!.path!);
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        return null;
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return newBook;
+  }
 }
 
 String details =
@@ -64,7 +187,9 @@ final List<Book> books = [
     author: 'Jubilee Enterprise',
     price: 'Rp 50.000',
     image: 'res/corel.jpg',
+    format: 'epub',
     path: 'res/Richard Powers - Orfeo.epub',
+    filename: 'res/Richard Powers - Orfeo.epub',
     last_modified: '',
     description: details,
     rating: 3.5,
@@ -76,7 +201,9 @@ final List<Book> books = [
       author: 'Widada',
       price: 'Rp 55.000',
       image: 'res/drafter.jpg',
+      format: 'epub',
       path: 'res/Richard Powers - Orfeo.epub',
+      filename: 'res/Richard Powers - Orfeo.epub',
       last_modified: '',
       description: details,
       rating: 4.5,
@@ -87,7 +214,9 @@ final List<Book> books = [
       author: 'Jubilee Enterprise',
       price: 'Rp 60.000',
       image: 'res/indesign.jpg',
+      format: 'epub',
       path: 'res/Richard Powers - Orfeo.epub',
+      filename: 'res/Richard Powers - Orfeo.epub',
       last_modified: '',
       description: details,
       rating: 5.0,
@@ -98,7 +227,9 @@ final List<Book> books = [
       author: 'Wahana Komputer',
       price: 'Rp 58.000',
       image: 'res/max_3d.jpeg',
+      format: 'epub',
       path: 'res/Richard Powers - Orfeo.epub',
+      filename: 'res/Richard Powers - Orfeo.epub',
       last_modified: '',
       description: details,
       rating: 3.0,
@@ -109,7 +240,9 @@ final List<Book> books = [
       author: 'Dhani Ariatmanto',
       price: 'Rp 90.000',
       image: 'res/maya.jpeg',
+      format: 'epub',
       path: 'res/Richard Powers - Orfeo.epub',
+      filename: 'res/Richard Powers - Orfeo.epub',
       last_modified: '',
       description: details,
       rating: 4.8,
@@ -120,7 +253,9 @@ final List<Book> books = [
       author: 'Jubilee Enterprise',
       price: 'Rp 57.000',
       image: 'res/photoshop.jpg',
+      format: 'epub',
       path: 'res/Richard Powers - Orfeo.epub',
+      filename: 'res/Richard Powers - Orfeo.epub',
       last_modified: '',
       description: details,
       rating: 4.5,
@@ -131,7 +266,9 @@ final List<Book> books = [
       author: 'Jubilee Enterprise',
       price: 'Rp 56.000',
       image: 'res/premier.jpg',
+      format: 'epub',
       path: 'res/Richard Powers - Orfeo.epub',
+      filename: 'res/Richard Powers - Orfeo.epub',
       last_modified: '',
       description: details,
       rating: 4.8,
@@ -142,7 +279,9 @@ final List<Book> books = [
       author: 'Wahana Komputer',
       price: 'Rp 55.000',
       image: 'res/sketchup.jpeg',
+      format: 'epub',
       path: 'res/Richard Powers - Orfeo.epub',
+      filename: 'res/Richard Powers - Orfeo.epub',
       last_modified: '',
       description: details,
       rating: 4.5,
@@ -153,7 +292,9 @@ final List<Book> books = [
       author: 'Wahana Komputer',
       price: 'Rp 54.000',
       image: 'res/webmaster.jpeg',
+      format: 'epub',
       path: 'res/Richard Powers - Orfeo.epub',
+      filename: 'res/Richard Powers - Orfeo.epub',
       last_modified: '',
       description: details,
       rating: 3.5,

@@ -29,7 +29,7 @@ class BookDatasource {
 
   Future<Database> _initDbMobile() async {
     final dbPath = await getApplicationDocumentsDirectory();
-    final path = join(dbPath.path, AppKeys.dbName);
+    final path = join(dbPath.path, 'ebooks', AppKeys.dbName);
     return await openDatabase(
       path,
       version: 1,
@@ -39,7 +39,7 @@ class BookDatasource {
 
   Future<Database> _initDbDesktop() async {
     final dbPath = await getApplicationDocumentsDirectory();
-    final path = join(dbPath.path, AppKeys.dbName);
+    final path = join(dbPath.path, 'ebooks', AppKeys.dbName);
     sqfliteFfiInit();
     final databaseFactory = databaseFactoryFfi;
     return await databaseFactory.openDatabase(
@@ -60,6 +60,8 @@ class BookDatasource {
         ${Bookkeys.price} ${DbTypekeys.stringType},
         ${Bookkeys.image} ${DbTypekeys.stringType},
         ${Bookkeys.path} ${DbTypekeys.stringType},
+        ${Bookkeys.filename} ${DbTypekeys.stringType},
+        ${Bookkeys.format} ${DbTypekeys.stringType},
         ${Bookkeys.last_modified} ${DbTypekeys.stringType},
         ${Bookkeys.description} ${DbTypekeys.stringType},
         ${Bookkeys.pages} ${DbTypekeys.integerType},

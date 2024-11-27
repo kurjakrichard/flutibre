@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:remove_diacritic/remove_diacritic.dart';
 import '../config/config.dart';
 import '../data/data_export.dart';
 import '../providers/providers.dart';
@@ -19,14 +20,19 @@ class UpdateBook extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CreateTaskScreenState();
+      _UpdateBookScreenState();
 }
 
-class _CreateTaskScreenState extends ConsumerState<UpdateBook> {
+class _UpdateBookScreenState extends ConsumerState<UpdateBook> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _authorController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   int? id;
+  String? format;
+  String? oldPath;
+  String? oldFilename;
+  Book? selectedBook;
+  FileService fileService = FileService();
 
   @override
   void dispose() {
@@ -37,15 +43,25 @@ class _CreateTaskScreenState extends ConsumerState<UpdateBook> {
   }
 
   @override
+  void didChangeDependencies() {
+    selectedBook = ref.watch(selectedBookProvider);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = context.colorScheme;
-    Book? selectedBook = ref.watch(selectedBookProvider);
+
     if (selectedBook != null) {
-      _titleController.text = selectedBook.title;
-      _authorController.text = selectedBook.author;
-      _descriptionController.text = selectedBook.description;
-      id = selectedBook.id;
+      _titleController.text = selectedBook!.title;
+      _authorController.text = selectedBook!.author;
+      _descriptionController.text = selectedBook!.description;
+      id = selectedBook!.id;
+      format = selectedBook!.format;
+      oldPath = selectedBook!.path;
+      oldFilename = selectedBook!.filename;
     }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: colors.primary,
@@ -103,24 +119,31 @@ class _CreateTaskScreenState extends ConsumerState<UpdateBook> {
     final author = _authorController.text.trim();
     final description = _descriptionController.text.trim();
     final date = ref.watch(dateProvider);
+    String? path;
+    String? filename;
     if (title.isNotEmpty) {
-      final book = Book(
-        id: id,
-        title: title,
-        author: author,
-        price: '100 Ft',
-        image: 'res/corel.jpg',
-        path: 'res/Richard Powers - Orfeo.epub',
-        last_modified: DateFormat.yMMMd().format(date),
-        description: description,
-        rating: 1.0,
-        pages: 0,
-      );
+      path = '${removeDiacritics(author)}/${removeDiacritics(title)}';
+      filename = '${removeDiacritics(author)} - ${removeDiacritics(title)}';
+      final book = ref.watch(selectedBookProvider)!.copyWith(
+            title: title,
+            author: author,
+            path: path,
+            filename: filename,
+            last_modified: DateFormat.yMMMd().format(date),
+            description: description,
+          );
       ref.read(selectedBookProvider.notifier).setSelectedBook(book);
       await ref.read(booksProvider.notifier).updateBook(book).then((value) {
         AppAlerts.displaySnackbar(context, 'Update book successfully');
         context.go(RouteLocation.home);
       });
+      print('Teszt oldpath: $oldPath');
+      await fileService.copyFile(
+          oldpath:
+              '/home/sire/Dokumentumok/ebooks/$oldPath/$oldFilename.${book.format}',
+          newpath:
+              '/home/sire/Dokumentumok/ebooks/$path/$filename.${book.format}');
+      await fileService.deleteBook('/home/sire/Dokumentumok/ebooks/$oldPath');
     } else {
       AppAlerts.displaySnackbar(context, 'Title cannot be empty');
     }
