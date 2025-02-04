@@ -10,6 +10,9 @@ void main() async {
   prefs = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(
+      observers: [
+        MyObserver(),
+      ],
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
       ],

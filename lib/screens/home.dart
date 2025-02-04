@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutibre/widgets/widgets.dart';
@@ -25,6 +26,7 @@ class Home extends ConsumerStatefulWidget {
 class _HomeState extends ConsumerState<Home> {
   Book? selectedBook;
   PlatformFile? _pickedfile;
+  // ignore: unused_field
   bool _isLoading = false;
   FileService fileService = FileService();
   var allowedExtensions = ['pdf', 'odt', 'epub', 'mobi'];
@@ -44,7 +46,8 @@ class _HomeState extends ConsumerState<Home> {
           onPressed: () async {
             Book? newBook = await pickFile();
             if (newBook != null) {
-              _insertBook(newBook);
+              // ignore: use_build_context_synchronously
+              _insertBook(newBook, context);
             }
           },
           child: const Icon(Icons.add),
@@ -100,12 +103,14 @@ class _HomeState extends ConsumerState<Home> {
     return GridList(count: count);
   }
 
-  void _insertBook(Book book) async {
+  void _insertBook(Book book, BuildContext context) async {
     await ref.read(booksProvider.notifier).addBook(book).then((value) async {
+      // ignore: use_build_context_synchronously
       AppAlerts.displaySnackbar(context, 'Update book successfully');
       Book? selectedBook =
           await ref.read(booksProvider.notifier).getBook(value!);
       ref.read(selectedBookProvider.notifier).setSelectedBook(selectedBook!);
+      // ignore: use_build_context_synchronously
       context.go(RouteLocation.home);
     });
   }
@@ -124,6 +129,7 @@ class _HomeState extends ConsumerState<Home> {
 
       if (result != null) {
         _pickedfile = result.files.first;
+        // ignore: avoid_print
         print('Name: ${_pickedfile!.name}');
         // ignore: avoid_print
         print('Bytes: ${_pickedfile!.bytes}');
@@ -152,8 +158,7 @@ class _HomeState extends ConsumerState<Home> {
           price: '',
           rating: 0,
         );
-        print('Filename: ${newBook.filename}');
-        print('Path: ${newBook.path}');
+
         await fileService.copyFile(
             oldpath: _pickedfile!.path!,
             newpath:
