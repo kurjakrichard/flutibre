@@ -29,7 +29,7 @@ class BookDatasource {
 
   Future<Database> _initDbMobile() async {
     final dbPath = await getApplicationDocumentsDirectory();
-    final path = join(dbPath.path, 'ebooks', AppKeys.dbName);
+    final path = join(dbPath.path, 'ebooks', dbName);
     return await openDatabase(
       path,
       version: 1,
@@ -39,7 +39,7 @@ class BookDatasource {
 
   Future<Database> _initDbDesktop() async {
     final dbPath = await getApplicationDocumentsDirectory();
-    final path = join(dbPath.path, 'ebooks', AppKeys.dbName);
+    final path = join(dbPath.path, 'ebooks', dbName);
     sqfliteFfiInit();
     final databaseFactory = databaseFactoryFfi;
     return await databaseFactory.openDatabase(
@@ -53,19 +53,19 @@ class BookDatasource {
 
   void _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE ${AppKeys.dbTable} (
-        ${Bookkeys.id} ${DbTypekeys.idType},
-        ${Bookkeys.title} ${DbTypekeys.stringType},
-        ${Bookkeys.author} ${DbTypekeys.stringType},
-        ${Bookkeys.price} ${DbTypekeys.stringType},
-        ${Bookkeys.image} ${DbTypekeys.stringType},
-        ${Bookkeys.path} ${DbTypekeys.stringType},
-        ${Bookkeys.filename} ${DbTypekeys.stringType},
-        ${Bookkeys.format} ${DbTypekeys.stringType},
-        ${Bookkeys.last_modified} ${DbTypekeys.stringType},
-        ${Bookkeys.description} ${DbTypekeys.stringType},
-        ${Bookkeys.pages} ${DbTypekeys.integerType},
-        ${Bookkeys.rating} ${DbTypekeys.doubleType}
+      CREATE TABLE $dbTable (
+        ${Bookkeys.id.name} ${DbTypekeys.idType.name},
+        ${Bookkeys.title.name} ${DbTypekeys.stringType.name},
+        ${Bookkeys.author.name} ${DbTypekeys.stringType.name},
+        ${Bookkeys.price.name} ${DbTypekeys.stringType.name},
+        ${Bookkeys.image.name} ${DbTypekeys.stringType.name},
+        ${Bookkeys.path.name} ${DbTypekeys.stringType.name},
+        ${Bookkeys.filename.name} ${DbTypekeys.stringType.name},
+        ${Bookkeys.format.name} ${DbTypekeys.stringType.name},
+        ${Bookkeys.last_modified.name} ${DbTypekeys.stringType.name},
+        ${Bookkeys.description.name} ${DbTypekeys.stringType.name},
+        ${Bookkeys.pages.name} ${DbTypekeys.integerType.name},
+        ${Bookkeys.rating.name} ${DbTypekeys.doubleType.name}
 
       )
     ''');
@@ -75,7 +75,7 @@ class BookDatasource {
     final db = await database;
     return db.transaction((txn) async {
       return await txn.insert(
-        AppKeys.dbTable,
+        dbTable,
         book.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -85,7 +85,7 @@ class BookDatasource {
   Future<Book?> getBook(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> map = await db.query(
-      AppKeys.dbTable,
+      dbTable,
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -99,7 +99,7 @@ class BookDatasource {
   Future<List<Book>> getAllBooks() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
-      AppKeys.dbTable,
+      dbTable,
       orderBy: "id DESC",
     );
     return List.generate(
@@ -114,7 +114,7 @@ class BookDatasource {
     final db = await database;
     return db.transaction((txn) async {
       return await txn.update(
-        AppKeys.dbTable,
+        dbTable,
         book.toJson(),
         where: 'id = ?',
         whereArgs: [book.id],
@@ -127,7 +127,7 @@ class BookDatasource {
     return db.transaction(
       (txn) async {
         return await txn.delete(
-          AppKeys.dbTable,
+          dbTable,
           where: 'id = ?',
           whereArgs: [book.id],
         );

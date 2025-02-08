@@ -103,8 +103,11 @@ class GridList extends ConsumerWidget {
                     File(path); // Or any other way to get a File instance.
                 var decodedImage =
                     await decodeImageFromList(image.readAsBytesSync());
+                // ignore: avoid_print
                 print(decodedImage.width);
+                // ignore: avoid_print
                 print(decodedImage.height);
+                // ignore: use_build_context_synchronously
                 Navigator.of(context).canPop();
                 // Navigator.pushNamed(context, 'detail/${book.title}');
               },

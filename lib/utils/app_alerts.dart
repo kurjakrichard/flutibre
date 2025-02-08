@@ -37,11 +37,13 @@ class AppAlerts {
         await ref.read(booksProvider.notifier).deleteBook(book).then(
           (value) {
             displaySnackbar(
+              // ignore: use_build_context_synchronously
               context,
               'Book deleted successfully',
             );
 
             ref.read(selectedBookProvider.notifier).resetSelectedBook();
+            // ignore: use_build_context_synchronously
             context.pop();
           },
         );

@@ -134,10 +134,11 @@ class _UpdateBookScreenState extends ConsumerState<UpdateBook> {
           );
       ref.read(selectedBookProvider.notifier).setSelectedBook(book);
       await ref.read(booksProvider.notifier).updateBook(book).then((value) {
+        // ignore: use_build_context_synchronously
         AppAlerts.displaySnackbar(context, 'Update book successfully');
+        // ignore: use_build_context_synchronously
         context.go(RouteLocation.home);
       });
-      print('Teszt oldpath: $oldPath');
       await fileService.copyFile(
           oldpath:
               '/home/sire/Dokumentumok/ebooks/$oldPath/$oldFilename.${book.format}',

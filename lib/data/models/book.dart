@@ -32,35 +32,35 @@ class Book extends Equatable {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      Bookkeys.id: id,
-      Bookkeys.title: title,
-      Bookkeys.author: author,
-      Bookkeys.price: price,
-      Bookkeys.image: image,
-      Bookkeys.path: path,
-      Bookkeys.filename: filename,
-      Bookkeys.format: format,
-      Bookkeys.last_modified: last_modified,
-      Bookkeys.description: description,
-      Bookkeys.rating: rating,
-      Bookkeys.pages: pages
+      Bookkeys.id.name: id,
+      Bookkeys.title.name: title,
+      Bookkeys.author.name: author,
+      Bookkeys.price.name: price,
+      Bookkeys.image.name: image,
+      Bookkeys.path.name: path,
+      Bookkeys.filename.name: filename,
+      Bookkeys.format.name: format,
+      Bookkeys.last_modified.name: last_modified,
+      Bookkeys.description.name: description,
+      Bookkeys.rating.name: rating,
+      Bookkeys.pages.name: pages
     };
   }
 
   factory Book.fromJson(Map<String, dynamic> map) {
     return Book(
-      id: map[Bookkeys.id],
-      title: map[Bookkeys.title],
-      author: map[Bookkeys.author],
-      price: map[Bookkeys.price],
-      image: map[Bookkeys.image],
-      path: map[Bookkeys.path],
-      filename: map[Bookkeys.filename],
-      format: map[Bookkeys.format],
-      last_modified: map[Bookkeys.last_modified],
-      description: map[Bookkeys.description],
-      rating: map[Bookkeys.rating],
-      pages: map[Bookkeys.pages],
+      id: map[Bookkeys.id.name],
+      title: map[Bookkeys.title.name],
+      author: map[Bookkeys.author.name],
+      price: map[Bookkeys.price.name],
+      image: map[Bookkeys.image.name],
+      path: map[Bookkeys.path.name],
+      filename: map[Bookkeys.filename.name],
+      format: map[Bookkeys.format.name],
+      last_modified: map[Bookkeys.last_modified.name],
+      description: map[Bookkeys.description.name],
+      rating: map[Bookkeys.rating.name],
+      pages: map[Bookkeys.pages.name],
     );
   }
 
