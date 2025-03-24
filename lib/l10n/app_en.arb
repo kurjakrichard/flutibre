@@ -1,0 +1,163 @@
+{
+  "@@locale": "en",
+  "loading": "Loading",
+  "@loading": {
+    "description": "Loading"
+  },
+  "homepage": "HomePage",
+  "@homepage": {
+    "description": "HomePage"
+  },
+  "settingspage": "Settings Page",
+  "@settingspage": {
+    "description": "settingspage"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme selector"
+  },
+  "darktheme": "Dark Theme",
+  "@darktheme": {
+    "description": "Dark theme"
+  },
+  "nolibraryselected": "No library selected",
+  "@nolibraryselected": {
+    "description": "Calibre library selection"
+  },
+  "librarypath": "Library path",
+  "@librarypath": {
+    "description": "Ebook library path"
+  },
+  "chosepath": "Please select Calibre library.",
+  "@chosepath": {
+    "description": "Calibre library selection"
+  },
+  "newlibrary": "Pick an empty folder to create a new library.",
+  "@newlibrary": {
+    "description": "New library"
+  },
+  "attention": "Free version has no add and edit funkction.",
+  "@attention": {
+    "description": "Free version has no add and edit funkction."
+  },
+  "emptylibrary": "Empty list",
+  "@emptylibrary": {
+    "description": "Empty list"
+  },
+  "nobookselected": "No book selected",
+  "@nobookselected": {
+    "description": "No book selected"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "list": "List",
+  "@list": {
+    "description": "List button"
+  },
+  "tiles": "Tiles",
+  "@tiles": {
+    "description": "Tiles button"
+  },
+  "datagrid": "Data grid",
+  "@datagrid": {
+    "description": "Data grid"
+  },
+   "error": "Error. Please select another library.",
+  "@error": {
+    "description": "Error. Please select another library."
+  },
+  "addbook": "Add book",
+  "@addbook": {
+    "description": "Add book text"
+  },
+  "editbook": "Edit book",
+  "@addbook": {
+    "description": "Edit book text"
+  },
+  "deletebook": "Delete book",
+  "@addbook": {
+    "description": "Delete book text"
+  },
+  "title": "Title",
+  "@title": {
+    "description": "Title text"
+  },
+  "author": "Author",
+  "@author": {
+    "description": "Author text"
+  },
+  "date": "Date",
+  "@date": {
+    "description": "Date"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language"
+  },
+  "create": "Create",
+  "@create": {
+    "description": "Create button"
+  },
+  "confirmation": "Are you sure?",
+  "@confirmation": {
+    "description": "Are you sure?"
+  },
+  "titlerequired": "Title is required!",
+  "@titlerequired": {
+    "description": "Title is required!"
+  },
+  "authorrequired": "Author is required!",
+  "@authorrequired": {
+    "description": "Author is required!"
+  },
+  "commentrequired": "Comment is required!",
+  "@commentrequired": {
+    "description": "Comment is required!"
+  },
+  "wanttodelete": "Want to delete?",
+  "@wanttodelete": {
+    "description": "Want to delete?"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back button"
+  },
+  "open": "Open",
+  "@open": {
+    "description": "Open button"
+  },
+  "openbook": "Open book",
+  "@open": {
+    "description": "Open button"
+  },
+  "comment": "Comment",
+  "@open": {
+    "description": "Comment"
+  },
+  "pickfolder": "Pick folder",
+  "@pickfolder": {
+    "description": "Pick folder"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close"
+  },
+  "search": "Search term",
+  "@search": {
+    "description": "Search term"
+  },
+  "addialog": "No add funkction in the free version. You need Calibre to manage your library.",
+  "@search": {
+    "description": "Search term"
+  }
+}
